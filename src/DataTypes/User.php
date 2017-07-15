@@ -42,6 +42,11 @@ class User extends Base
     /**
      * {@inheritdoc}
      */
+    protected $unusedProperties = ['id'];
+
+    /**
+     * {@inheritdoc}
+     */
     protected function initPropertyMapping()
     {
         $this->propertyMapping += [

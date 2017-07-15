@@ -38,6 +38,11 @@ abstract class Element extends Base
     public $microCopy = '';
 
     /**
+     * {@inheritdoc}
+     */
+    protected $unusedProperties = ['id'];
+
+    /**
      * @return mixed
      */
     abstract public function getValue();
@@ -54,7 +59,6 @@ abstract class Element extends Base
      */
     protected function initPropertyMapping()
     {
-        unset($this->propertyMapping['id']);
         $this->propertyMapping += [
             'name' => 'id',
             'type' => 'type',

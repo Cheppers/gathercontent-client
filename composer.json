@@ -31,7 +31,7 @@
     "autoload-dev": {
         "psr-4": {
             "Cheppers\\GatherContent\\Composer\\": "src-dev/Composer",
-            "Cheppers\\GatherContent\\Test\\": "src-dev/Test"
+            "Cheppers\\GatherContent\\Tests\\": "src-dev/Tests"
         }
     },
     "scripts": {

@@ -14,7 +14,12 @@ class ElementOptions extends Element
      */
     public function getValue()
     {
-        return null;
+        $value = [];
+        foreach ($this->options as $option) {
+            $value[$option['name']] = $option['selected'];
+        }
+
+        return $value;
     }
 
     /**
@@ -22,7 +27,27 @@ class ElementOptions extends Element
      */
     public function setValue($value)
     {
+        foreach ($value as $name => $selected) {
+            foreach ($this->options as $key => $option) {
+                if ($option['name'] === $name) {
+                    $this->options[$key]['selected'] = $selected;
+
+                    break;
+                }
+            }
+        }
+
         return $this;
+    }
+
+    public function getOptions(): array
+    {
+        $options = [];
+        foreach ($this->options as $option) {
+            $options[$option['name']] = $option['label'];
+        }
+
+        return $options;
     }
 
     /**
@@ -31,7 +56,7 @@ class ElementOptions extends Element
     protected function initPropertyMapping()
     {
         $this->propertyMapping += [
-            'options' => '',
+            'options' => 'options',
         ];
 
         return parent::initPropertyMapping();

@@ -22,9 +22,13 @@ class Date extends Base
     /**
      * {@inheritdoc}
      */
+    protected $unusedProperties = ['id'];
+
+    /**
+     * {@inheritdoc}
+     */
     protected function initPropertyMapping()
     {
-        unset($this->propertyMapping['id']);
         $this->propertyMapping += [
             'date' => 'date',
             'timezone_type' => 'timezoneType',

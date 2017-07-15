@@ -85,7 +85,7 @@ class Item extends Base
             'project_id' => 'projectId',
             'parent_id' => 'parentId',
             'template_id' => 'templateId',
-            'custom_state_id' => 'custom_state_id',
+            'custom_state_id' => 'customStateId',
             'position' => 'position',
             'name' => 'name',
             'config' => [
@@ -95,8 +95,8 @@ class Item extends Base
             'notes' => 'notes',
             'type' => 'item',
             'overdue' => 'overdue',
-            'archived_by' => 'archiveBy',
-            'archived_at' => 'archiveAt',
+            'archived_by' => 'archivedBy',
+            'archived_at' => 'archivedAt',
             'created_at' => [
                 'type' => 'subConfig',
                 'destination' => 'createdAt',

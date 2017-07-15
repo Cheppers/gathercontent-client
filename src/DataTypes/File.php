@@ -20,9 +20,9 @@ class File extends Base
     public $field = '';
 
     /**
-     * @var int|string
+     * @var string
      */
-    public $type = 0;
+    public $type = '';
 
     /**
      * @var string

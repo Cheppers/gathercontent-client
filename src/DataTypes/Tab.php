@@ -19,9 +19,13 @@ class Tab extends Base
      */
     public $elements = [];
 
+    /**
+     * {@inheritdoc}
+     */
+    protected $unusedProperties = ['id'];
+
     protected function initPropertyMapping()
     {
-        unset($this->propertyMapping['id']);
         $this->propertyMapping += [
             'name' => 'id',
             'label' => 'label',

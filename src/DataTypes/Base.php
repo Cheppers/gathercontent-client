@@ -2,6 +2,7 @@
 
 namespace Cheppers\GatherContent\DataTypes;
 
+use Cheppers\GatherContent\Utils\NestedArray;
 use JsonSerializable;
 
 class Base implements JsonSerializable
@@ -26,6 +27,8 @@ class Base implements JsonSerializable
      */
     protected $dataDefaultValues = [];
 
+    protected $unusedProperties = [];
+
     public function __construct(array $data = [])
     {
         $this->data = $data;
@@ -43,7 +46,25 @@ class Base implements JsonSerializable
         $export = [];
 
         foreach ($this->propertyMapping as $src => $handler) {
-            $export[$src] = $this->{$handler['destination']};
+            if (in_array($src, $this->unusedProperties)) {
+                continue;
+            }
+
+            $value = $this->{$handler['destination']};
+
+            if ($handler['type'] === 'setJsonDecode') {
+                $value = json_encode($value, JSON_PRETTY_PRINT);
+            }
+
+            if (!empty($handler['parents'])) {
+                while ($handler['parents']) {
+                    $value = [
+                        array_pop($handler['parents']) => $value,
+                    ];
+                }
+            }
+
+            $export[$src] = $value;
         }
 
         return $export;
@@ -107,15 +128,12 @@ class Base implements JsonSerializable
                     $this->{$handler['destination']} = $handler['closure']($data[$src], $src);
                     break;
 
-                case 'callback':
-                    $this->{$handler['destination']} = call_user_func($handler['callback'], $data[$src], $src);
-                    break;
-
                 case 'subConfig':
+                    /** @var \Cheppers\GatherContent\DataTypes\Base $subConfig */
                     if (empty($handler['parents'])) {
                         $subConfig = new $handler['class']((array) $data[$src]);
                     } else {
-                        $subConfigData = $this->getNestedValue($data[$src], $handler['parents']);
+                        $subConfigData = NestedArray::getValue($data[$src], $handler['parents']);
                         $subConfig = new $handler['class']((array) $subConfigData);
                     }
 
@@ -126,12 +144,13 @@ class Base implements JsonSerializable
                     if (empty($handler['parents'])) {
                         $subConfigs = (array) $data[$src];
                     } else {
-                        $subConfigs = (array) $this->getNestedValue($data[$src], $handler['parents']);
+                        $subConfigs = (array) NestedArray::getValue($data[$src], $handler['parents']);
                     }
 
                     foreach ($subConfigs as $subConfigId => $subConfigData) {
                         $subConfig = new $handler['class']($subConfigData);
-                        $this->{$handler['destination']}[$subConfig->id] = $subConfig;
+                        $id = $subConfig->id ?: $subConfigId;
+                        $this->{$handler['destination']}[$id] = $subConfig;
                     }
                     break;
             }
@@ -143,23 +162,5 @@ class Base implements JsonSerializable
     protected function setDataDefaultValues(array $data): array
     {
         return array_replace_recursive($this->dataDefaultValues, $data);
-    }
-
-    public function &getNestedValue(array &$array, array $parents, &$key_exists = null)
-    {
-        $ref = &$array;
-        foreach ($parents as $parent) {
-            if (is_array($ref) && array_key_exists($parent, $ref)) {
-                $ref = &$ref[$parent];
-            } else {
-                $key_exists = false;
-                $null = null;
-
-                return $null;
-            }
-        }
-        $key_exists = true;
-
-        return $ref;
     }
 }
