@@ -23,16 +23,14 @@ class ElementSectionTest extends BaseTest
         $cases['basic'][0] = [
             'id' => 'a',
             'type' => 'section',
-            'label' => 'c',
-            'required' => false,
-            'microCopy' => 'd',
+            'title' => 'b',
+            'subtitle' => 'c',
         ];
         $cases['basic'][1] = [
             'name' => 'a',
             'type' => 'section',
-            'label' => 'c',
-            'required' => false,
-            'microcopy' => 'd',
+            'title' => 'b',
+            'subtitle' => 'c',
         ];
 
         return $cases;

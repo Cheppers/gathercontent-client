@@ -338,7 +338,7 @@ class GatherContentClient implements GatherContentClientInterface
     /**
      * {@inheritdoc}
      */
-    public function itemGet(int $itemId): DataTypes\Item
+    public function itemGet(int $itemId): ?DataTypes\Item
     {
         $this->response = $this->client->request(
             'GET',
@@ -352,7 +352,7 @@ class GatherContentClient implements GatherContentClientInterface
         $this->validateResponse(200);
         $body = $this->parseResponse();
 
-        return new DataTypes\Item($body['data']);
+        return empty($body['data']) ? null : new DataTypes\Item($body['data']);
     }
 
     public function itemSavePost(int $itemId)
@@ -385,14 +385,8 @@ class GatherContentClient implements GatherContentClientInterface
             ]
         );
 
-        if ($this->response->getStatusCode() !== 200) {
-            throw new \Exception('@todo ' . __METHOD__);
-        }
-
-        $body = \GuzzleHttp\json_decode($this->response->getBody(), true);
-        if (!empty($body['data']['message'])) {
-            throw new \Exception('@todo ' . $body['data']['message']);
-        }
+        $this->validateResponse(200);
+        $body = $this->parseResponse();
 
         return $this->parseResponseDataItems($body['data'], DataTypes\File::class);
     }
@@ -411,19 +405,13 @@ class GatherContentClient implements GatherContentClientInterface
             ]
         );
 
-        if ($this->response->getStatusCode() !== 200) {
-            throw new \Exception('@todo ' . __METHOD__);
-        }
-
-        $body = \GuzzleHttp\json_decode($this->response->getBody(), true);
-        if (!empty($body['data']['message'])) {
-            throw new \Exception('@todo ' . $body['data']['message']);
-        }
+        $this->validateResponse(200);
+        $body = $this->parseResponse();
 
         return $this->parseResponseDataItems($body['data'], DataTypes\Template::class);
     }
 
-    public function templateGet(int $templateId): DataTypes\Template
+    public function templateGet(int $templateId): ?DataTypes\Template
     {
         $this->response = $this->client->request(
             'GET',
@@ -434,16 +422,10 @@ class GatherContentClient implements GatherContentClientInterface
             ]
         );
 
-        if ($this->response->getStatusCode() !== 200) {
-            throw new \Exception('@todo ' . __METHOD__);
-        }
+        $this->validateResponse(200);
+        $body = $this->parseResponse();
 
-        $body = \GuzzleHttp\json_decode($this->response->getBody(), true);
-        if (!empty($body['data']['message'])) {
-            throw new \Exception('@todo ' . $body['data']['message']);
-        }
-
-        return new DataTypes\Template($body['data']);
+        return empty($body['data']) ? null : new DataTypes\Template($body['data']);
     }
 
     protected function getUri(string $path): string

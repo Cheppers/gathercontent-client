@@ -2,7 +2,7 @@
 
 namespace Cheppers\GatherContent\DataTypes;
 
-abstract class Element extends Base
+class Element extends Base
 {
     /**
      * @var array
@@ -45,14 +45,20 @@ abstract class Element extends Base
     /**
      * @return mixed
      */
-    abstract public function getValue();
+    public function getValue()
+    {
+        return null;
+    }
 
     /**
      * @param mixed $value
      *
      * @return $this
      */
-    abstract public function setValue($value);
+    public function setValue($value)
+    {
+        return $this;
+    }
 
     /**
      * {@inheritdoc}

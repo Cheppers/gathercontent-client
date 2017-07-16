@@ -3,8 +3,10 @@
 namespace Cheppers\GatherContent\Tests\Unit;
 
 use Cheppers\GatherContent\DataTypes\Account;
+use Cheppers\GatherContent\DataTypes\Item;
 use Cheppers\GatherContent\DataTypes\Project;
 use Cheppers\GatherContent\DataTypes\Status;
+use Cheppers\GatherContent\DataTypes\Template;
 use Cheppers\GatherContent\DataTypes\User;
 use Cheppers\GatherContent\GatherContentClient;
 use GuzzleHttp\Client;
@@ -424,10 +426,7 @@ class GatherContentClientTest extends GcBaseTestCase
             static::getUniqueResponseStatus(),
         ];
 
-        $expected = [];
-        foreach ($data as $status) {
-            $expected[$status['id']] = $status;
-        }
+        $expected = static::reKeyArray($data, 'id');
 
         return [
             'empty' => [
@@ -550,14 +549,14 @@ class GatherContentClientTest extends GcBaseTestCase
     {
         $data = [
             static::getUniqueResponseItem([
-                ['text', 'files', /*'choice_radio', 'choice_checkbox'*/],
+                ['text', 'files', 'choice_radio', 'choice_checkbox'],
             ]),
             static::getUniqueResponseItem([
-//                ['text', 'choice_radio', 'choice_checkbox'],
-//                ['text', 'choice_radio'],
+                ['text', 'choice_radio', 'choice_checkbox'],
+                ['text', 'choice_radio'],
             ]),
             static::getUniqueResponseItem([
-//                ['choice_radio', 'choice_checkbox'],
+                ['choice_radio', 'choice_checkbox'],
             ]),
         ];
 
@@ -626,6 +625,313 @@ class GatherContentClientTest extends GcBaseTestCase
         static::assertEquals(['api.example.com'], $request->getHeader('Host'));
         static::assertEquals(
             "{$this->gcClientOptions['baseUri']}/items?project_id=$projectId",
+            (string) $request->getUri()
+        );
+    }
+
+    public function casesItemGet(): array
+    {
+        $item = static::getUniqueResponseItem([
+            ['text', 'choice_checkbox'],
+        ]);
+
+        $item['config'] = static::reKeyArray($item['config'], 'name');
+        foreach (array_keys($item['config']) as $tabId) {
+            $item['config'][$tabId]['elements'] = static::reKeyArray(
+                $item['config'][$tabId]['elements'],
+                'name'
+            );
+        }
+
+        return [
+            'empty' => [
+                null,
+                ['data' => []],
+                42,
+            ],
+            'basic' => [
+                $item,
+                ['data' => $item],
+                $item['id']
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider casesItemGet
+     */
+    public function testItemGet(?array $expected, array $responseBody, int $itemId): void
+    {
+        $container = [];
+        $history = Middleware::history($container);
+        $mock = new MockHandler([
+            new Response(
+                200,
+                ['Content-Type' => 'application/json'],
+                \GuzzleHttp\json_encode($responseBody)
+            ),
+            new RequestException('Error Communicating with Server', new Request('GET', 'project'))
+        ]);
+        $handlerStack = HandlerStack::create($mock);
+        $handlerStack->push($history);
+
+        $client = new Client([
+            'handler' => $handlerStack,
+        ]);
+
+        $actual = (new GatherContentClient($client))
+            ->setOptions($this->gcClientOptions)
+            ->itemGet($itemId);
+
+        if ($expected) {
+            static::assertTrue($actual instanceof Item, 'Data type of the return is Item');
+            static::assertEquals(
+                json_encode($expected, JSON_PRETTY_PRINT),
+                json_encode($actual, JSON_PRETTY_PRINT)
+            );
+        } else {
+            static::assertNull($actual);
+        }
+
+        /** @var Request $request */
+        $request = $container[0]['request'];
+
+        static::assertEquals(1, count($container));
+        static::assertEquals('GET', $request->getMethod());
+        static::assertEquals(['application/vnd.gathercontent.v0.5+json'], $request->getHeader('Accept'));
+        static::assertEquals(['api.example.com'], $request->getHeader('Host'));
+        static::assertEquals(
+            "{$this->gcClientOptions['baseUri']}/items/$itemId",
+            (string) $request->getUri()
+        );
+    }
+
+    public function casesItemFilesGet(): array
+    {
+        $data = [
+            static::getUniqueResponseFile(),
+            static::getUniqueResponseFile(),
+            static::getUniqueResponseFile(),
+        ];
+
+        $expected = static::reKeyArray($data, 'id');
+
+        return [
+            'empty' => [
+                [],
+                ['data' => []],
+                42,
+            ],
+            'basic' => [
+                $expected,
+                ['data' => $data],
+                42,
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider casesItemFilesGet
+     */
+    public function testItemFilesGet(array $expected, array $responseBody, int $itemId): void
+    {
+        $container = [];
+        $history = Middleware::history($container);
+        $mock = new MockHandler([
+            new Response(
+                200,
+                ['Content-Type' => 'application/json'],
+                \GuzzleHttp\json_encode($responseBody)
+            ),
+            new RequestException('Error Communicating with Server', new Request('GET', 'accounts'))
+        ]);
+        $handlerStack = HandlerStack::create($mock);
+        $handlerStack->push($history);
+
+        $client = new Client([
+            'handler' => $handlerStack,
+        ]);
+
+        $actual = (new GatherContentClient($client))
+            ->setOptions($this->gcClientOptions)
+            ->itemFilesGet($itemId);
+
+        static::assertEquals(
+            json_encode($expected, JSON_PRETTY_PRINT),
+            json_encode($actual, JSON_PRETTY_PRINT)
+        );
+
+        /** @var Request $request */
+        $request = $container[0]['request'];
+
+        static::assertEquals(1, count($container));
+        static::assertEquals('GET', $request->getMethod());
+        static::assertEquals(['application/vnd.gathercontent.v0.5+json'], $request->getHeader('Accept'));
+        static::assertEquals(['api.example.com'], $request->getHeader('Host'));
+        static::assertEquals(
+            "{$this->gcClientOptions['baseUri']}/items/$itemId/files",
+            (string) $request->getUri()
+        );
+    }
+
+    public function casesTemplatesGet(): array
+    {
+        $data = [
+            static::getUniqueResponseTemplate([
+                ['text', 'files', 'choice_radio', 'choice_checkbox'],
+            ]),
+            static::getUniqueResponseTemplate([
+                ['text', 'choice_radio', 'choice_checkbox'],
+                ['text', 'choice_radio'],
+            ]),
+            static::getUniqueResponseTemplate([
+                ['choice_radio', 'choice_checkbox'],
+            ]),
+        ];
+
+        $templates = static::reKeyArray($data, 'id');
+        foreach (array_keys($templates) as $templateId) {
+            $templates[$templateId]['config'] = static::reKeyArray($templates[$templateId]['config'], 'name');
+            foreach (array_keys($templates[$templateId]['config']) as $tabId) {
+                $templates[$templateId]['config'][$tabId]['elements'] = static::reKeyArray(
+                    $templates[$templateId]['config'][$tabId]['elements'],
+                    'name'
+                );
+            }
+        }
+
+        return [
+            'empty' => [
+                [],
+                ['data' => []],
+                42,
+            ],
+            'basic' => [
+                $templates,
+                ['data' => $data],
+                42,
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider casesTemplatesGet
+     */
+    public function testTemplatesGet(array $expected, array $responseBody, int $projectId): void
+    {
+        $container = [];
+        $history = Middleware::history($container);
+        $mock = new MockHandler([
+            new Response(
+                200,
+                ['Content-Type' => 'application/json'],
+                \GuzzleHttp\json_encode($responseBody)
+            ),
+            new RequestException('Error Communicating with Server', new Request('GET', 'accounts'))
+        ]);
+        $handlerStack = HandlerStack::create($mock);
+        $handlerStack->push($history);
+
+        $client = new Client([
+            'handler' => $handlerStack,
+        ]);
+
+        $actual = (new GatherContentClient($client))
+            ->setOptions($this->gcClientOptions)
+            ->templatesGet($projectId);
+
+        static::assertEquals(
+            json_encode($expected, JSON_PRETTY_PRINT),
+            json_encode($actual, JSON_PRETTY_PRINT)
+        );
+
+        /** @var Request $request */
+        $request = $container[0]['request'];
+
+        static::assertEquals(1, count($container));
+        static::assertEquals('GET', $request->getMethod());
+        static::assertEquals(['application/vnd.gathercontent.v0.5+json'], $request->getHeader('Accept'));
+        static::assertEquals(['api.example.com'], $request->getHeader('Host'));
+        static::assertEquals(
+            "{$this->gcClientOptions['baseUri']}/templates?project_id=$projectId",
+            (string) $request->getUri()
+        );
+    }
+
+    public function casesTemplateGet(): array
+    {
+        $data = static::getUniqueResponseTemplate([
+            ['text', 'files', 'section', 'choice_radio', 'choice_checkbox'],
+        ]);
+
+        $template = $data;
+        $template['config'] = static::reKeyArray($template['config'], 'name');
+        foreach (array_keys($template['config']) as $tabId) {
+            $template['config'][$tabId]['elements'] = static::reKeyArray(
+                $template['config'][$tabId]['elements'],
+                'name'
+            );
+        }
+
+        return [
+            'empty' => [
+                null,
+                ['data' => []],
+                42,
+            ],
+            'basic' => [
+                $template,
+                ['data' => $data],
+                42,
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider casesTemplateGet
+     */
+    public function testTemplateGet(?array $expected, array $responseBody, int $templateId): void
+    {
+        $container = [];
+        $history = Middleware::history($container);
+        $mock = new MockHandler([
+            new Response(
+                200,
+                ['Content-Type' => 'application/json'],
+                \GuzzleHttp\json_encode($responseBody)
+            ),
+            new RequestException('Error Communicating with Server', new Request('GET', 'accounts'))
+        ]);
+        $handlerStack = HandlerStack::create($mock);
+        $handlerStack->push($history);
+
+        $client = new Client([
+            'handler' => $handlerStack,
+        ]);
+
+        $actual = (new GatherContentClient($client))
+            ->setOptions($this->gcClientOptions)
+            ->templateGet($templateId);
+
+        if ($expected) {
+            static::assertTrue($actual instanceof Template, 'Data type of the return is Template');
+            static::assertEquals(
+                json_encode($expected, JSON_PRETTY_PRINT),
+                json_encode($actual, JSON_PRETTY_PRINT)
+            );
+        } else {
+            static::assertNull($actual);
+        }
+
+        /** @var Request $request */
+        $request = $container[0]['request'];
+
+        static::assertEquals(1, count($container));
+        static::assertEquals('GET', $request->getMethod());
+        static::assertEquals(['application/vnd.gathercontent.v0.5+json'], $request->getHeader('Accept'));
+        static::assertEquals(['api.example.com'], $request->getHeader('Host'));
+        static::assertEquals(
+            "{$this->gcClientOptions['baseUri']}/templates/$templateId",
             (string) $request->getUri()
         );
     }

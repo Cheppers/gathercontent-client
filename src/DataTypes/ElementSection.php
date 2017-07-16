@@ -5,18 +5,34 @@ namespace Cheppers\GatherContent\DataTypes;
 class ElementSection extends Element
 {
     /**
-     * {@inheritdoc}
+     * @var string
      */
-    public function getValue()
-    {
-        return null;
-    }
+    public $title = '';
+
+    /**
+     * @var string
+     */
+    public $subtitle = '';
 
     /**
      * {@inheritdoc}
      */
-    public function setValue($value)
+    protected $unusedProperties = ['id', 'label', 'required', 'microcopy'];
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function initPropertyMapping()
     {
+        parent::initPropertyMapping();
+        $this->propertyMapping = array_replace(
+            $this->propertyMapping,
+            [
+                'title' => 'title',
+                'subtitle' => 'subtitle',
+            ]
+        );
+
         return $this;
     }
 }
