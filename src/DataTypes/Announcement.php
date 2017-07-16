@@ -16,11 +16,15 @@ class Announcement extends Base
 
     protected function initPropertyMapping()
     {
-        $this->propertyMapping += [
-            'name' => 'name',
-            'acknowledged' => 'acknowledged',
-        ];
+        parent::initPropertyMapping();
+        $this->propertyMapping = array_replace(
+            $this->propertyMapping,
+            [
+                'name' => 'name',
+                'acknowledged' => 'acknowledged',
+            ]
+        );
 
-        return parent::initPropertyMapping();
+        return $this;
     }
 }

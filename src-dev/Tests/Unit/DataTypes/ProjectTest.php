@@ -4,6 +4,9 @@ namespace Cheppers\GatherContent\Tests\Unit\DataTypes;
 
 use Cheppers\GatherContent\DataTypes\Project;
 
+/**
+ * @group GatherContentClient
+ */
 class ProjectTest extends BaseTest
 {
     /**

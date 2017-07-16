@@ -14,10 +14,14 @@ class Usage extends Base
      */
     protected function initPropertyMapping()
     {
-        $this->propertyMapping += [
-            'item_count' => 'itemCount',
-        ];
+        parent::initPropertyMapping();
+        $this->propertyMapping = array_replace(
+            $this->propertyMapping,
+            [
+                'item_count' => 'itemCount',
+            ]
+        );
 
-        return parent::initPropertyMapping();
+        return $this;
     }
 }

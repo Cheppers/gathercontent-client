@@ -66,28 +66,32 @@ class Project extends Base
 
     protected function initPropertyMapping()
     {
-        $this->propertyMapping += [
-            'name' => 'name',
-            'type' => 'type',
-            'example' => 'example',
-            'account_id' => 'accountId',
-            'active' => 'active',
-            'text_direction' => 'textDirection',
-            'allowed_tags' => [
-                'type' => 'setJsonDecode',
-                'destination' => 'allowedTags',
-            ],
-            'created_at' => 'createdAt',
-            'updated_at' => 'updatedAt',
-            'overdue' => 'overdue',
-            'statuses' => [
-                'type' => 'subConfigs',
-                'class' => Status::class,
-                'parents' => ['data'],
-            ],
-            'meta' => 'meta',
-        ];
+        parent::initPropertyMapping();
+        $this->propertyMapping = array_replace(
+            $this->propertyMapping,
+            [
+                'name' => 'name',
+                'type' => 'type',
+                'example' => 'example',
+                'account_id' => 'accountId',
+                'active' => 'active',
+                'text_direction' => 'textDirection',
+                'allowed_tags' => [
+                    'type' => 'setJsonDecode',
+                    'destination' => 'allowedTags',
+                ],
+                'created_at' => 'createdAt',
+                'updated_at' => 'updatedAt',
+                'overdue' => 'overdue',
+                'statuses' => [
+                    'type' => 'subConfigs',
+                    'class' => Status::class,
+                    'parents' => ['data'],
+                ],
+                'meta' => 'meta',
+            ]
+        );
 
-        return parent::initPropertyMapping();
+        return $this;
     }
 }

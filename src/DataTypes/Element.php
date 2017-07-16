@@ -59,14 +59,18 @@ abstract class Element extends Base
      */
     protected function initPropertyMapping()
     {
-        $this->propertyMapping += [
-            'name' => 'id',
-            'type' => 'type',
-            'label' => 'label',
-            'required' => 'required',
-            'microcopy' => 'microCopy',
-        ];
+        parent::initPropertyMapping();
+        $this->propertyMapping = array_replace(
+            $this->propertyMapping,
+            [
+                'name' => 'id',
+                'type' => 'type',
+                'label' => 'label',
+                'required' => 'required',
+                'microcopy' => 'microCopy',
+            ]
+        );
 
-        return parent::initPropertyMapping();
+        return $this;
     }
 }

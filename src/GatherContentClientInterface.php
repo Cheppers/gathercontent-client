@@ -68,12 +68,12 @@ interface GatherContentClientInterface
      *
      * @return \Cheppers\GatherContent\DataTypes\Status[]
      */
-    public function projectStatuses(int $projectId): array;
+    public function projectStatusesGet(int $projectId): array;
 
     /**
      * @see https://docs.gathercontent.com/reference#get-project-statuses-by-id
      */
-    public function projectStatus(int $projectId, int $statusId): DataTypes\Status;
+    public function projectStatusGet(int $projectId, int $statusId): DataTypes\Status;
 
     /**
      * @see https://docs.gathercontent.com/reference#get-items

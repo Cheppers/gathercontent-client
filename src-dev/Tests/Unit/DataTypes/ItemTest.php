@@ -4,6 +4,9 @@ namespace Cheppers\GatherContent\Tests\Unit\DataTypes;
 
 use Cheppers\GatherContent\DataTypes\Item;
 
+/**
+ * @group GatherContentClient
+ */
 class ItemTest extends BaseTest
 {
     /**
@@ -45,14 +48,18 @@ class ItemTest extends BaseTest
                             ],
                             'element-02-id' => [
                                 'name' => 'element-02-id',
-                                'type' => 'text',
+                                'type' => 'files',
                                 'label' => 'element-02-label',
                                 'required' => false,
                                 'microcopy' => '',
-                                'limit_type' => 'element-02-limit_type',
-                                'limit' => 84,
-                                'plain_text' => false,
-                                'value' => 'element-02-value',
+                                'user_id' => 43,
+                                'item_id' => 44,
+                                'field' => 'element-02-field',
+                                'url' => 'element-02-url',
+                                'filename' => 'element-02-fileName',
+                                'size' => 45,
+                                'created_at' => 'element-02-createdAt',
+                                'updated_at' => 'element-02-updatedAt',
                             ],
                         ],
                     ],
@@ -76,14 +83,18 @@ class ItemTest extends BaseTest
                             ],
                             [
                                 'name' => 'element-02-id',
-                                'type' => 'text',
+                                'type' => 'files',
                                 'label' => 'element-02-label',
                                 'required' => false,
                                 'microcopy' => '',
-                                'limit_type' => 'element-02-limit_type',
-                                'limit' => 84,
-                                'plain_text' => false,
-                                'value' => 'element-02-value',
+                                'user_id' => 43,
+                                'item_id' => 44,
+                                'field' => 'element-02-field',
+                                'url' => 'element-02-url',
+                                'filename' => 'element-02-fileName',
+                                'size' => 45,
+                                'created_at' => 'element-02-createdAt',
+                                'updated_at' => 'element-02-updatedAt',
                             ],
                         ],
                     ],

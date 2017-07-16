@@ -47,13 +47,17 @@ class ElementText extends Element
      */
     protected function initPropertyMapping()
     {
-        $this->propertyMapping += [
-            'limit_type' => 'limitType',
-            'limit' => 'limit',
-            'plain_text' => 'plainText',
-            'value' => 'value',
-        ];
+        parent::initPropertyMapping();
+        $this->propertyMapping = array_replace(
+            $this->propertyMapping,
+            [
+                'limit_type' => 'limitType',
+                'limit' => 'limit',
+                'plain_text' => 'plainText',
+                'value' => 'value',
+            ]
+        );
 
-        return parent::initPropertyMapping();
+        return $this;
     }
 }

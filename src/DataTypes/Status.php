@@ -39,15 +39,19 @@ class Status extends Base
      */
     protected function initPropertyMapping()
     {
-        $this->propertyMapping += [
-            'is_default' => 'isDefault',
-            'position' => 'position',
-            'color' => 'color',
-            'name' => 'name',
-            'description' => 'description',
-            'can_edit' => 'canEdit',
-        ];
+        parent::initPropertyMapping();
+        $this->propertyMapping = array_replace(
+            $this->propertyMapping,
+            [
+                'is_default' => 'isDefault',
+                'position' => 'position',
+                'color' => 'color',
+                'name' => 'name',
+                'description' => 'description',
+                'can_edit' => 'canEdit',
+            ]
+        );
 
-        return parent::initPropertyMapping();
+        return $this;
     }
 }

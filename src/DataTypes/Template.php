@@ -54,21 +54,25 @@ class Template extends Base
      */
     protected function initPropertyMapping()
     {
-        $this->propertyMapping += [
-            'project_id' => 'projectId',
-            'created_by' => 'createdBy',
-            'updated_by' => 'updatedBy',
-            'name' => 'name',
-            'description' => 'description',
-            'used_at' => 'usedAt',
-            'created_at' => 'createdAt',
-            'updated_at' => 'updatedAt',
-            'usage' => [
-                'type' => 'subConfig',
-                'class' => Usage::class,
-            ],
-        ];
+        parent::initPropertyMapping();
+        $this->propertyMapping = array_replace(
+            $this->propertyMapping,
+            [
+                'project_id' => 'projectId',
+                'created_by' => 'createdBy',
+                'updated_by' => 'updatedBy',
+                'name' => 'name',
+                'description' => 'description',
+                'used_at' => 'usedAt',
+                'created_at' => 'createdAt',
+                'updated_at' => 'updatedAt',
+                'usage' => [
+                    'type' => 'subConfig',
+                    'class' => Usage::class,
+                ],
+            ]
+        );
 
-        return parent::initPropertyMapping();
+        return $this;
     }
 }

@@ -62,17 +62,21 @@ class ElementFiles extends Element
 
     protected function initPropertyMapping()
     {
-        $this->propertyMapping += [
-            'user_id' => 'userId',
-            'item_id' => 'itemId',
-            'field' => 'field',
-            'url' => 'url',
-            'filename' => 'fileName',
-            'size' => 'size',
-            'created_at' => 'createdAt',
-            'updated_at' => 'updatedAt',
-        ];
-        
-        return parent::initPropertyMapping();
+        parent::initPropertyMapping();
+        $this->propertyMapping = array_replace(
+            $this->propertyMapping,
+            [
+                'user_id' => 'userId',
+                'item_id' => 'itemId',
+                'field' => 'field',
+                'url' => 'url',
+                'filename' => 'fileName',
+                'size' => 'size',
+                'created_at' => 'createdAt',
+                'updated_at' => 'updatedAt',
+            ]
+        );
+
+        return $this;
     }
 }

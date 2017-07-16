@@ -4,6 +4,9 @@ namespace Cheppers\GatherContent\Tests\Unit\DataTypes;
 
 use Cheppers\GatherContent\DataTypes\ElementFiles;
 
+/**
+ * @group GatherContentClient
+ */
 class ElementFilesTest extends BaseTest
 {
     /**

@@ -26,26 +26,30 @@ class Tab extends Base
 
     protected function initPropertyMapping()
     {
-        $this->propertyMapping += [
-            'name' => 'id',
-            'label' => 'label',
-            'hidden' => 'hidden',
-            'elements' => [
-                'type' => 'closure',
-                'closure' => function (array $data) {
-                    $elements = [];
-                    foreach ($data as $elementData) {
-                        $class = Element::$type2Class[$elementData['type']];
-                        /** @var \Cheppers\GatherContent\DataTypes\Element $element */
-                        $element = new $class($elementData);
-                        $elements[$element->id] = $element;
-                    }
+        parent::initPropertyMapping();
+        $this->propertyMapping = array_replace(
+            $this->propertyMapping,
+            [
+                'name' => 'id',
+                'label' => 'label',
+                'hidden' => 'hidden',
+                'elements' => [
+                    'type' => 'closure',
+                    'closure' => function (array $data) {
+                        $elements = [];
+                        foreach ($data as $elementData) {
+                            $class = Element::$type2Class[$elementData['type']];
+                            /** @var \Cheppers\GatherContent\DataTypes\Element $element */
+                            $element = new $class($elementData);
+                            $elements[$element->id] = $element;
+                        }
 
-                    return $elements;
-                },
-            ],
-        ];
+                        return $elements;
+                    },
+                ],
+            ]
+        );
 
-        return parent::initPropertyMapping();
+        return $this;
     }
 }

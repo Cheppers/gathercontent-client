@@ -147,15 +147,8 @@ class GatherContentClient implements GatherContentClientInterface
             ]
         );
 
-        if ($this->response->getStatusCode() !== 200) {
-            throw new \Exception('@todo ' . __METHOD__);
-        }
-
-        $body = \GuzzleHttp\json_decode($this->response->getBody(), true);
-
-        if (!empty($body['data']['message'])) {
-            throw new \Exception('@todo ' . $body['data']['message']);
-        }
+        $this->validateResponse(200);
+        $body = $this->parseResponse();
 
         return new DataTypes\User($body['data']);
     }
@@ -174,14 +167,8 @@ class GatherContentClient implements GatherContentClientInterface
             ]
         );
 
-        if ($this->response->getStatusCode() !== 200) {
-            throw new \Exception('@todo ' . __METHOD__);
-        }
-
-        $body = \GuzzleHttp\json_decode($this->response->getBody(), true);
-        if (!empty($body['data']['message'])) {
-            throw new \Exception('@todo ' . $body['data']['message']);
-        }
+        $this->validateResponse(200);
+        $body = $this->parseResponse();
 
         return $this->parseResponseDataItems($body['data'], DataTypes\Account::class);
     }
@@ -200,14 +187,8 @@ class GatherContentClient implements GatherContentClientInterface
             ]
         );
 
-        if ($this->response->getStatusCode() !== 200) {
-            throw new \Exception('@todo ' . __METHOD__);
-        }
-
-        $body = \GuzzleHttp\json_decode($this->response->getBody(), true);
-        if (!empty($body['data']['message'])) {
-            throw new \Exception('@todo ' . $body['data']['message']);
-        }
+        $this->validateResponse(200);
+        $body = $this->parseResponse();
 
         return new DataTypes\Account($body['data']);
     }
@@ -229,14 +210,8 @@ class GatherContentClient implements GatherContentClientInterface
             ]
         );
 
-        if ($this->response->getStatusCode() !== 200) {
-            throw new \Exception('@todo ' . __METHOD__);
-        }
-
-        $body = \GuzzleHttp\json_decode($this->response->getBody(), true);
-        if (!empty($body['data']['message'])) {
-            throw new \Exception('@todo ' . $body['data']['message']);
-        }
+        $this->validateResponse(200);
+        $body = $this->parseResponse();
 
         return $this->parseResponseDataItems($body['data'], DataTypes\Project::class);
     }
@@ -255,15 +230,8 @@ class GatherContentClient implements GatherContentClientInterface
             ]
         );
 
-        if ($this->response->getStatusCode() !== 200) {
-            throw new \Exception('@todo ' . __METHOD__);
-        }
-
-        $body = \GuzzleHttp\json_decode($this->response->getBody(), true);
-        if (!empty($body['data']['message'])) {
-            throw new \Exception('@todo ' . $body['data']['message']);
-        }
-
+        $this->validateResponse(200);
+        $body = $this->parseResponse();
         $body += ['meta' => []];
 
         return new DataTypes\Project($body['data'] + ['meta' => $body['meta']]);
@@ -307,7 +275,7 @@ class GatherContentClient implements GatherContentClientInterface
     /**
      * {@inheritdoc}
      */
-    public function projectStatuses(int $projectId): array
+    public function projectStatusesGet(int $projectId): array
     {
         $this->response = $this->client->request(
             'GET',
@@ -318,14 +286,8 @@ class GatherContentClient implements GatherContentClientInterface
             ]
         );
 
-        if ($this->response->getStatusCode() !== 200) {
-            throw new \Exception('@todo ' . __METHOD__);
-        }
-
-        $body = \GuzzleHttp\json_decode($this->response->getBody(), true);
-        if (!empty($body['data']['message'])) {
-            throw new \Exception('@todo ' . $body['data']['message']);
-        }
+        $this->validateResponse(200);
+        $body = $this->parseResponse();
 
         return $this->parseResponseDataItems($body['data'], DataTypes\Status::class);
     }
@@ -333,7 +295,7 @@ class GatherContentClient implements GatherContentClientInterface
     /**
      * {@inheritdoc}
      */
-    public function projectStatus(int $projectId, int $statusId): DataTypes\Status
+    public function projectStatusGet(int $projectId, int $statusId): DataTypes\Status
     {
         $this->response = $this->client->request(
             'GET',
@@ -344,14 +306,8 @@ class GatherContentClient implements GatherContentClientInterface
             ]
         );
 
-        if ($this->response->getStatusCode() !== 200) {
-            throw new \Exception('@todo ' . __METHOD__);
-        }
-
-        $body = \GuzzleHttp\json_decode($this->response->getBody(), true);
-        if (!empty($body['data']['message'])) {
-            throw new \Exception('@todo ' . $body['data']['message']);
-        }
+        $this->validateResponse(200);
+        $body = $this->parseResponse();
 
         return new DataTypes\Status($body['data']);
     }
@@ -373,14 +329,8 @@ class GatherContentClient implements GatherContentClientInterface
             ]
         );
 
-        if ($this->response->getStatusCode() !== 200) {
-            throw new \Exception('@todo ' . __METHOD__);
-        }
-
-        $body = \GuzzleHttp\json_decode($this->response->getBody(), true);
-        if (!empty($body['data']['message'])) {
-            throw new \Exception('@todo ' . $body['data']['message']);
-        }
+        $this->validateResponse(200);
+        $body = $this->parseResponse();
 
         return $this->parseResponseDataItems($body['data'], DataTypes\Item::class);
     }
@@ -399,14 +349,8 @@ class GatherContentClient implements GatherContentClientInterface
             ]
         );
 
-        if ($this->response->getStatusCode() !== 200) {
-            throw new \Exception('@todo ' . __METHOD__);
-        }
-
-        $body = \GuzzleHttp\json_decode($this->response->getBody(), true);
-        if (!empty($body['data']['message'])) {
-            throw new \Exception('@todo ' . $body['data']['message']);
-        }
+        $this->validateResponse(200);
+        $body = $this->parseResponse();
 
         return new DataTypes\Item($body['data']);
     }
@@ -522,9 +466,14 @@ class GatherContentClient implements GatherContentClientInterface
         ];
     }
 
-    protected function parseResponseDataItem(array $data, string $class): DataTypes\Base
+    protected function parseResponse(): array
     {
-        return $item = new $class($data);
+        $body = \GuzzleHttp\json_decode($this->response->getBody(), true);
+        if (!empty($body['data']['message'])) {
+            throw new \Exception('@todo ' . $body['data']['message']);
+        }
+
+        return $body;
     }
 
     /**
@@ -539,5 +488,26 @@ class GatherContentClient implements GatherContentClientInterface
         }
 
         return $items;
+    }
+
+    protected function parseResponseDataItem(array $data, string $class): DataTypes\Base
+    {
+        return $item = new $class($data);
+    }
+
+    protected function validateResponse(int $expectedStatusCode): void
+    {
+        $responseStatusCode = $this->response->getStatusCode();
+        if ($responseStatusCode !== $expectedStatusCode) {
+            throw new \Exception(
+                "Response status code is $responseStatusCode; Expected status code is $expectedStatusCode"
+            );
+        }
+
+        $responseContentType = $this->response->getHeader('Content-Type');
+        $responseContentType = end($responseContentType);
+        if ($responseContentType !== 'application/json') {
+            throw new \Exception("Unexpected Content-Type: '$responseContentType'", 1);
+        }
     }
 }

@@ -4,6 +4,9 @@ namespace Cheppers\GatherContent\Tests\Unit\DataTypes;
 
 use Cheppers\GatherContent\DataTypes\ElementSection;
 
+/**
+ * @group GatherContentClient
+ */
 class ElementSectionTest extends BaseTest
 {
     /**

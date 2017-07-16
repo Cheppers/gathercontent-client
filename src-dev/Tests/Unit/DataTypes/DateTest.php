@@ -4,6 +4,9 @@ namespace Cheppers\GatherContent\Tests\Unit\DataTypes;
 
 use Cheppers\GatherContent\DataTypes\Date;
 
+/**
+ * @group GatherContentClient
+ */
 class DateTest extends BaseTest
 {
     /**

@@ -5,6 +5,9 @@ namespace Cheppers\GatherContent\Tests\Unit\DataTypes;
 use Cheppers\GatherContent\DataTypes\Base;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @group GatherContentClient
+ */
 class BaseTest extends TestCase
 {
     /**

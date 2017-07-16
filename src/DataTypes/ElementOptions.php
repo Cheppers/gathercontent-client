@@ -55,10 +55,14 @@ class ElementOptions extends Element
      */
     protected function initPropertyMapping()
     {
-        $this->propertyMapping += [
-            'options' => 'options',
-        ];
+        parent::initPropertyMapping();
+        $this->propertyMapping = array_replace(
+            $this->propertyMapping,
+            [
+                'options' => 'options',
+            ]
+        );
 
-        return parent::initPropertyMapping();
+        return $this;
     }
 }

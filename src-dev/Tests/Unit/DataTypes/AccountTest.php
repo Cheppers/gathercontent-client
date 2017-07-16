@@ -4,6 +4,9 @@ namespace Cheppers\GatherContent\Tests\Unit\DataTypes;
 
 use Cheppers\GatherContent\DataTypes\Account;
 
+/**
+ * @group GatherContentClient
+ */
 class AccountTest extends BaseTest
 {
     /**

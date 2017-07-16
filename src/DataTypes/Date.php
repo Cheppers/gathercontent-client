@@ -29,12 +29,16 @@ class Date extends Base
      */
     protected function initPropertyMapping()
     {
-        $this->propertyMapping += [
-            'date' => 'date',
-            'timezone_type' => 'timezoneType',
-            'timezone' => 'timezone',
-        ];
+        parent::initPropertyMapping();
+        $this->propertyMapping = array_replace(
+            $this->propertyMapping,
+            [
+                'date' => 'date',
+                'timezone_type' => 'timezoneType',
+                'timezone' => 'timezone',
+            ]
+        );
 
-        return parent::initPropertyMapping();
+        return $this;
     }
 }

@@ -21,12 +21,16 @@ class Account extends Base
 
     protected function initPropertyMapping()
     {
-        $this->propertyMapping += [
-            'name' => 'name',
-            'slug' => 'slug',
-            'timezone' => 'timezone',
-        ];
+        parent::initPropertyMapping();
+        $this->propertyMapping = array_replace(
+            $this->propertyMapping,
+            [
+                'name' => 'name',
+                'slug' => 'slug',
+                'timezone' => 'timezone',
+            ]
+        );
 
-        return parent::initPropertyMapping();
+        return $this;
     }
 }

@@ -49,19 +49,23 @@ class User extends Base
      */
     protected function initPropertyMapping()
     {
-        $this->propertyMapping += [
-            'email' => 'email',
-            'first_name' => 'firstName',
-            'last_name' => 'lastName',
-            'language' => 'language',
-            'gender' => 'gender',
-            'avatar' => 'avatar',
-            'announcements' => [
-                'type' => 'subConfigs',
-                'class' => Announcement::class,
-            ],
-        ];
+        parent::initPropertyMapping();
+        $this->propertyMapping = array_replace(
+            $this->propertyMapping,
+            [
+                'email' => 'email',
+                'first_name' => 'firstName',
+                'last_name' => 'lastName',
+                'language' => 'language',
+                'gender' => 'gender',
+                'avatar' => 'avatar',
+                'announcements' => [
+                    'type' => 'subConfigs',
+                    'class' => Announcement::class,
+                ],
+            ]
+        );
 
-        return parent::initPropertyMapping();
+        return $this;
     }
 }
