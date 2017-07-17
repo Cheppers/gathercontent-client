@@ -86,7 +86,7 @@ class ProjectTest extends BaseTest
             'type' => ['c', 'c'],
             'example' => [false, false],
             'account_id' => [1, 1],
-            'active' => [true, true, false],
+            'active' => [true, true],
             'text_direction' => ['d', 'd'],
             'allowed_tags' => [$allowedTagsJson, $allowedTagsJson],
             'created_at' => [2, 2],

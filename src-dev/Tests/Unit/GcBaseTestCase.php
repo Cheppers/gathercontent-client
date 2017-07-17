@@ -46,6 +46,22 @@ class GcBaseTestCase extends TestCase
         ];
     }
 
+    protected static function getUniqueResponseFile():array
+    {
+        return [
+            'id' => static::getUniqueInt(),
+            'user_id' => static::getUniqueInt(),
+            'item_id' => static::getUniqueInt(),
+            'field' => 'field',
+            'type' => 'type',
+            'url' => static::getUniqueString('http://'),
+            'filename' => static::getUniqueString('fileName'),
+            'size' => static::getUniqueInt(),
+            'created_at' => static::getUniqueDate(),
+            'updated_at' => static::getUniqueDate(),
+        ];
+    }
+
     protected static function getUniqueResponseUser(): array
     {
         return [
@@ -160,6 +176,53 @@ class GcBaseTestCase extends TestCase
         return $tab;
     }
 
+    protected static function getUniqueResponseTemplateTab(array $elements): array
+    {
+        $tab = [
+            'name' => static::getUniqueString('tab'),
+            'label' => static::getUniqueString('label'),
+            'hidden' => false,
+            'elements' => [],
+        ];
+
+        foreach ($elements as $elementType) {
+            switch ($elementType) {
+                case 'text':
+                    $tab['elements'][] = static::getUniqueResponseElementText();
+                    break;
+
+                case 'files':
+                    $tab['elements'][] = static::getUniqueResponseElementTemplateFiles();
+                    break;
+
+                case 'section':
+                    $tab['elements'][] = static::getUniqueResponseElementSection();
+                    break;
+
+                case 'choice_radio':
+                    $tab['elements'][] = static::getUniqueResponseElementChoiceRadio();
+                    break;
+
+                case 'choice_checkbox':
+                    $tab['elements'][] = static::getUniqueResponseElementChoiceCheckbox();
+                    break;
+            }
+        }
+
+        return $tab;
+    }
+
+    protected static function getUniqueResponseElementTemplateFiles(): array
+    {
+        return [
+            'name' => static::getUniqueString('el'),
+            'type' => 'files',
+            'label' => static::getUniqueString('label'),
+            'required' => false,
+            'microcopy' => '',
+        ];
+    }
+
     protected static function getUniqueResponseElementText(): array
     {
         return [
@@ -199,9 +262,8 @@ class GcBaseTestCase extends TestCase
         return [
             'name' => static::getUniqueString('el'),
             'type' => 'section',
-            'label' => static::getUniqueString('label'),
-            'required' => false,
-            'microcopy' => '',
+            'title' => static::getUniqueString('title'),
+            'subtitle' => static::getUniqueString('subtitle'),
         ];
     }
 
@@ -282,6 +344,31 @@ class GcBaseTestCase extends TestCase
         }
 
         return $item;
+    }
+
+    protected static function getUniqueResponseTemplate(array $tabs): array
+    {
+        $template = [
+            'id' => static::getUniqueInt(),
+            'project_id' => static::getUniqueInt(),
+            'created_by' => static::getUniqueInt(),
+            'updated_by' => static::getUniqueInt(),
+            'name' => static::getUniqueString('name'),
+            'description' => static::getUniqueString('description'),
+            'config' => [],
+            'used_at' => null,
+            'created_at' => static::getUniqueResponseDate(),
+            'updated_at' => static::getUniqueResponseDate(),
+            'usage' => [
+                'item_count' => static::getUniqueInt(),
+            ],
+        ];
+
+        foreach ($tabs as $elements) {
+            $template['config'][] = static::getUniqueResponseTemplateTab($elements);
+        }
+
+        return $template;
     }
 
     protected static function reKeyArray(array $array, string $key): array

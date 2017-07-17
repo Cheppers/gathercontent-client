@@ -85,7 +85,7 @@ interface GatherContentClientInterface
     /**
      * @see https://docs.gathercontent.com/reference#get-items-by-id
      */
-    public function itemGet(int $itemId): DataTypes\Item;
+    public function itemGet(int $itemId): ?DataTypes\Item;
 
     /**
      * @return \Cheppers\GatherContent\DataTypes\File[]
@@ -102,5 +102,5 @@ interface GatherContentClientInterface
     /**
      * @see https://docs.gathercontent.com/reference#get-template-by-id
      */
-    public function templateGet(int $templateId): DataTypes\Template;
+    public function templateGet(int $templateId): ?DataTypes\Template;
 }

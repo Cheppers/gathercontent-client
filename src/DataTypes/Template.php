@@ -30,6 +30,11 @@ class Template extends Base
     public $description = '';
 
     /**
+     * @var \Cheppers\GatherContent\DataTypes\TemplateTab[]
+     */
+    public $config = [];
+
+    /**
      * @var string
      */
     public $usedAt = '';
@@ -63,6 +68,10 @@ class Template extends Base
                 'updated_by' => 'updatedBy',
                 'name' => 'name',
                 'description' => 'description',
+                'config' => [
+                    'type' => 'subConfigs',
+                    'class' => TemplateTab::class,
+                ],
                 'used_at' => 'usedAt',
                 'created_at' => 'createdAt',
                 'updated_at' => 'updatedAt',
