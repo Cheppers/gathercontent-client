@@ -361,7 +361,7 @@ class GatherContentClient implements GatherContentClientInterface
         ?int $parentId = null,
         ?int $templateId = null,
         $config = null
-    ): void {
+    ): int {
         $this->response = $this->client->request(
             'POST',
             $this->getUri('items'),
@@ -377,6 +377,19 @@ class GatherContentClient implements GatherContentClientInterface
                 ],
             ]
         );
+
+        if ($this->response->getStatusCode() !== 202) {
+            throw new \Exception('@todo ' . __METHOD__);
+        }
+
+        $locations = $this->response->getHeader('Location');
+        $locationPath = parse_url(reset($locations), PHP_URL_PATH);
+        $matches = [];
+        if (!preg_match('@/items/(?P<itemId>\d+)$@', $locationPath, $matches)) {
+            throw new \Exception('@todo Where is the new item ID?');
+        }
+
+        return $matches['itemId'];
     }
 
     public function itemSavePost(int $itemId)
