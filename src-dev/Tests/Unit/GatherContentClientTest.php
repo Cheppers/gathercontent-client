@@ -103,10 +103,10 @@ class GatherContentClientTest extends GcBaseTestCase
         }
 
         return [
-            'basic' => [
-                $userExpected,
-                ['data' => $userData],
-            ],
+          'basic' => [
+            $userExpected,
+            ['data' => $userData],
+          ],
         ];
     }
 
@@ -129,12 +129,12 @@ class GatherContentClientTest extends GcBaseTestCase
         $handlerStack->push($history);
 
         $client = new Client([
-            'handler' => $handlerStack,
+          'handler' => $handlerStack,
         ]);
 
         $user = (new GatherContentClient($client))
-            ->setOptions($this->gcClientOptions)
-            ->meGet();
+          ->setOptions($this->gcClientOptions)
+          ->meGet();
 
         static::assertTrue($user instanceof User, 'Return data type is User');
         static::assertEquals(
@@ -153,6 +153,57 @@ class GatherContentClientTest extends GcBaseTestCase
             "{$this->gcClientOptions['baseUri']}/me",
             (string) $request->getUri()
         );
+    }
+
+    public function casesStatusCodeMeGet(): array
+    {
+        return [
+            'unauthorized' => [
+                [
+                    'code' => 401,
+                    'body' => '401 Unauthorized',
+                ],
+            ],
+            'internal-error' => [
+                [
+                    'code' => 500,
+                    'body' => [
+                        'error' => 'unknown error'
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider casesStatusCodeMeGet
+     */
+    public function testStatusCodeMeGet(array $response): void
+    {
+        $container = [];
+        $history = Middleware::history($container);
+        $mock = new MockHandler([
+            new Response(
+                $response['code'],
+                ['Content-Type' => 'application/json'],
+                \GuzzleHttp\json_encode($response['body'])
+            ),
+            new RequestException('Error Communicating with Server', new Request('GET', 'me'))
+        ]);
+        $handlerStack = HandlerStack::create($mock);
+        $handlerStack->push($history);
+
+        $client = new Client([
+          'handler' => $handlerStack,
+        ]);
+
+        $gc = (new GatherContentClient($client))
+          ->setOptions($this->gcClientOptions);
+
+        static::expectExceptionCode($response['code']);
+        static::expectExceptionMessage(\GuzzleHttp\json_encode($response['body']));
+
+        $gc->meGet();
     }
 
     public function casesAccountsGet(): array
@@ -218,6 +269,57 @@ class GatherContentClientTest extends GcBaseTestCase
             "{$this->gcClientOptions['baseUri']}/accounts",
             (string) $request->getUri()
         );
+    }
+
+    public function casesStatusAccountsGet(): array
+    {
+        return [
+            'unauthorized' => [
+                [
+                    'code' => 401,
+                    'body' => '401 Unauthorized',
+                ],
+            ],
+            'internal-error' => [
+                [
+                    'code' => 500,
+                    'body' => [
+                        'error' => 'unknown error'
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider casesStatusAccountsGet
+     */
+    public function testStatusAccountsGet(array $response): void
+    {
+        $container = [];
+        $history = Middleware::history($container);
+        $mock = new MockHandler([
+            new Response(
+                $response['code'],
+                ['Content-Type' => 'application/json'],
+                \GuzzleHttp\json_encode($response['body'])
+            ),
+            new RequestException('Error Communicating with Server', new Request('GET', 'me'))
+        ]);
+        $handlerStack = HandlerStack::create($mock);
+        $handlerStack->push($history);
+
+        $client = new Client([
+            'handler' => $handlerStack,
+        ]);
+
+        $gc = (new GatherContentClient($client))
+            ->setOptions($this->gcClientOptions);
+
+        static::expectExceptionCode($response['code']);
+        static::expectExceptionMessage(\GuzzleHttp\json_encode($response['body']));
+
+        $gc->meGet();
     }
 
     public function casesAccountGet(): array

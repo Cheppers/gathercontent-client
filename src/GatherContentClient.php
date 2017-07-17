@@ -479,13 +479,6 @@ class GatherContentClient implements GatherContentClientInterface
 
     protected function validateResponse(int $expectedStatusCode): void
     {
-        $responseStatusCode = $this->response->getStatusCode();
-        if ($responseStatusCode !== $expectedStatusCode) {
-            throw new \Exception(
-                "Response status code is $responseStatusCode; Expected status code is $expectedStatusCode"
-            );
-        }
-
         $responseContentType = $this->response->getHeader('Content-Type');
         $responseContentType = end($responseContentType);
         if ($responseContentType !== 'application/json') {
