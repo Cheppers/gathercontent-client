@@ -355,6 +355,30 @@ class GatherContentClient implements GatherContentClientInterface
         return empty($body['data']) ? null : new DataTypes\Item($body['data']);
     }
 
+    public function itemsPost(
+        int $projectId,
+        string $name,
+        ?int $parentId = null,
+        ?int $templateId = null,
+        $config = null
+    ): void {
+        $this->response = $this->client->request(
+            'POST',
+            $this->getUri('items'),
+            [
+                'auth' => $this->getRequestAuth(),
+                'headers' => $this->getRequestHeaders([]),
+                'form_params' => [
+                    'project_id' => $projectId,
+                    'name' => $name,
+                    'parent_id' => $parentId,
+                    'template_id' => $templateId,
+                    'config' => $config,
+                ],
+            ]
+        );
+    }
+
     public function itemSavePost(int $itemId)
     {
         //
