@@ -360,7 +360,7 @@ class GatherContentClient implements GatherContentClientInterface
         string $name,
         ?int $parentId = null,
         ?int $templateId = null,
-        ?string $config = null
+        ?array $config = []
     ): int {
         $this->response = $this->client->request(
             'POST',
@@ -373,7 +373,7 @@ class GatherContentClient implements GatherContentClientInterface
                     'name' => $name,
                     'parent_id' => $parentId,
                     'template_id' => $templateId,
-                    'config' => $config,
+                    'config' => base64_encode(\GuzzleHttp\json_encode($config)),
                 ],
             ]
         );
