@@ -360,7 +360,7 @@ class GatherContentClient implements GatherContentClientInterface
         string $name,
         ?int $parentId = null,
         ?int $templateId = null,
-        $config = null
+        ?string $config = null
     ): int {
         $this->response = $this->client->request(
             'POST',
