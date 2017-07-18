@@ -1320,24 +1320,26 @@ class GatherContentClientTest extends GcBaseTestCase
 
     public function casesItemApplyTemplatePostFail(): array
     {
-        return [
-            'empty' => [
-                [
-                    'class' => \Exception::class,
-                    'code' => 400,
-                    'msg' => '{"error":"Missing template_id","code":400}',
-                ],
-                [
-                    'code' => 400,
-                    'body' => [
-                        'error' => 'Missing template_id',
-                        'code' => 400
-                    ],
-                ],
-                42,
-                0
+        $cases = static::basicFailCases(['id' => 0]);
+        $cases['empty'] = [
+            [
+                'class' => \Exception::class,
+                'code' => 400,
+                'msg' => '{"error":"Missing template_id","code":400}',
             ],
+            [
+                'code' => 400,
+                'headers' => ['Content-Type' => 'application/json'],
+                'body' => [
+                    'error' => 'Missing template_id',
+                    'code' => 400
+                ],
+            ],
+            42,
+            0
         ];
+
+        return $cases;
     }
 
     /**
@@ -1350,7 +1352,7 @@ class GatherContentClientTest extends GcBaseTestCase
         $mock = new MockHandler([
             new Response(
                 $response['code'],
-                ['Content-Type' => 'application/json'],
+                $response['headers'],
                 \GuzzleHttp\json_encode($response['body'])
             ),
             new RequestException('Error Communicating with Server', new Request('GET', 'me'))

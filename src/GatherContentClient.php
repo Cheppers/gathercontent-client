@@ -259,7 +259,8 @@ class GatherContentClient implements GatherContentClientInterface
         );
 
         if ($this->response->getStatusCode() !== 202) {
-            throw new \Exception('@todo ' . __METHOD__);
+            $this->validateResponse();
+            $this->parseResponse();
         }
 
         $locations = $this->response->getHeader('Location');
@@ -375,7 +376,8 @@ class GatherContentClient implements GatherContentClientInterface
         );
 
         if ($this->response->getStatusCode() !== 202) {
-            throw new \Exception('@todo ' . __METHOD__);
+            $this->validateResponse();
+            $this->parseResponse();
         }
     }
 
