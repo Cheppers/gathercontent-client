@@ -1374,34 +1374,6 @@ class GatherContentClientTest extends GcBaseTestCase
         $gc->itemApplyTemplatePost($itemId, $templateId);
     }
 
-    public function casesItemGet(): array
-    {
-        $item = static::getUniqueResponseItem([
-            ['text', 'choice_checkbox'],
-        ]);
-
-        $item['config'] = static::reKeyArray($item['config'], 'name');
-        foreach (array_keys($item['config']) as $tabId) {
-            $item['config'][$tabId]['elements'] = static::reKeyArray(
-                $item['config'][$tabId]['elements'],
-                'name'
-            );
-        }
-
-        return [
-            'empty' => [
-                null,
-                ['data' => []],
-                42,
-            ],
-            'basic' => [
-                $item,
-                ['data' => $item],
-                $item['id']
-            ],
-        ];
-    }
-
     public function casesTemplatesGet(): array
     {
         $data = [
