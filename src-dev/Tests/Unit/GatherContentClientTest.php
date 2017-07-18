@@ -1631,7 +1631,7 @@ class GatherContentClientTest extends GcBaseTestCase
                 [
                     'class' => \Exception::class,
                     'code' => 200,
-                    'msg' => '{"data":{"message":"Item Not Found"}}',
+                    'msg' => '@todo Cheppers\GatherContent\GatherContentClient::itemChooseStatusPost',
                 ],
                 [
                     'code' => 200,
@@ -1666,7 +1666,7 @@ class GatherContentClientTest extends GcBaseTestCase
     /**
      * @dataProvider casesItemChooseStatusPostFail
      */
-    public function testItemChooseStatusPostFail(array $expected, array $response, int $itemId, int $templateId): void
+    public function testItemChooseStatusPostFail(array $expected, array $response, int $itemId, int $statusId): void
     {
         $container = [];
         $history = Middleware::history($container);
@@ -1692,7 +1692,7 @@ class GatherContentClientTest extends GcBaseTestCase
         static::expectExceptionCode($expected['code']);
         static::expectExceptionMessage($expected['msg']);
 
-        $gc->itemApplyTemplatePost($itemId, $templateId);
+        $gc->itemChooseStatusPost($itemId, $statusId);
     }
 
 
