@@ -388,9 +388,12 @@ class GcBaseTestCase extends TestCase
                 [
                     'code' => 401,
                     'body' => '401 Unauthorized',
+                ],
+                [
+                    'class' => \Exception::class,
+                    'code' => 401,
                     'msg' => '401 Unauthorized',
                 ],
-                ['data' => $data],
                 42,
                 (isset($data['id'])) ? $data['id'] : null
             ],
@@ -400,9 +403,12 @@ class GcBaseTestCase extends TestCase
                     'body' => [
                         'error' => 'unknown error'
                     ],
+                ],
+                [
+                    'class' => \Exception::class,
+                    'code' => 500,
                     'msg' => '{"error":"unknown error"}',
                 ],
-                ['data' => $data],
                 42,
                 (isset($data['id'])) ? $data['id'] : null
             ],

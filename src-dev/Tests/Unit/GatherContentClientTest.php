@@ -155,15 +155,15 @@ class GatherContentClientTest extends GcBaseTestCase
         );
     }
 
-    public function casesStatusCodeMeGet(): array
+    public function casesMeGetFail(): array
     {
         return static::basicStatusCodeCases();
     }
 
     /**
-     * @dataProvider casesStatusCodeMeGet
+     * @dataProvider casesMeGetFail
      */
-    public function testStatusCodeMeGet(array $response): void
+    public function testMeGetFail(array $response, array $expected): void
     {
         $container = [];
         $history = Middleware::history($container);
@@ -185,8 +185,9 @@ class GatherContentClientTest extends GcBaseTestCase
         $gc = (new GatherContentClient($client))
           ->setOptions($this->gcClientOptions);
 
-        static::expectExceptionCode($response['code']);
-        static::expectExceptionMessage($response['msg']);
+        static::expectException($expected['class']);
+        static::expectExceptionCode($expected['code']);
+        static::expectExceptionMessage($expected['msg']);
 
         $gc->meGet();
     }
@@ -256,15 +257,15 @@ class GatherContentClientTest extends GcBaseTestCase
         );
     }
 
-    public function casesStatusAccountsGet(): array
+    public function casesAccountsGetFail(): array
     {
         return static::basicStatusCodeCases();
     }
 
     /**
-     * @dataProvider casesStatusAccountsGet
+     * @dataProvider casesAccountsGetFail
      */
-    public function testStatusAccountsGet(array $response): void
+    public function testAccountsGetFail(array $response, array $expected): void
     {
         $container = [];
         $history = Middleware::history($container);
@@ -286,8 +287,9 @@ class GatherContentClientTest extends GcBaseTestCase
         $gc = (new GatherContentClient($client))
             ->setOptions($this->gcClientOptions);
 
-        static::expectExceptionCode($response['code']);
-        static::expectExceptionMessage($response['msg']);
+        static::expectException($expected['class']);
+        static::expectExceptionCode($expected['code']);
+        static::expectExceptionMessage($expected['msg']);
 
         $gc->accountsGet();
     }
@@ -349,7 +351,7 @@ class GatherContentClientTest extends GcBaseTestCase
         );
     }
 
-    public function casesStatusAccountGet(): array
+    public function casesAccountGetFail(): array
     {
         $data = static::getUniqueResponseAccount();
         $cases = static::basicStatusCodeCases($data);
@@ -362,18 +364,22 @@ class GatherContentClientTest extends GcBaseTestCase
                         'message' => 'Account not found'
                     ]
                 ],
+            ],
+            [
+                'class' => \Exception::class,
+                'code' => 200,
                 'msg' => '@todo Account not found',
             ],
-            ['data' => $data]
+            42
         ];
 
         return $cases;
     }
 
     /**
-     * @dataProvider casesStatusAccountGet
+     * @dataProvider casesAccountGetFail
      */
-    public function testStatusAccountGet(array $response, array $responseBody): void
+    public function testAccountGetFail(array $response, array $expected, int $account_id): void
     {
         $container = [];
         $history = Middleware::history($container);
@@ -395,10 +401,11 @@ class GatherContentClientTest extends GcBaseTestCase
         $gc = (new GatherContentClient($client))
             ->setOptions($this->gcClientOptions);
 
-        static::expectExceptionCode($response['code']);
-        static::expectExceptionMessage($response['msg']);
+        static::expectException($expected['class']);
+        static::expectExceptionCode($expected['code']);
+        static::expectExceptionMessage($expected['msg']);
 
-        $gc->accountGet($responseBody['data']['id']);
+        $gc->accountGet($account_id);
     }
 
     public function casesProjectsGet(): array
@@ -477,7 +484,7 @@ class GatherContentClientTest extends GcBaseTestCase
         );
     }
 
-    public function casesStatusProjectsGet(): array
+    public function casesProjectsGetFail(): array
     {
         $cases = static::basicStatusCodeCases();
 
@@ -489,9 +496,12 @@ class GatherContentClientTest extends GcBaseTestCase
                         'message' => 'Account not found'
                     ]
                 ],
+            ],
+            [
+                'class' => \Exception::class,
+                'code' => 200,
                 'msg' => '@todo Account not found',
             ],
-            ['data' => null],
             42
         ];
 
@@ -499,9 +509,9 @@ class GatherContentClientTest extends GcBaseTestCase
     }
 
     /**
-     * @dataProvider casesStatusProjectsGet
+     * @dataProvider casesProjectsGetFail
      */
-    public function testStatusProjectsGet(array $response, array $responseBody, int $accountId): void
+    public function testProjectsGetFail(array $response, array $expected, int $accountId): void
     {
         $container = [];
         $history = Middleware::history($container);
@@ -523,8 +533,9 @@ class GatherContentClientTest extends GcBaseTestCase
         $gc = (new GatherContentClient($client))
             ->setOptions($this->gcClientOptions);
 
-        static::expectExceptionCode($response['code']);
-        static::expectExceptionMessage($response['msg']);
+        static::expectException($expected['class']);
+        static::expectExceptionCode($expected['code']);
+        static::expectExceptionMessage($expected['msg']);
 
         $gc->projectsGet($accountId);
     }
@@ -594,7 +605,7 @@ class GatherContentClientTest extends GcBaseTestCase
         );
     }
 
-    public function casesStatusProjectGet(): array
+    public function casesProjectGetFail(): array
     {
         $cases = static::basicStatusCodeCases();
 
@@ -606,9 +617,12 @@ class GatherContentClientTest extends GcBaseTestCase
                         'message' => 'Project Not Found'
                     ]
                 ],
+            ],
+            [
+                'class' => \Exception::class,
+                'code' => 200,
                 'msg' => '@todo Project Not Found',
             ],
-            ['data' => null],
             42
         ];
 
@@ -616,9 +630,9 @@ class GatherContentClientTest extends GcBaseTestCase
     }
 
     /**
-     * @dataProvider casesStatusProjectGet
+     * @dataProvider casesProjectGetFail
      */
-    public function testStatusProjectGet(array $response, array $responseBody, int $projectId): void
+    public function testProjectGetFail(array $response, array $expected, int $projectId): void
     {
         $container = [];
         $history = Middleware::history($container);
@@ -640,8 +654,9 @@ class GatherContentClientTest extends GcBaseTestCase
         $gc = (new GatherContentClient($client))
             ->setOptions($this->gcClientOptions);
 
-        static::expectExceptionCode($response['code']);
-        static::expectExceptionMessage($response['msg']);
+        static::expectException($expected['class']);
+        static::expectExceptionCode($expected['code']);
+        static::expectExceptionMessage($expected['msg']);
 
         $gc->projectGet($projectId);
     }
@@ -714,7 +729,7 @@ class GatherContentClientTest extends GcBaseTestCase
         );
     }
 
-    public function casesStatusProjectStatusesGet(): array
+    public function casesProjectStatusesGetFail(): array
     {
         $cases = static::basicStatusCodeCases();
 
@@ -725,9 +740,12 @@ class GatherContentClientTest extends GcBaseTestCase
                     'error' => 'Project Not Found',
                     'code' => 404
                 ],
+            ],
+            [
+                'class' => \Exception::class,
+                'code' => 404,
                 'msg' => '{"error":"Project Not Found","code":404}',
             ],
-            ['data' => null],
             42
         ];
 
@@ -735,9 +753,9 @@ class GatherContentClientTest extends GcBaseTestCase
     }
 
     /**
-     * @dataProvider casesStatusProjectStatusesGet
+     * @dataProvider casesProjectStatusesGetFail
      */
-    public function testStatusProjectStatusesGet(array $response, array $responseBody, int $projectId): void
+    public function testProjectStatusesGetFail(array $response, array $expected, int $projectId): void
     {
         $container = [];
         $history = Middleware::history($container);
@@ -759,8 +777,9 @@ class GatherContentClientTest extends GcBaseTestCase
         $gc = (new GatherContentClient($client))
             ->setOptions($this->gcClientOptions);
 
-        static::expectExceptionCode($response['code']);
-        static::expectExceptionMessage($response['msg']);
+        static::expectException($expected['class']);
+        static::expectExceptionCode($expected['code']);
+        static::expectExceptionMessage($expected['msg']);
 
         $gc->projectStatusesGet($projectId);
     }
@@ -824,18 +843,18 @@ class GatherContentClientTest extends GcBaseTestCase
         );
     }
 
-    public function casesStatusProjectStatusGet(): array
+    public function casesProjectStatusGetFail(): array
     {
         $data = static::getUniqueResponseStatus();
         return static::basicStatusCodeCases($data);
     }
 
     /**
-     * @dataProvider casesStatusProjectStatusGet
+     * @dataProvider casesProjectStatusGetFail
      */
-    public function testStatusProjectStatusGet(
+    public function testProjectStatusGetFail(
         array $response,
-        array $responseBody,
+        array $expected,
         int $projectId,
         int $statusId
     ): void {
@@ -859,8 +878,9 @@ class GatherContentClientTest extends GcBaseTestCase
         $gc = (new GatherContentClient($client))
             ->setOptions($this->gcClientOptions);
 
-        static::expectExceptionCode($response['code']);
-        static::expectExceptionMessage($response['msg']);
+        static::expectException($expected['class']);
+        static::expectExceptionCode($expected['code']);
+        static::expectExceptionMessage($expected['msg']);
 
         $gc->projectStatusGet($projectId, $statusId);
     }
@@ -949,6 +969,62 @@ class GatherContentClientTest extends GcBaseTestCase
         );
     }
 
+    public function casesItemsGetFail(): array
+    {
+        $cases = static::basicStatusCodeCases();
+
+        $cases['not_found'] = [
+            [
+                'code' => 200,
+                'body' => [
+                    'data' => [
+                        'message' => 'Project Not Found'
+                    ]
+                ],
+            ],
+            [
+                'class' => \Exception::class,
+                'code' => 200,
+                'msg' => '@todo Project Not Found',
+            ],
+            42
+        ];
+
+        return $cases;
+    }
+
+    /**
+     * @dataProvider casesItemsGetFail
+     */
+    public function testItemsGetFail(array $response, array $expected, int $projectId): void
+    {
+        $container = [];
+        $history = Middleware::history($container);
+        $mock = new MockHandler([
+            new Response(
+                $response['code'],
+                ['Content-Type' => 'application/json'],
+                \GuzzleHttp\json_encode($response['body'])
+            ),
+            new RequestException('Error Communicating with Server', new Request('GET', 'me'))
+        ]);
+        $handlerStack = HandlerStack::create($mock);
+        $handlerStack->push($history);
+
+        $client = new Client([
+            'handler' => $handlerStack,
+        ]);
+
+        $gc = (new GatherContentClient($client))
+            ->setOptions($this->gcClientOptions);
+
+        static::expectException($expected['class']);
+        static::expectExceptionCode($expected['code']);
+        static::expectExceptionMessage($expected['msg']);
+
+        $gc->itemsGet($projectId);
+    }
+
     public function casesItemGet(): array
     {
         $item = static::getUniqueResponseItem([
@@ -975,58 +1051,6 @@ class GatherContentClientTest extends GcBaseTestCase
                 $item['id']
             ],
         ];
-    }
-
-    public function casesStatusItemsGet(): array
-    {
-        $cases = static::basicStatusCodeCases();
-
-        $cases['not_found'] = [
-            [
-                'code' => 200,
-                'body' => [
-                    'data' => [
-                        'message' => 'Project Not Found'
-                    ]
-                ],
-                'msg' => '@todo Project Not Found',
-            ],
-            ['data' => null],
-            42
-        ];
-
-        return $cases;
-    }
-
-    /**
-     * @dataProvider casesStatusItemsGet
-     */
-    public function testStatusItemsGet(array $response, array $responseBody, int $projectId): void
-    {
-        $container = [];
-        $history = Middleware::history($container);
-        $mock = new MockHandler([
-            new Response(
-                $response['code'],
-                ['Content-Type' => 'application/json'],
-                \GuzzleHttp\json_encode($response['body'])
-            ),
-            new RequestException('Error Communicating with Server', new Request('GET', 'me'))
-        ]);
-        $handlerStack = HandlerStack::create($mock);
-        $handlerStack->push($history);
-
-        $client = new Client([
-            'handler' => $handlerStack,
-        ]);
-
-        $gc = (new GatherContentClient($client))
-            ->setOptions($this->gcClientOptions);
-
-        static::expectExceptionCode($response['code']);
-        static::expectExceptionMessage($response['msg']);
-
-        $gc->itemsGet($projectId);
     }
 
     /**
@@ -1078,7 +1102,7 @@ class GatherContentClientTest extends GcBaseTestCase
         );
     }
 
-    public function casesStatusItemGet(): array
+    public function casesItemGetFail(): array
     {
         $cases = static::basicStatusCodeCases();
 
@@ -1090,9 +1114,12 @@ class GatherContentClientTest extends GcBaseTestCase
                         'message' => 'Item Not Found'
                     ]
                 ],
+            ],
+            [
+                'class' => \Exception::class,
+                'code' => 200,
                 'msg' => '@todo Item Not Found',
             ],
-            ['data' => null],
             42
         ];
 
@@ -1100,9 +1127,9 @@ class GatherContentClientTest extends GcBaseTestCase
     }
 
     /**
-     * @dataProvider casesStatusItemGet
+     * @dataProvider casesItemGetFail
      */
-    public function testStatusItemGet(array $response, array $responseBody, int $itemId): void
+    public function testItemGetFail(array $response, array $expected, int $itemId): void
     {
         $container = [];
         $history = Middleware::history($container);
@@ -1124,8 +1151,9 @@ class GatherContentClientTest extends GcBaseTestCase
         $gc = (new GatherContentClient($client))
             ->setOptions($this->gcClientOptions);
 
-        static::expectExceptionCode($response['code']);
-        static::expectExceptionMessage($response['msg']);
+        static::expectException($expected['class']);
+        static::expectExceptionCode($expected['code']);
+        static::expectExceptionMessage($expected['msg']);
 
         $gc->itemGet($itemId);
     }
@@ -1199,9 +1227,9 @@ class GatherContentClientTest extends GcBaseTestCase
     }
 
     /**
-     * @dataProvider casesStatusItemGet
+     * @dataProvider casesItemGetFail
      */
-    public function testStatusItemFilesGet(array $response, array $responseBody, int $itemId): void
+    public function testItemFilesGetFail(array $response, array $expected, int $itemId): void
     {
         $container = [];
         $history = Middleware::history($container);
@@ -1223,8 +1251,9 @@ class GatherContentClientTest extends GcBaseTestCase
         $gc = (new GatherContentClient($client))
             ->setOptions($this->gcClientOptions);
 
-        static::expectExceptionCode($response['code']);
-        static::expectExceptionMessage($response['msg']);
+        static::expectException($expected['class']);
+        static::expectExceptionCode($expected['code']);
+        static::expectExceptionMessage($expected['msg']);
 
         $gc->itemFilesGet($itemId);
     }
@@ -1313,7 +1342,7 @@ class GatherContentClientTest extends GcBaseTestCase
         );
     }
 
-    public function casesStatusTemplatesGet(): array
+    public function casesTemplatesGetFail(): array
     {
         $cases = static::basicStatusCodeCases();
 
@@ -1325,9 +1354,12 @@ class GatherContentClientTest extends GcBaseTestCase
                         'message' => 'Project Not Found'
                     ]
                 ],
+            ],
+            [
+                'class' => \Exception::class,
+                'code' => 200,
                 'msg' => '@todo Project Not Found',
             ],
-            ['data' => null],
             42
         ];
 
@@ -1335,9 +1367,9 @@ class GatherContentClientTest extends GcBaseTestCase
     }
 
     /**
-     * @dataProvider casesStatusTemplatesGet
+     * @dataProvider casesTemplatesGetFail
      */
-    public function testStatusTemplatesGet(array $response, array $responseBody, int $projectId): void
+    public function testTemplatesGetFail(array $response, array $expected, int $projectId): void
     {
         $container = [];
         $history = Middleware::history($container);
@@ -1359,8 +1391,9 @@ class GatherContentClientTest extends GcBaseTestCase
         $gc = (new GatherContentClient($client))
             ->setOptions($this->gcClientOptions);
 
-        static::expectExceptionCode($response['code']);
-        static::expectExceptionMessage($response['msg']);
+        static::expectException($expected['class']);
+        static::expectExceptionCode($expected['code']);
+        static::expectExceptionMessage($expected['msg']);
 
         $gc->templatesGet($projectId);
     }
@@ -1443,7 +1476,7 @@ class GatherContentClientTest extends GcBaseTestCase
         );
     }
 
-    public function casesStatusTemplateGet(): array
+    public function casesTemplateGetFail(): array
     {
         $cases = static::basicStatusCodeCases();
 
@@ -1455,9 +1488,12 @@ class GatherContentClientTest extends GcBaseTestCase
                         'message' => 'Template Not Found'
                     ]
                 ],
+            ],
+            [
+                'class' => \Exception::class,
+                'code' => 200,
                 'msg' => '@todo Template Not Found',
             ],
-            ['data' => null],
             42
         ];
 
@@ -1465,9 +1501,9 @@ class GatherContentClientTest extends GcBaseTestCase
     }
 
     /**
-     * @dataProvider casesStatusTemplateGet
+     * @dataProvider casesTemplateGetFail
      */
-    public function testStatusTemplateGet(array $response, array $responseBody, int $templateId): void
+    public function testTemplateGetFail(array $response, array $expected, int $templateId): void
     {
         $container = [];
         $history = Middleware::history($container);
@@ -1489,8 +1525,9 @@ class GatherContentClientTest extends GcBaseTestCase
         $gc = (new GatherContentClient($client))
             ->setOptions($this->gcClientOptions);
 
-        static::expectExceptionCode($response['code']);
-        static::expectExceptionMessage($response['msg']);
+        static::expectException($expected['class']);
+        static::expectExceptionCode($expected['code']);
+        static::expectExceptionMessage($expected['msg']);
 
         $gc->templateGet($templateId);
     }
