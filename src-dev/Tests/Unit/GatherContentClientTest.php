@@ -1264,46 +1264,6 @@ class GatherContentClientTest extends GcBaseTestCase
         $gc->itemFilesGet($itemId);
     }
 
-    public function casesTemplatesGet(): array
-    {
-        $data = [
-            static::getUniqueResponseTemplate([
-                ['text', 'files', 'choice_radio', 'choice_checkbox'],
-            ]),
-            static::getUniqueResponseTemplate([
-                ['text', 'choice_radio', 'choice_checkbox'],
-                ['text', 'choice_radio'],
-            ]),
-            static::getUniqueResponseTemplate([
-                ['choice_radio', 'choice_checkbox'],
-            ]),
-        ];
-
-        $templates = static::reKeyArray($data, 'id');
-        foreach (array_keys($templates) as $templateId) {
-            $templates[$templateId]['config'] = static::reKeyArray($templates[$templateId]['config'], 'name');
-            foreach (array_keys($templates[$templateId]['config']) as $tabId) {
-                $templates[$templateId]['config'][$tabId]['elements'] = static::reKeyArray(
-                    $templates[$templateId]['config'][$tabId]['elements'],
-                    'name'
-                );
-            }
-        }
-
-        return [
-            'empty' => [
-                [],
-                ['data' => []],
-                42,
-            ],
-            'basic' => [
-                $templates,
-                ['data' => $data],
-                42,
-            ],
-        ];
-    }
-
     public function casesItemApplyTemplatePost(): array
     {
         return [
@@ -1410,6 +1370,74 @@ class GatherContentClientTest extends GcBaseTestCase
         static::expectExceptionMessage($expected['msg']);
 
         $gc->itemApplyTemplatePost($itemId, $templateId);
+    }
+
+    public function casesItemGet(): array
+    {
+        $item = static::getUniqueResponseItem([
+            ['text', 'choice_checkbox'],
+        ]);
+
+        $item['config'] = static::reKeyArray($item['config'], 'name');
+        foreach (array_keys($item['config']) as $tabId) {
+            $item['config'][$tabId]['elements'] = static::reKeyArray(
+                $item['config'][$tabId]['elements'],
+                'name'
+            );
+        }
+
+        return [
+            'empty' => [
+                null,
+                ['data' => []],
+                42,
+            ],
+            'basic' => [
+                $item,
+                ['data' => $item],
+                $item['id']
+            ],
+        ];
+    }
+
+    public function casesTemplatesGet(): array
+    {
+        $data = [
+            static::getUniqueResponseTemplate([
+                ['text', 'files', 'choice_radio', 'choice_checkbox'],
+            ]),
+            static::getUniqueResponseTemplate([
+                ['text', 'choice_radio', 'choice_checkbox'],
+                ['text', 'choice_radio'],
+            ]),
+            static::getUniqueResponseTemplate([
+                ['choice_radio', 'choice_checkbox'],
+            ]),
+        ];
+
+        $templates = static::reKeyArray($data, 'id');
+        foreach (array_keys($templates) as $templateId) {
+            $templates[$templateId]['config'] = static::reKeyArray($templates[$templateId]['config'], 'name');
+            foreach (array_keys($templates[$templateId]['config']) as $tabId) {
+                $templates[$templateId]['config'][$tabId]['elements'] = static::reKeyArray(
+                    $templates[$templateId]['config'][$tabId]['elements'],
+                    'name'
+                );
+            }
+        }
+
+        return [
+            'empty' => [
+                [],
+                ['data' => []],
+                42,
+            ],
+            'basic' => [
+                $templates,
+                ['data' => $data],
+                42,
+            ],
+        ];
     }
 
     /**
