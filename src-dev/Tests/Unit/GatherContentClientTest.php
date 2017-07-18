@@ -1030,6 +1030,115 @@ class GatherContentClientTest extends GcBaseTestCase
         $gc->itemsGet($projectId);
     }
 
+    public function casesItemsApplyTemplatePost(): array
+    {
+        return [
+            'basic' => [
+                42,
+                [
+                    'code' => 202,
+                    'body' => [],
+                ],
+                42,
+                423
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider casesItemsApplyTemplatePost
+     */
+    public function testItemsApplyTemplatePost(int $expected, array $response, int $itemId, int $templateId): void
+    {
+        $container = [];
+        $history = Middleware::history($container);
+        $mock = new MockHandler([
+            new Response(
+                $response['code'],
+                ['Content-Type' => 'application/json'],
+                \GuzzleHttp\json_encode($response['body'])
+            ),
+            new RequestException('Error Communicating with Server', new Request('GET', 'me'))
+        ]);
+        $handlerStack = HandlerStack::create($mock);
+        $handlerStack->push($history);
+
+        $client = new Client([
+            'handler' => $handlerStack,
+        ]);
+
+        $actual = (new GatherContentClient($client))
+            ->setOptions($this->gcClientOptions)
+            ->itemApplyTemplatePost($itemId, $templateId);
+
+        static::assertEquals(
+            json_encode($expected, JSON_PRETTY_PRINT),
+            json_encode($actual, JSON_PRETTY_PRINT)
+        );
+
+        /** @var Request $request */
+        $request = $container[0]['request'];
+
+        static::assertEquals(1, count($container));
+        static::assertEquals('POST', $request->getMethod());
+        static::assertEquals(['application/vnd.gathercontent.v0.5+json'], $request->getHeader('Accept'));
+        static::assertEquals(['api.example.com'], $request->getHeader('Host'));
+    }
+
+    public function casesItemsApplyTemplatePostFail(): array
+    {
+        return [
+            'empty' => [
+                [
+                    'class' => \Exception::class,
+                    'code' => 400,
+                    'msg' => '{"error":"Missing template_id","code":400}',
+                ],
+                [
+                    'code' => 400,
+                    'body' => [
+                        'error' => 'Missing template_id',
+                        'code' => 400
+                    ],
+                ],
+                42,
+                0
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider casesItemsApplyTemplatePostFail
+     */
+    public function testItemsApplyTemplatePostFail(array $expected, array $response, int $itemId, int $templateId): void
+    {
+        $container = [];
+        $history = Middleware::history($container);
+        $mock = new MockHandler([
+            new Response(
+                $response['code'],
+                ['Content-Type' => 'application/json'],
+                \GuzzleHttp\json_encode($response['body'])
+            ),
+            new RequestException('Error Communicating with Server', new Request('GET', 'me'))
+        ]);
+        $handlerStack = HandlerStack::create($mock);
+        $handlerStack->push($history);
+
+        $client = new Client([
+            'handler' => $handlerStack,
+        ]);
+
+        $gc = (new GatherContentClient($client))
+            ->setOptions($this->gcClientOptions);
+
+        static::expectException($expected['class']);
+        static::expectExceptionCode($expected['code']);
+        static::expectExceptionMessage($expected['msg']);
+
+        $gc->itemApplyTemplatePost($itemId, $templateId);
+    }
+
     public function casesItemGet(): array
     {
         $item = static::getUniqueResponseItem([
