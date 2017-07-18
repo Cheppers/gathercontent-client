@@ -1539,4 +1539,87 @@ class GatherContentClientTest extends GcBaseTestCase
 
         $gc->templateGet($templateId);
     }
+
+    public function testItemsPost(): void
+    {
+        $itemId = 131313;
+        $container = [];
+        $history = Middleware::history($container);
+        $mock = new MockHandler([
+            new Response(
+                202,
+                [
+                    'Content-Type' => 'application/json',
+                    'Location' => $this->gcClientOptions['baseUri'] . '/items/' . $itemId,
+                ]
+            ),
+        ]);
+        $handlerStack = HandlerStack::create($mock);
+        $handlerStack->push($history);
+        $client = new Client([
+            'handler' => $handlerStack,
+        ]);
+
+        $actual = (new GatherContentClient($client))
+          ->setOptions($this->gcClientOptions)
+          ->itemsPost(0, 'test');
+
+        self::assertEquals($itemId, $actual);
+
+        /** @var Request $request */
+        $request = $container[0]['request'];
+
+        static::assertEquals(1, count($container));
+        static::assertEquals('POST', $request->getMethod());
+        static::assertEquals(['application/vnd.gathercontent.v0.5+json'], $request->getHeader('Accept'));
+        static::assertEquals(['api.example.com'], $request->getHeader('Host'));
+        static::assertEquals(
+            "{$this->gcClientOptions['baseUri']}/items",
+            (string) $request->getUri()
+        );
+    }
+
+    public function testItemsPostNoPath()
+    {
+        $container = [];
+        $history = Middleware::history($container);
+        $mock = new MockHandler([
+            new Response(
+                202,
+                [
+                    'Content-Type' => 'application/json',
+                    'Location' => $this->gcClientOptions['baseUri'],
+                ]
+            ),
+        ]);
+        $handlerStack = HandlerStack::create($mock);
+        $handlerStack->push($history);
+        $client = new Client([
+          'handler' => $handlerStack,
+        ]);
+
+        static::expectException(\Exception::class);
+        (new GatherContentClient($client))
+          ->setOptions($this->gcClientOptions)
+          ->itemsPost(0, 'test');
+    }
+
+    public function testItemsPostUnexpectedStatusCode()
+    {
+        $container = [];
+        $history = Middleware::history($container);
+        $mock = new MockHandler([
+          new Response(200, []),
+        ]);
+        $handlerStack = HandlerStack::create($mock);
+        $handlerStack->push($history);
+        $client = new Client([
+          'handler' => $handlerStack,
+        ]);
+
+        static::expectException(\Exception::class);
+        (new GatherContentClient($client))
+          ->setOptions($this->gcClientOptions)
+          ->itemsPost(0, 'test');
+    }
 }
