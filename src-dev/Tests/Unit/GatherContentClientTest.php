@@ -1071,10 +1071,7 @@ class GatherContentClientTest extends GcBaseTestCase
             ->setOptions($this->gcClientOptions)
             ->itemApplyTemplatePost($itemId, $templateId);
 
-        static::assertEquals(
-            json_encode($expected, JSON_PRETTY_PRINT),
-            json_encode($actual, JSON_PRETTY_PRINT)
-        );
+        static::assertEquals($expected, $actual);
 
         /** @var Request $request */
         $request = $container[0]['request'];
