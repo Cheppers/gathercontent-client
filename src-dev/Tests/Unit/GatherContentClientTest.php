@@ -1428,131 +1428,6 @@ class GatherContentClientTest extends GcBaseTestCase
         );
     }
 
-    public function casesItemChooseStatusPost(): array
-    {
-        return [
-            'basic' => [
-                [
-                    'code' => 202,
-                ],
-                [
-                    'code' => 202,
-                    'body' => [],
-                ],
-                42,
-                423
-            ],
-        ];
-    }
-
-    /**
-     * @dataProvider casesItemChooseStatusPost
-     */
-    public function testItemChooseStatusPost(array $expected, array $response, int $itemId, int $statusId): void
-    {
-        $container = [];
-        $history = Middleware::history($container);
-        $mock = new MockHandler([
-            new Response(
-                $response['code'],
-                ['Content-Type' => 'application/json'],
-                \GuzzleHttp\json_encode($response['body'])
-            ),
-            new RequestException('Error Communicating with Server', new Request('GET', 'me'))
-        ]);
-        $handlerStack = HandlerStack::create($mock);
-        $handlerStack->push($history);
-
-        $client = new Client([
-            'handler' => $handlerStack,
-        ]);
-
-        $client = (new GatherContentClient($client));
-        $client->setOptions($this->gcClientOptions)
-            ->itemChooseStatusPost($itemId, $statusId);
-
-
-        /** @var Request $request */
-        $request = $container[0]['request'];
-
-        static::assertEquals($expected['code'], $client->getResponse()->getStatusCode());
-        static::assertEquals(1, count($container));
-        static::assertEquals('POST', $request->getMethod());
-        static::assertEquals(['application/vnd.gathercontent.v0.5+json'], $request->getHeader('Accept'));
-        static::assertEquals(['api.example.com'], $request->getHeader('Host'));
-    }
-
-    public function casesItemChooseStatusPostFail(): array
-    {
-        return [
-            'missing_item' => [
-                [
-                    'class' => \Exception::class,
-                    'code' => 200,
-                    'msg' => '@todo Cheppers\GatherContent\GatherContentClient::itemChooseStatusPost',
-                ],
-                [
-                    'code' => 200,
-                    'body' => [
-                        'data' => [
-                            'message' => 'Item Not Found'
-                        ]
-                    ],
-                ],
-                0,
-                423
-            ],
-            'missing_status' => [
-                [
-                    'class' => \Exception::class,
-                    'code' => 400,
-                    'msg' => '{"error":"Missing status_id","code":400}',
-                ],
-                [
-                    'code' => 400,
-                    'body' => [
-                        'error' => 'Missing status_id',
-                        'code' => 400
-                    ],
-                ],
-                42,
-                0
-            ],
-        ];
-    }
-
-    /**
-     * @dataProvider casesItemChooseStatusPostFail
-     */
-    public function testItemChooseStatusPostFail(array $expected, array $response, int $itemId, int $statusId): void
-    {
-        $container = [];
-        $history = Middleware::history($container);
-        $mock = new MockHandler([
-            new Response(
-                $response['code'],
-                ['Content-Type' => 'application/json'],
-                \GuzzleHttp\json_encode($response['body'])
-            ),
-            new RequestException('Error Communicating with Server', new Request('GET', 'me'))
-        ]);
-        $handlerStack = HandlerStack::create($mock);
-        $handlerStack->push($history);
-
-        $client = new Client([
-            'handler' => $handlerStack,
-        ]);
-
-        $gc = (new GatherContentClient($client))
-            ->setOptions($this->gcClientOptions);
-
-        static::expectException($expected['class']);
-        static::expectExceptionCode($expected['code']);
-        static::expectExceptionMessage($expected['msg']);
-
-        $gc->itemChooseStatusPost($itemId, $statusId);
-    }
-
 
     /**
      * @dataProvider casesItemGetFail
@@ -1820,7 +1695,6 @@ class GatherContentClientTest extends GcBaseTestCase
 
         $gc->itemChooseStatusPost($itemId, $statusId);
     }
-
 
     public function casesTemplatesGet(): array
     {
