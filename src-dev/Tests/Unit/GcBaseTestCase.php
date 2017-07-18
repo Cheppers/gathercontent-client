@@ -391,7 +391,8 @@ class GcBaseTestCase extends TestCase
                     'msg' => '401 Unauthorized',
                 ],
                 ['data' => $data],
-                42
+                42,
+                (isset($data['id'])) ? $data['id'] : null
             ],
             'internal-error' => [
                 [
@@ -402,7 +403,8 @@ class GcBaseTestCase extends TestCase
                     'msg' => '{"error":"unknown error"}',
                 ],
                 ['data' => $data],
-                42
+                42,
+                (isset($data['id'])) ? $data['id'] : null
             ],
         ];
     }
