@@ -163,7 +163,7 @@ class GatherContentClientTest extends GcBaseTestCase
     /**
      * @dataProvider casesMeGetFail
      */
-    public function testMeGetFail(array $response, array $expected): void
+    public function testMeGetFail(array $expected, array $response): void
     {
         $container = [];
         $history = Middleware::history($container);
@@ -265,7 +265,7 @@ class GatherContentClientTest extends GcBaseTestCase
     /**
      * @dataProvider casesAccountsGetFail
      */
-    public function testAccountsGetFail(array $response, array $expected): void
+    public function testAccountsGetFail(array $expected, array $response): void
     {
         $container = [];
         $history = Middleware::history($container);
@@ -358,17 +358,17 @@ class GatherContentClientTest extends GcBaseTestCase
 
         $cases['not_found'] = [
             [
+                'class' => \Exception::class,
+                'code' => 200,
+                'msg' => '@todo Account not found',
+            ],
+            [
                 'code' => 200,
                 'body' => [
                     'data' => [
                         'message' => 'Account not found'
                     ]
                 ],
-            ],
-            [
-                'class' => \Exception::class,
-                'code' => 200,
-                'msg' => '@todo Account not found',
             ],
             42
         ];
@@ -379,7 +379,7 @@ class GatherContentClientTest extends GcBaseTestCase
     /**
      * @dataProvider casesAccountGetFail
      */
-    public function testAccountGetFail(array $response, array $expected, int $account_id): void
+    public function testAccountGetFail(array $expected, array $response, int $account_id): void
     {
         $container = [];
         $history = Middleware::history($container);
@@ -490,17 +490,17 @@ class GatherContentClientTest extends GcBaseTestCase
 
         $cases['not_found'] = [
             [
+                'class' => \Exception::class,
+                'code' => 200,
+                'msg' => '@todo Account not found',
+            ],
+            [
                 'code' => 200,
                 'body' => [
                     'data' => [
                         'message' => 'Account not found'
                     ]
                 ],
-            ],
-            [
-                'class' => \Exception::class,
-                'code' => 200,
-                'msg' => '@todo Account not found',
             ],
             42
         ];
@@ -511,7 +511,7 @@ class GatherContentClientTest extends GcBaseTestCase
     /**
      * @dataProvider casesProjectsGetFail
      */
-    public function testProjectsGetFail(array $response, array $expected, int $accountId): void
+    public function testProjectsGetFail(array $expected, array $response, int $accountId): void
     {
         $container = [];
         $history = Middleware::history($container);
@@ -611,17 +611,17 @@ class GatherContentClientTest extends GcBaseTestCase
 
         $cases['not_found'] = [
             [
+                'class' => \Exception::class,
+                'code' => 200,
+                'msg' => '@todo Project Not Found',
+            ],
+            [
                 'code' => 200,
                 'body' => [
                     'data' => [
                         'message' => 'Project Not Found'
                     ]
                 ],
-            ],
-            [
-                'class' => \Exception::class,
-                'code' => 200,
-                'msg' => '@todo Project Not Found',
             ],
             42
         ];
@@ -632,7 +632,7 @@ class GatherContentClientTest extends GcBaseTestCase
     /**
      * @dataProvider casesProjectGetFail
      */
-    public function testProjectGetFail(array $response, array $expected, int $projectId): void
+    public function testProjectGetFail(array $expected, array $response, int $projectId): void
     {
         $container = [];
         $history = Middleware::history($container);
@@ -735,16 +735,16 @@ class GatherContentClientTest extends GcBaseTestCase
 
         $cases['not_found'] = [
             [
+                'class' => \Exception::class,
+                'code' => 404,
+                'msg' => '{"error":"Project Not Found","code":404}',
+            ],
+            [
                 'code' => 404,
                 'body' => [
                     'error' => 'Project Not Found',
                     'code' => 404
                 ],
-            ],
-            [
-                'class' => \Exception::class,
-                'code' => 404,
-                'msg' => '{"error":"Project Not Found","code":404}',
             ],
             42
         ];
@@ -755,7 +755,7 @@ class GatherContentClientTest extends GcBaseTestCase
     /**
      * @dataProvider casesProjectStatusesGetFail
      */
-    public function testProjectStatusesGetFail(array $response, array $expected, int $projectId): void
+    public function testProjectStatusesGetFail(array $expected, array $response, int $projectId): void
     {
         $container = [];
         $history = Middleware::history($container);
@@ -853,8 +853,8 @@ class GatherContentClientTest extends GcBaseTestCase
      * @dataProvider casesProjectStatusGetFail
      */
     public function testProjectStatusGetFail(
-        array $response,
         array $expected,
+        array $response,
         int $projectId,
         int $statusId
     ): void {
@@ -975,17 +975,17 @@ class GatherContentClientTest extends GcBaseTestCase
 
         $cases['not_found'] = [
             [
+                'class' => \Exception::class,
+                'code' => 200,
+                'msg' => '@todo Project Not Found',
+            ],
+            [
                 'code' => 200,
                 'body' => [
                     'data' => [
                         'message' => 'Project Not Found'
                     ]
                 ],
-            ],
-            [
-                'class' => \Exception::class,
-                'code' => 200,
-                'msg' => '@todo Project Not Found',
             ],
             42
         ];
@@ -996,7 +996,7 @@ class GatherContentClientTest extends GcBaseTestCase
     /**
      * @dataProvider casesItemsGetFail
      */
-    public function testItemsGetFail(array $response, array $expected, int $projectId): void
+    public function testItemsGetFail(array $expected, array $response, int $projectId): void
     {
         $container = [];
         $history = Middleware::history($container);
@@ -1108,17 +1108,17 @@ class GatherContentClientTest extends GcBaseTestCase
 
         $cases['not_found'] = [
             [
+                'class' => \Exception::class,
+                'code' => 200,
+                'msg' => '@todo Item Not Found',
+            ],
+            [
                 'code' => 200,
                 'body' => [
                     'data' => [
                         'message' => 'Item Not Found'
                     ]
                 ],
-            ],
-            [
-                'class' => \Exception::class,
-                'code' => 200,
-                'msg' => '@todo Item Not Found',
             ],
             42
         ];
@@ -1129,7 +1129,7 @@ class GatherContentClientTest extends GcBaseTestCase
     /**
      * @dataProvider casesItemGetFail
      */
-    public function testItemGetFail(array $response, array $expected, int $itemId): void
+    public function testItemGetFail(array $expected, array $response, int $itemId): void
     {
         $container = [];
         $history = Middleware::history($container);
@@ -1229,7 +1229,7 @@ class GatherContentClientTest extends GcBaseTestCase
     /**
      * @dataProvider casesItemGetFail
      */
-    public function testItemFilesGetFail(array $response, array $expected, int $itemId): void
+    public function testItemFilesGetFail(array $expected, array $response, int $itemId): void
     {
         $container = [];
         $history = Middleware::history($container);
@@ -1348,17 +1348,17 @@ class GatherContentClientTest extends GcBaseTestCase
 
         $cases['not_found'] = [
             [
+                'class' => \Exception::class,
+                'code' => 200,
+                'msg' => '@todo Project Not Found',
+            ],
+            [
                 'code' => 200,
                 'body' => [
                     'data' => [
                         'message' => 'Project Not Found'
                     ]
                 ],
-            ],
-            [
-                'class' => \Exception::class,
-                'code' => 200,
-                'msg' => '@todo Project Not Found',
             ],
             42
         ];
@@ -1369,7 +1369,7 @@ class GatherContentClientTest extends GcBaseTestCase
     /**
      * @dataProvider casesTemplatesGetFail
      */
-    public function testTemplatesGetFail(array $response, array $expected, int $projectId): void
+    public function testTemplatesGetFail(array $expected, array $response, int $projectId): void
     {
         $container = [];
         $history = Middleware::history($container);
@@ -1482,17 +1482,17 @@ class GatherContentClientTest extends GcBaseTestCase
 
         $cases['not_found'] = [
             [
+                'class' => \Exception::class,
+                'code' => 200,
+                'msg' => '@todo Template Not Found',
+            ],
+            [
                 'code' => 200,
                 'body' => [
                     'data' => [
                         'message' => 'Template Not Found'
                     ]
                 ],
-            ],
-            [
-                'class' => \Exception::class,
-                'code' => 200,
-                'msg' => '@todo Template Not Found',
             ],
             42
         ];
@@ -1503,7 +1503,7 @@ class GatherContentClientTest extends GcBaseTestCase
     /**
      * @dataProvider casesTemplateGetFail
      */
-    public function testTemplateGetFail(array $response, array $expected, int $templateId): void
+    public function testTemplateGetFail(array $expected, array $response, int $templateId): void
     {
         $container = [];
         $history = Middleware::history($container);
