@@ -1034,7 +1034,9 @@ class GatherContentClientTest extends GcBaseTestCase
     {
         return [
             'basic' => [
-                42,
+                [
+                    'code' => 202,
+                ],
                 [
                     'code' => 202,
                     'body' => [],
@@ -1048,7 +1050,7 @@ class GatherContentClientTest extends GcBaseTestCase
     /**
      * @dataProvider casesItemsApplyTemplatePost
      */
-    public function testItemsApplyTemplatePost(int $expected, array $response, int $itemId, int $templateId): void
+    public function testItemsApplyTemplatePost(array $expected, array $response, int $itemId, int $templateId): void
     {
         $container = [];
         $history = Middleware::history($container);
@@ -1067,15 +1069,15 @@ class GatherContentClientTest extends GcBaseTestCase
             'handler' => $handlerStack,
         ]);
 
-        $actual = (new GatherContentClient($client))
-            ->setOptions($this->gcClientOptions)
+        $client = (new GatherContentClient($client));
+        $client->setOptions($this->gcClientOptions)
             ->itemApplyTemplatePost($itemId, $templateId);
 
-        static::assertEquals($expected, $actual);
 
         /** @var Request $request */
         $request = $container[0]['request'];
 
+        static::assertEquals($expected['code'], $client->getResponse()->getStatusCode());
         static::assertEquals(1, count($container));
         static::assertEquals('POST', $request->getMethod());
         static::assertEquals(['application/vnd.gathercontent.v0.5+json'], $request->getHeader('Accept'));

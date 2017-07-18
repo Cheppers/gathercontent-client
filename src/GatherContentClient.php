@@ -360,7 +360,7 @@ class GatherContentClient implements GatherContentClientInterface
         //
     }
 
-    public function itemApplyTemplatePost(int $itemId, int $templateId)
+    public function itemApplyTemplatePost(int $itemId, int $templateId): void
     {
         $this->response = $this->client->request(
             'POST',
@@ -377,8 +377,6 @@ class GatherContentClient implements GatherContentClientInterface
         if ($this->response->getStatusCode() !== 202) {
             throw new \Exception('@todo ' . __METHOD__);
         }
-
-        return $itemId;
     }
 
     public function itemChooseStatusPost(int $itemId)
