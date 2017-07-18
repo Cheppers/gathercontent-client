@@ -380,4 +380,30 @@ class GcBaseTestCase extends TestCase
 
         return $items;
     }
+
+    protected static function basicStatusCodeCases($data = null): array
+    {
+        return [
+            'unauthorized' => [
+                [
+                    'code' => 401,
+                    'body' => '401 Unauthorized',
+                    'msg' => '401 Unauthorized',
+                ],
+                ['data' => $data],
+                42
+            ],
+            'internal-error' => [
+                [
+                    'code' => 500,
+                    'body' => [
+                        'error' => 'unknown error'
+                    ],
+                    'msg' => '{"error":"unknown error"}',
+                ],
+                ['data' => $data],
+                42
+            ],
+        ];
+    }
 }

@@ -452,7 +452,7 @@ class GatherContentClient implements GatherContentClientInterface
     {
         $body = \GuzzleHttp\json_decode($this->response->getBody(), true);
         if (!empty($body['data']['message'])) {
-            throw new \Exception('@todo ' . $body['data']['message']);
+            throw new \Exception('@todo ' . $body['data']['message'], $this->response->getStatusCode());
         }
 
         return $body;

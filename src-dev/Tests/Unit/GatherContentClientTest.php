@@ -157,22 +157,7 @@ class GatherContentClientTest extends GcBaseTestCase
 
     public function casesStatusCodeMeGet(): array
     {
-        return [
-            'unauthorized' => [
-                [
-                    'code' => 401,
-                    'body' => '401 Unauthorized',
-                ],
-            ],
-            'internal-error' => [
-                [
-                    'code' => 500,
-                    'body' => [
-                        'error' => 'unknown error'
-                    ],
-                ],
-            ],
-        ];
+        return static::basicStatusCodeCases();
     }
 
     /**
@@ -201,7 +186,7 @@ class GatherContentClientTest extends GcBaseTestCase
           ->setOptions($this->gcClientOptions);
 
         static::expectExceptionCode($response['code']);
-        static::expectExceptionMessage(\GuzzleHttp\json_encode($response['body']));
+        static::expectExceptionMessage($response['msg']);
 
         $gc->meGet();
     }
@@ -273,22 +258,7 @@ class GatherContentClientTest extends GcBaseTestCase
 
     public function casesStatusAccountsGet(): array
     {
-        return [
-            'unauthorized' => [
-                [
-                    'code' => 401,
-                    'body' => '401 Unauthorized',
-                ],
-            ],
-            'internal-error' => [
-                [
-                    'code' => 500,
-                    'body' => [
-                        'error' => 'unknown error'
-                    ],
-                ],
-            ],
-        ];
+        return static::basicStatusCodeCases();
     }
 
     /**
@@ -317,9 +287,9 @@ class GatherContentClientTest extends GcBaseTestCase
             ->setOptions($this->gcClientOptions);
 
         static::expectExceptionCode($response['code']);
-        static::expectExceptionMessage(\GuzzleHttp\json_encode($response['body']));
+        static::expectExceptionMessage($response['msg']);
 
-        $gc->meGet();
+        $gc->accountsGet();
     }
 
     public function casesAccountGet(): array
@@ -377,6 +347,58 @@ class GatherContentClientTest extends GcBaseTestCase
             "{$this->gcClientOptions['baseUri']}/accounts/" . (int) $responseBody['data']['id'],
             (string) $request->getUri()
         );
+    }
+
+    public function casesStatusAccountGet(): array
+    {
+        $data = static::getUniqueResponseAccount();
+        $cases = static::basicStatusCodeCases($data);
+
+        $cases['not_found'] = [
+            [
+                'code' => 200,
+                'body' => [
+                    'data' => [
+                        'message' => 'Account not found'
+                    ]
+                ],
+                'msg' => '@todo Account not found',
+            ],
+            ['data' => $data]
+        ];
+
+        return $cases;
+    }
+
+    /**
+     * @dataProvider casesStatusAccountGet
+     */
+    public function testStatusAccountGet(array $response, array $responseBody): void
+    {
+        $container = [];
+        $history = Middleware::history($container);
+        $mock = new MockHandler([
+            new Response(
+                $response['code'],
+                ['Content-Type' => 'application/json'],
+                \GuzzleHttp\json_encode($response['body'])
+            ),
+            new RequestException('Error Communicating with Server', new Request('GET', 'me'))
+        ]);
+        $handlerStack = HandlerStack::create($mock);
+        $handlerStack->push($history);
+
+        $client = new Client([
+            'handler' => $handlerStack,
+        ]);
+
+        $gc = (new GatherContentClient($client))
+            ->setOptions($this->gcClientOptions);
+
+        static::expectExceptionCode($response['code']);
+        static::expectExceptionMessage($response['msg']);
+
+        $gc->accountGet($responseBody['data']['id']);
     }
 
     public function casesProjectsGet(): array
@@ -455,6 +477,58 @@ class GatherContentClientTest extends GcBaseTestCase
         );
     }
 
+    public function casesStatusProjectsGet(): array
+    {
+        $cases = static::basicStatusCodeCases();
+
+        $cases['not_found'] = [
+            [
+                'code' => 200,
+                'body' => [
+                    'data' => [
+                        'message' => 'Account not found'
+                    ]
+                ],
+                'msg' => '@todo Account not found',
+            ],
+            ['data' => null],
+            42
+        ];
+
+        return $cases;
+    }
+
+    /**
+     * @dataProvider casesStatusProjectsGet
+     */
+    public function testStatusProjectsGet(array $response, array $responseBody, int $accountId): void
+    {
+        $container = [];
+        $history = Middleware::history($container);
+        $mock = new MockHandler([
+            new Response(
+                $response['code'],
+                ['Content-Type' => 'application/json'],
+                \GuzzleHttp\json_encode($response['body'])
+            ),
+            new RequestException('Error Communicating with Server', new Request('GET', 'me'))
+        ]);
+        $handlerStack = HandlerStack::create($mock);
+        $handlerStack->push($history);
+
+        $client = new Client([
+            'handler' => $handlerStack,
+        ]);
+
+        $gc = (new GatherContentClient($client))
+            ->setOptions($this->gcClientOptions);
+
+        static::expectExceptionCode($response['code']);
+        static::expectExceptionMessage($response['msg']);
+
+        $gc->projectsGet($accountId);
+    }
+
     public function casesProjectGet(): array
     {
         $data = static::getUniqueResponseProject();
@@ -518,6 +592,58 @@ class GatherContentClientTest extends GcBaseTestCase
             "{$this->gcClientOptions['baseUri']}/projects/$projectId",
             (string) $request->getUri()
         );
+    }
+
+    public function casesStatusProjectGet(): array
+    {
+        $cases = static::basicStatusCodeCases();
+
+        $cases['not_found'] = [
+            [
+                'code' => 200,
+                'body' => [
+                    'data' => [
+                        'message' => 'Project Not Found'
+                    ]
+                ],
+                'msg' => '@todo Project Not Found',
+            ],
+            ['data' => null],
+            42
+        ];
+
+        return $cases;
+    }
+
+    /**
+     * @dataProvider casesStatusProjectGet
+     */
+    public function testStatusProjectGet(array $response, array $responseBody, int $projectId): void
+    {
+        $container = [];
+        $history = Middleware::history($container);
+        $mock = new MockHandler([
+            new Response(
+                $response['code'],
+                ['Content-Type' => 'application/json'],
+                \GuzzleHttp\json_encode($response['body'])
+            ),
+            new RequestException('Error Communicating with Server', new Request('GET', 'me'))
+        ]);
+        $handlerStack = HandlerStack::create($mock);
+        $handlerStack->push($history);
+
+        $client = new Client([
+            'handler' => $handlerStack,
+        ]);
+
+        $gc = (new GatherContentClient($client))
+            ->setOptions($this->gcClientOptions);
+
+        static::expectExceptionCode($response['code']);
+        static::expectExceptionMessage($response['msg']);
+
+        $gc->projectGet($projectId);
     }
 
     public function casesProjectStatusesGet(): array
