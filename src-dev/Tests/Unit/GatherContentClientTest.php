@@ -103,10 +103,10 @@ class GatherContentClientTest extends GcBaseTestCase
         }
 
         return [
-          'basic' => [
-            $userExpected,
-            ['data' => $userData],
-          ],
+            'basic' => [
+                $userExpected,
+                ['data' => $userData],
+            ],
         ];
     }
 
@@ -129,12 +129,12 @@ class GatherContentClientTest extends GcBaseTestCase
         $handlerStack->push($history);
 
         $client = new Client([
-          'handler' => $handlerStack,
+            'handler' => $handlerStack,
         ]);
 
         $user = (new GatherContentClient($client))
-          ->setOptions($this->gcClientOptions)
-          ->meGet();
+            ->setOptions($this->gcClientOptions)
+            ->meGet();
 
         static::assertTrue($user instanceof User, 'Return data type is User');
         static::assertEquals(
@@ -157,7 +157,7 @@ class GatherContentClientTest extends GcBaseTestCase
 
     public function casesMeGetFail(): array
     {
-        return static::basicStatusCodeCases();
+        return static::basicFailCases();
     }
 
     /**
@@ -170,7 +170,7 @@ class GatherContentClientTest extends GcBaseTestCase
         $mock = new MockHandler([
             new Response(
                 $response['code'],
-                ['Content-Type' => 'application/json'],
+                $response['headers'],
                 \GuzzleHttp\json_encode($response['body'])
             ),
             new RequestException('Error Communicating with Server', new Request('GET', 'me'))
@@ -179,11 +179,11 @@ class GatherContentClientTest extends GcBaseTestCase
         $handlerStack->push($history);
 
         $client = new Client([
-          'handler' => $handlerStack,
+            'handler' => $handlerStack,
         ]);
 
         $gc = (new GatherContentClient($client))
-          ->setOptions($this->gcClientOptions);
+            ->setOptions($this->gcClientOptions);
 
         static::expectException($expected['class']);
         static::expectExceptionCode($expected['code']);
@@ -259,7 +259,7 @@ class GatherContentClientTest extends GcBaseTestCase
 
     public function casesAccountsGetFail(): array
     {
-        return static::basicStatusCodeCases();
+        return static::basicFailCases();
     }
 
     /**
@@ -272,7 +272,7 @@ class GatherContentClientTest extends GcBaseTestCase
         $mock = new MockHandler([
             new Response(
                 $response['code'],
-                ['Content-Type' => 'application/json'],
+                $response['headers'],
                 \GuzzleHttp\json_encode($response['body'])
             ),
             new RequestException('Error Communicating with Server', new Request('GET', 'me'))
@@ -354,16 +354,17 @@ class GatherContentClientTest extends GcBaseTestCase
     public function casesAccountGetFail(): array
     {
         $data = static::getUniqueResponseAccount();
-        $cases = static::basicStatusCodeCases($data);
+        $cases = static::basicFailCases($data);
 
         $cases['not_found'] = [
             [
                 'class' => \Exception::class,
                 'code' => 200,
-                'msg' => '@todo Account not found',
+                'msg' => 'API Error: "Account not found"',
             ],
             [
                 'code' => 200,
+                'headers' => ['Content-Type' => 'application/json'],
                 'body' => [
                     'data' => [
                         'message' => 'Account not found'
@@ -386,7 +387,7 @@ class GatherContentClientTest extends GcBaseTestCase
         $mock = new MockHandler([
             new Response(
                 $response['code'],
-                ['Content-Type' => 'application/json'],
+                $response['headers'],
                 \GuzzleHttp\json_encode($response['body'])
             ),
             new RequestException('Error Communicating with Server', new Request('GET', 'me'))
@@ -486,16 +487,17 @@ class GatherContentClientTest extends GcBaseTestCase
 
     public function casesProjectsGetFail(): array
     {
-        $cases = static::basicStatusCodeCases();
+        $cases = static::basicFailCases();
 
         $cases['not_found'] = [
             [
                 'class' => \Exception::class,
                 'code' => 200,
-                'msg' => '@todo Account not found',
+                'msg' => 'API Error: "Account not found"',
             ],
             [
                 'code' => 200,
+                'headers' => ['Content-Type' => 'application/json'],
                 'body' => [
                     'data' => [
                         'message' => 'Account not found'
@@ -518,7 +520,7 @@ class GatherContentClientTest extends GcBaseTestCase
         $mock = new MockHandler([
             new Response(
                 $response['code'],
-                ['Content-Type' => 'application/json'],
+                $response['headers'],
                 \GuzzleHttp\json_encode($response['body'])
             ),
             new RequestException('Error Communicating with Server', new Request('GET', 'me'))
@@ -607,16 +609,17 @@ class GatherContentClientTest extends GcBaseTestCase
 
     public function casesProjectGetFail(): array
     {
-        $cases = static::basicStatusCodeCases();
+        $cases = static::basicFailCases();
 
         $cases['not_found'] = [
             [
                 'class' => \Exception::class,
                 'code' => 200,
-                'msg' => '@todo Project Not Found',
+                'msg' => 'API Error: "Project Not Found"',
             ],
             [
                 'code' => 200,
+                'headers' => ['Content-Type' => 'application/json'],
                 'body' => [
                     'data' => [
                         'message' => 'Project Not Found'
@@ -639,7 +642,7 @@ class GatherContentClientTest extends GcBaseTestCase
         $mock = new MockHandler([
             new Response(
                 $response['code'],
-                ['Content-Type' => 'application/json'],
+                $response['headers'],
                 \GuzzleHttp\json_encode($response['body'])
             ),
             new RequestException('Error Communicating with Server', new Request('GET', 'me'))
@@ -731,7 +734,7 @@ class GatherContentClientTest extends GcBaseTestCase
 
     public function casesProjectStatusesGetFail(): array
     {
-        $cases = static::basicStatusCodeCases();
+        $cases = static::basicFailCases();
 
         $cases['not_found'] = [
             [
@@ -741,6 +744,7 @@ class GatherContentClientTest extends GcBaseTestCase
             ],
             [
                 'code' => 404,
+                'headers' => ['Content-Type' => 'application/json'],
                 'body' => [
                     'error' => 'Project Not Found',
                     'code' => 404
@@ -762,7 +766,7 @@ class GatherContentClientTest extends GcBaseTestCase
         $mock = new MockHandler([
             new Response(
                 $response['code'],
-                ['Content-Type' => 'application/json'],
+                $response['headers'],
                 \GuzzleHttp\json_encode($response['body'])
             ),
             new RequestException('Error Communicating with Server', new Request('GET', 'me'))
@@ -846,7 +850,7 @@ class GatherContentClientTest extends GcBaseTestCase
     public function casesProjectStatusGetFail(): array
     {
         $data = static::getUniqueResponseStatus();
-        return static::basicStatusCodeCases($data);
+        return static::basicFailCases($data);
     }
 
     /**
@@ -863,7 +867,7 @@ class GatherContentClientTest extends GcBaseTestCase
         $mock = new MockHandler([
             new Response(
                 $response['code'],
-                ['Content-Type' => 'application/json'],
+                $response['headers'],
                 \GuzzleHttp\json_encode($response['body'])
             ),
             new RequestException('Error Communicating with Server', new Request('GET', 'me'))
@@ -971,16 +975,17 @@ class GatherContentClientTest extends GcBaseTestCase
 
     public function casesItemsGetFail(): array
     {
-        $cases = static::basicStatusCodeCases();
+        $cases = static::basicFailCases();
 
         $cases['not_found'] = [
             [
                 'class' => \Exception::class,
                 'code' => 200,
-                'msg' => '@todo Project Not Found',
+                'msg' => 'API Error: "Project Not Found"',
             ],
             [
                 'code' => 200,
+                'headers' => ['Content-Type' => 'application/json'],
                 'body' => [
                     'data' => [
                         'message' => 'Project Not Found'
@@ -1003,7 +1008,7 @@ class GatherContentClientTest extends GcBaseTestCase
         $mock = new MockHandler([
             new Response(
                 $response['code'],
-                ['Content-Type' => 'application/json'],
+                $response['headers'],
                 \GuzzleHttp\json_encode($response['body'])
             ),
             new RequestException('Error Communicating with Server', new Request('GET', 'me'))
@@ -1104,16 +1109,17 @@ class GatherContentClientTest extends GcBaseTestCase
 
     public function casesItemGetFail(): array
     {
-        $cases = static::basicStatusCodeCases();
+        $cases = static::basicFailCases();
 
         $cases['not_found'] = [
             [
                 'class' => \Exception::class,
                 'code' => 200,
-                'msg' => '@todo Item Not Found',
+                'msg' => 'API Error: "Item Not Found"',
             ],
             [
                 'code' => 200,
+                'headers' => ['Content-Type' => 'application/json'],
                 'body' => [
                     'data' => [
                         'message' => 'Item Not Found'
@@ -1136,7 +1142,7 @@ class GatherContentClientTest extends GcBaseTestCase
         $mock = new MockHandler([
             new Response(
                 $response['code'],
-                ['Content-Type' => 'application/json'],
+                $response['headers'],
                 \GuzzleHttp\json_encode($response['body'])
             ),
             new RequestException('Error Communicating with Server', new Request('GET', 'me'))
@@ -1236,7 +1242,7 @@ class GatherContentClientTest extends GcBaseTestCase
         $mock = new MockHandler([
             new Response(
                 $response['code'],
-                ['Content-Type' => 'application/json'],
+                $response['headers'],
                 \GuzzleHttp\json_encode($response['body'])
             ),
             new RequestException('Error Communicating with Server', new Request('GET', 'me'))
@@ -1344,16 +1350,17 @@ class GatherContentClientTest extends GcBaseTestCase
 
     public function casesTemplatesGetFail(): array
     {
-        $cases = static::basicStatusCodeCases();
+        $cases = static::basicFailCases();
 
         $cases['not_found'] = [
             [
                 'class' => \Exception::class,
                 'code' => 200,
-                'msg' => '@todo Project Not Found',
+                'msg' => 'API Error: "Project Not Found"',
             ],
             [
                 'code' => 200,
+                'headers' => ['Content-Type' => 'application/json'],
                 'body' => [
                     'data' => [
                         'message' => 'Project Not Found'
@@ -1376,7 +1383,7 @@ class GatherContentClientTest extends GcBaseTestCase
         $mock = new MockHandler([
             new Response(
                 $response['code'],
-                ['Content-Type' => 'application/json'],
+                $response['headers'],
                 \GuzzleHttp\json_encode($response['body'])
             ),
             new RequestException('Error Communicating with Server', new Request('GET', 'me'))
@@ -1478,16 +1485,17 @@ class GatherContentClientTest extends GcBaseTestCase
 
     public function casesTemplateGetFail(): array
     {
-        $cases = static::basicStatusCodeCases();
+        $cases = static::basicFailCases();
 
         $cases['not_found'] = [
             [
                 'class' => \Exception::class,
                 'code' => 200,
-                'msg' => '@todo Template Not Found',
+                'msg' => 'API Error: "Template Not Found"',
             ],
             [
                 'code' => 200,
+                'headers' => ['Content-Type' => 'application/json'],
                 'body' => [
                     'data' => [
                         'message' => 'Template Not Found'
@@ -1510,7 +1518,7 @@ class GatherContentClientTest extends GcBaseTestCase
         $mock = new MockHandler([
             new Response(
                 $response['code'],
-                ['Content-Type' => 'application/json'],
+                $response['headers'],
                 \GuzzleHttp\json_encode($response['body'])
             ),
             new RequestException('Error Communicating with Server', new Request('GET', 'me'))

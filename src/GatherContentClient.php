@@ -147,7 +147,7 @@ class GatherContentClient implements GatherContentClientInterface
             ]
         );
 
-        $this->validateResponse(200);
+        $this->validateResponse();
         $body = $this->parseResponse();
 
         return new DataTypes\User($body['data']);
@@ -167,7 +167,7 @@ class GatherContentClient implements GatherContentClientInterface
             ]
         );
 
-        $this->validateResponse(200);
+        $this->validateResponse();
         $body = $this->parseResponse();
 
         return $this->parseResponseDataItems($body['data'], DataTypes\Account::class);
@@ -187,7 +187,7 @@ class GatherContentClient implements GatherContentClientInterface
             ]
         );
 
-        $this->validateResponse(200);
+        $this->validateResponse();
         $body = $this->parseResponse();
 
         return new DataTypes\Account($body['data']);
@@ -210,7 +210,7 @@ class GatherContentClient implements GatherContentClientInterface
             ]
         );
 
-        $this->validateResponse(200);
+        $this->validateResponse();
         $body = $this->parseResponse();
 
         return $this->parseResponseDataItems($body['data'], DataTypes\Project::class);
@@ -230,7 +230,7 @@ class GatherContentClient implements GatherContentClientInterface
             ]
         );
 
-        $this->validateResponse(200);
+        $this->validateResponse();
         $body = $this->parseResponse();
         $body += ['meta' => []];
 
@@ -286,7 +286,7 @@ class GatherContentClient implements GatherContentClientInterface
             ]
         );
 
-        $this->validateResponse(200);
+        $this->validateResponse();
         $body = $this->parseResponse();
 
         return $this->parseResponseDataItems($body['data'], DataTypes\Status::class);
@@ -306,7 +306,7 @@ class GatherContentClient implements GatherContentClientInterface
             ]
         );
 
-        $this->validateResponse(200);
+        $this->validateResponse();
         $body = $this->parseResponse();
 
         return new DataTypes\Status($body['data']);
@@ -329,7 +329,7 @@ class GatherContentClient implements GatherContentClientInterface
             ]
         );
 
-        $this->validateResponse(200);
+        $this->validateResponse();
         $body = $this->parseResponse();
 
         return $this->parseResponseDataItems($body['data'], DataTypes\Item::class);
@@ -349,7 +349,7 @@ class GatherContentClient implements GatherContentClientInterface
             ]
         );
 
-        $this->validateResponse(200);
+        $this->validateResponse();
         $body = $this->parseResponse();
 
         return empty($body['data']) ? null : new DataTypes\Item($body['data']);
@@ -385,7 +385,7 @@ class GatherContentClient implements GatherContentClientInterface
             ]
         );
 
-        $this->validateResponse(200);
+        $this->validateResponse();
         $body = $this->parseResponse();
 
         return $this->parseResponseDataItems($body['data'], DataTypes\File::class);
@@ -405,7 +405,7 @@ class GatherContentClient implements GatherContentClientInterface
             ]
         );
 
-        $this->validateResponse(200);
+        $this->validateResponse();
         $body = $this->parseResponse();
 
         return $this->parseResponseDataItems($body['data'], DataTypes\Template::class);
@@ -422,7 +422,7 @@ class GatherContentClient implements GatherContentClientInterface
             ]
         );
 
-        $this->validateResponse(200);
+        $this->validateResponse();
         $body = $this->parseResponse();
 
         return empty($body['data']) ? null : new DataTypes\Template($body['data']);
@@ -452,7 +452,7 @@ class GatherContentClient implements GatherContentClientInterface
     {
         $body = \GuzzleHttp\json_decode($this->response->getBody(), true);
         if (!empty($body['data']['message'])) {
-            throw new \Exception('@todo ' . $body['data']['message'], $this->response->getStatusCode());
+            throw new \Exception('API Error: "' . $body['data']['message'] . '"', $this->response->getStatusCode());
         }
 
         return $body;
@@ -477,7 +477,7 @@ class GatherContentClient implements GatherContentClientInterface
         return $item = new $class($data);
     }
 
-    protected function validateResponse(int $expectedStatusCode): void
+    protected function validateResponse(): void
     {
         $responseContentType = $this->response->getHeader('Content-Type');
         $responseContentType = end($responseContentType);

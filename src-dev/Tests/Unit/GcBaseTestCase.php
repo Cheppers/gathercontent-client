@@ -381,7 +381,7 @@ class GcBaseTestCase extends TestCase
         return $items;
     }
 
-    protected static function basicStatusCodeCases($data = null): array
+    protected static function basicFailCases($data = null): array
     {
         return [
             'unauthorized' => [
@@ -392,6 +392,7 @@ class GcBaseTestCase extends TestCase
                 ],
                 [
                     'code' => 401,
+                    'headers' => ['Content-Type' => 'application/json'],
                     'body' => '401 Unauthorized',
                 ],
                 42,
@@ -405,9 +406,24 @@ class GcBaseTestCase extends TestCase
                 ],
                 [
                     'code' => 500,
+                    'headers' => ['Content-Type' => 'application/json'],
                     'body' => [
                         'error' => 'unknown error'
                     ],
+                ],
+                42,
+                (isset($data['id'])) ? $data['id'] : null
+            ],
+            'header-error' => [
+                [
+                    'class' => \Exception::class,
+                    'code' => 1,
+                    'msg' => 'Unexpected Content-Type: \'text/css\'',
+                ],
+                [
+                    'code' => 200,
+                    'headers' => ['Content-Type' => 'text/css'],
+                    'body' => [],
                 ],
                 42,
                 (isset($data['id'])) ? $data['id'] : null
