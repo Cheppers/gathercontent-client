@@ -380,4 +380,54 @@ class GcBaseTestCase extends TestCase
 
         return $items;
     }
+
+    protected static function basicFailCases($data = null): array
+    {
+        return [
+            'unauthorized' => [
+                [
+                    'class' => \Exception::class,
+                    'code' => 401,
+                    'msg' => '401 Unauthorized',
+                ],
+                [
+                    'code' => 401,
+                    'headers' => ['Content-Type' => 'application/json'],
+                    'body' => '401 Unauthorized',
+                ],
+                42,
+                (isset($data['id'])) ? $data['id'] : null
+            ],
+            'internal-error' => [
+                [
+                    'class' => \Exception::class,
+                    'code' => 500,
+                    'msg' => '{"error":"unknown error"}',
+                ],
+                [
+                    'code' => 500,
+                    'headers' => ['Content-Type' => 'application/json'],
+                    'body' => [
+                        'error' => 'unknown error'
+                    ],
+                ],
+                42,
+                (isset($data['id'])) ? $data['id'] : null
+            ],
+            'header-error' => [
+                [
+                    'class' => \Exception::class,
+                    'code' => 1,
+                    'msg' => 'Unexpected Content-Type: \'text/css\'',
+                ],
+                [
+                    'code' => 200,
+                    'headers' => ['Content-Type' => 'text/css'],
+                    'body' => [],
+                ],
+                42,
+                (isset($data['id'])) ? $data['id'] : null
+            ],
+        ];
+    }
 }
