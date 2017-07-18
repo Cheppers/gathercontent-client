@@ -445,9 +445,23 @@ class GatherContentClient implements GatherContentClientInterface
         }
     }
 
-    public function itemChooseStatusPost(int $itemId)
+    public function itemChooseStatusPost(int $itemId, int $statusId): void
     {
-        //
+        $this->response = $this->client->request(
+            'POST',
+            $this->getUri('items/' . $itemId . '/choose_status'),
+            [
+                'auth' => $this->getRequestAuth(),
+                'headers' => $this->getRequestHeaders(),
+                'form_params' => [
+                    'status_id' => $statusId,
+                ],
+            ]
+        );
+
+        if ($this->response->getStatusCode() !== 202) {
+            throw new \Exception('@todo ' . __METHOD__, $this->response->getStatusCode());
+        }
     }
 
     /**
