@@ -93,9 +93,9 @@ interface GatherContentClientInterface
     public function itemsPost(
         int $projectId,
         string $name,
-        ?int $parentId = null,
-        ?int $templateId = null,
-        ?array $config = []
+        int $parentId = 0,
+        int $templateId = 0,
+        array $config = []
     ): int;
 
     /**

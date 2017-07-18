@@ -358,23 +358,35 @@ class GatherContentClient implements GatherContentClientInterface
     public function itemsPost(
         int $projectId,
         string $name,
-        ?int $parentId = null,
-        ?int $templateId = null,
-        ?array $config = []
+        int $parentId = 0,
+        int $templateId = 0,
+        array $config = []
     ): int {
+        $form_params = [
+            'project_id' => $projectId,
+            'name' => $name,
+        ];
+
+        if ($parentId) {
+            $form_params['parent_id'] = $parentId;
+        }
+
+        if ($templateId) {
+            $form_params['template_id'] = $templateId;
+        }
+
+        if ($config) {
+            $config = array_values($config);
+            $form_params['config'] = base64_encode(\GuzzleHttp\json_encode($config));
+        }
+
         $this->response = $this->client->request(
             'POST',
             $this->getUri('items'),
             [
                 'auth' => $this->getRequestAuth(),
                 'headers' => $this->getRequestHeaders([]),
-                'form_params' => [
-                    'project_id' => $projectId,
-                    'name' => $name,
-                    'parent_id' => $parentId,
-                    'template_id' => $templateId,
-                    'config' => base64_encode(\GuzzleHttp\json_encode($config)),
-                ],
+                'form_params' => $form_params,
             ]
         );
 
