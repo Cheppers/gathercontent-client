@@ -827,22 +827,7 @@ class GatherContentClientTest extends GcBaseTestCase
     public function casesStatusProjectStatusGet(): array
     {
         $data = static::getUniqueResponseStatus();
-        $cases = static::basicStatusCodeCases($data);
-
-        $cases['internal_error'] = [
-            [
-                'code' => 500,
-                'body' => [
-                    'error' => 'unknown error'
-                ],
-                'msg' => '{"error":"unknown error"}',
-            ],
-            ['data' => $data],
-            42,
-            $data['id']
-        ];
-
-        return $cases;
+        return static::basicStatusCodeCases($data);
     }
 
     /**
