@@ -360,9 +360,25 @@ class GatherContentClient implements GatherContentClientInterface
         //
     }
 
-    public function itemApplyTemplatePost(int $itemId)
+    public function itemApplyTemplatePost(int $itemId, int $templateId)
     {
-        //
+        $this->response = $this->client->request(
+            'POST',
+            $this->getUri('items/' . $itemId . '/apply_template'),
+            [
+                'auth' => $this->getRequestAuth(),
+                'headers' => $this->getRequestHeaders(),
+                'form_params' => [
+                    'template_id' => $templateId,
+                ],
+            ]
+        );
+
+        if ($this->response->getStatusCode() !== 202) {
+            throw new \Exception('@todo ' . __METHOD__);
+        }
+
+        return $itemId;
     }
 
     public function itemChooseStatusPost(int $itemId)
