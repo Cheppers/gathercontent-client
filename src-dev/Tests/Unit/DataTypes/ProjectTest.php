@@ -95,7 +95,7 @@ class ProjectTest extends BaseTest
             'statuses' => [
                 [
                     'data' => [
-                        'status-01-id' => [
+                        [
                             'id' => 'status-01-id',
                             'is_default' => true,
                             'position' => 'p1',
@@ -104,7 +104,7 @@ class ProjectTest extends BaseTest
                             'description' => 'd1',
                             'can_edit' => true,
                         ],
-                        'status-02-id' => [
+                        [
                             'id' => 'status-02-id',
                             'is_default' => true,
                             'position' => 'p2',
@@ -159,7 +159,7 @@ class ProjectTest extends BaseTest
         $expected['text_direction'] .= '-MODIFIED';
 
         $project1->statuses['status-01-id']->color .= '-MODIFIED';
-        $expected['statuses']['data']['status-01-id']['color'] .= '-MODIFIED';
+        $expected['statuses']['data'][0]['color'] .= '-MODIFIED';
 
         $json1 = json_encode($project1);
         $actual1 = json_decode($json1, true);

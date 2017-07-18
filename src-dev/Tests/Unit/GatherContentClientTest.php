@@ -101,7 +101,7 @@ class GatherContentClientTest extends GcBaseTestCase
         $userExpected = $userData;
         $userExpected['announcements'] = [];
         foreach ($userData['announcements'] as $announcement) {
-            $userExpected['announcements'][$announcement['id']] = $announcement;
+            $userExpected['announcements'][] = $announcement;
         }
 
         return [
@@ -425,7 +425,7 @@ class GatherContentClientTest extends GcBaseTestCase
             $expected[$project['id']]['meta'] = [];
             $expected[$project['id']]['statuses'] = [];
             foreach ($project['statuses']['data'] as $status) {
-                $expected[$project['id']]['statuses']['data'][$status['id']] = $status;
+                $expected[$project['id']]['statuses']['data'][] = $status;
             }
         }
 
@@ -552,7 +552,7 @@ class GatherContentClientTest extends GcBaseTestCase
         $expected['meta'] = [];
         $expected['statuses'] = [];
         foreach ($data['statuses']['data'] as $status) {
-            $expected['statuses']['data'][$status['id']] = $status;
+            $expected['statuses']['data'][] = $status;
         }
 
         return [
@@ -907,15 +907,6 @@ class GatherContentClientTest extends GcBaseTestCase
         ];
 
         $items = static::reKeyArray($data, 'id');
-        foreach (array_keys($items) as $itemId) {
-            $items[$itemId]['config'] = static::reKeyArray($items[$itemId]['config'], 'name');
-            foreach (array_keys($items[$itemId]['config']) as $tabId) {
-                $items[$itemId]['config'][$tabId]['elements'] = static::reKeyArray(
-                    $items[$itemId]['config'][$tabId]['elements'],
-                    'name'
-                );
-            }
-        }
 
         return [
             'empty' => [
@@ -1037,14 +1028,6 @@ class GatherContentClientTest extends GcBaseTestCase
         $item = static::getUniqueResponseItem([
             ['text', 'choice_checkbox'],
         ]);
-
-        $item['config'] = static::reKeyArray($item['config'], 'name');
-        foreach (array_keys($item['config']) as $tabId) {
-            $item['config'][$tabId]['elements'] = static::reKeyArray(
-                $item['config'][$tabId]['elements'],
-                'name'
-            );
-        }
 
         return [
             'empty' => [
@@ -1393,7 +1376,6 @@ class GatherContentClientTest extends GcBaseTestCase
 
         $templates = static::reKeyArray($data, 'id');
         foreach (array_keys($templates) as $templateId) {
-            $templates[$templateId]['config'] = static::reKeyArray($templates[$templateId]['config'], 'name');
             foreach (array_keys($templates[$templateId]['config']) as $tabId) {
                 $templates[$templateId]['config'][$tabId]['elements'] = static::reKeyArray(
                     $templates[$templateId]['config'][$tabId]['elements'],
@@ -1524,7 +1506,6 @@ class GatherContentClientTest extends GcBaseTestCase
         ]);
 
         $template = $data;
-        $template['config'] = static::reKeyArray($template['config'], 'name');
         foreach (array_keys($template['config']) as $tabId) {
             $template['config'][$tabId]['elements'] = static::reKeyArray(
                 $template['config'][$tabId]['elements'],
@@ -1891,5 +1872,55 @@ class GatherContentClientTest extends GcBaseTestCase
         (new GatherContentClient($client))
           ->setOptions($this->gcClientOptions)
           ->itemsPost(0, 'test');
+    }
+
+    public function testItemSavePost()
+    {
+        $itemId = 131313;
+        $container = [];
+        $history = Middleware::history($container);
+        $mock = new MockHandler([
+            new Response(202),
+        ]);
+        $handlerStack = HandlerStack::create($mock);
+        $handlerStack->push($history);
+        $client = new Client([
+            'handler' => $handlerStack,
+        ]);
+
+        (new GatherContentClient($client))
+          ->setOptions($this->gcClientOptions)
+          ->itemSavePost($itemId, []);
+
+        /** @var Request $request */
+        $request = $container[0]['request'];
+
+        static::assertEquals(1, count($container));
+        static::assertEquals('POST', $request->getMethod());
+        static::assertEquals(['application/vnd.gathercontent.v0.5+json'], $request->getHeader('Accept'));
+        static::assertEquals(['api.example.com'], $request->getHeader('Host'));
+        static::assertEquals(
+            "{$this->gcClientOptions['baseUri']}/items/$itemId/save",
+            (string) $request->getUri()
+        );
+    }
+
+    public function testItemSavePostUnexpectedStatusCode()
+    {
+        $container = [];
+        $history = Middleware::history($container);
+        $mock = new MockHandler([
+          new Response(200, []),
+        ]);
+        $handlerStack = HandlerStack::create($mock);
+        $handlerStack->push($history);
+        $client = new Client([
+          'handler' => $handlerStack,
+        ]);
+
+        static::expectException(\Exception::class);
+        (new GatherContentClient($client))
+          ->setOptions($this->gcClientOptions)
+          ->itemSavePost(131313, []);
     }
 }

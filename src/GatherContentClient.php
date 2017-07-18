@@ -411,9 +411,27 @@ class GatherContentClient implements GatherContentClientInterface
         return $matches['itemId'];
     }
 
-    public function itemSavePost(int $itemId)
+    public function itemSavePost(int $itemId, array $config): void
     {
-        //
+        $config = array_values($config);
+        $jsonConfig = \GuzzleHttp\json_encode($config);
+        $encodedConfig = base64_encode($jsonConfig);
+
+        $this->response = $this->client->request(
+            'POST',
+            $this->getUri('items/' . $itemId . '/save'),
+            [
+                'auth' => $this->getRequestAuth(),
+                'headers' => $this->getRequestHeaders([]),
+                'form_params' => [
+                    'config' => $encodedConfig,
+                ],
+            ]
+        );
+
+        if ($this->response->getStatusCode() !== 202) {
+            throw new \Exception('@todo ' . __METHOD__);
+        }
     }
 
     /**

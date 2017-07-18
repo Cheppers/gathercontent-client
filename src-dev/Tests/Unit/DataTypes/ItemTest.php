@@ -30,12 +30,12 @@ class ItemTest extends BaseTest
             'archived_at' => [6, 6],
             'config' => [
                 [
-                    'tab-01-id' => [
+                    [
                         'name' => 'tab-01-id',
                         'label' => 'tab-01-label',
                         'hidden' => false,
                         'elements' => [
-                            'element-01-id' => [
+                            /*'element-01-id' => */[
                                 'name' => 'element-01-id',
                                 'type' => 'text',
                                 'label' => 'element-01-label',
@@ -46,7 +46,7 @@ class ItemTest extends BaseTest
                                 'plain_text' => true,
                                 'value' => 'element-01-value',
                             ],
-                            'element-02-id' => [
+                            /*'element-02-id' => */[
                                 'name' => 'element-02-id',
                                 'type' => 'files',
                                 'label' => 'element-02-label',
@@ -195,8 +195,11 @@ class ItemTest extends BaseTest
         $item1->status->color .= '-MODIFIED';
         $expected['status']['data']['color'] .= '-MODIFIED';
 
+//        $item1->config['tab-01-id']->elements['element-01-id']->label .= '-MODIFIED';
+//        $expected['config']['tab-01-id']['elements']['element-01-id']['label'] .= '-MODIFIED';
+
         $item1->config['tab-01-id']->elements['element-01-id']->label .= '-MODIFIED';
-        $expected['config']['tab-01-id']['elements']['element-01-id']['label'] .= '-MODIFIED';
+        $expected['config'][0]['elements'][0]['label'] .= '-MODIFIED';
 
         $json1 = json_encode($item1);
         $actual1 = json_decode($json1, true);
