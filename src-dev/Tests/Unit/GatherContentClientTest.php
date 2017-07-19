@@ -3,9 +3,11 @@
 namespace Cheppers\GatherContent\Tests\Unit;
 
 use Cheppers\GatherContent\DataTypes\Account;
+use Cheppers\GatherContent\DataTypes\ElementText;
 use Cheppers\GatherContent\DataTypes\Item;
 use Cheppers\GatherContent\DataTypes\Project;
 use Cheppers\GatherContent\DataTypes\Status;
+use Cheppers\GatherContent\DataTypes\Tab;
 use Cheppers\GatherContent\DataTypes\Template;
 use Cheppers\GatherContent\DataTypes\User;
 use Cheppers\GatherContent\GatherContentClient;
@@ -1650,9 +1652,52 @@ class GatherContentClientTest extends GcBaseTestCase
         $gc->templateGet($templateId);
     }
 
-    public function testItemsPost(): void
+    public function casesItemsPost()
     {
-        $itemId = 131313;
+        $item = new Item();
+
+        $tab = new Tab();
+        $tab->label = 'Test tab';
+        $tab->id = 'test_tab';
+        $tab->hidden = false;
+
+        $item->config[$tab->id] = $tab;
+
+        $text = new ElementText();
+        $text->label = 'Test text';
+        $text->id = 'test_text';
+        $text->type = 'text';
+        $text->limitType = 'words';
+        $text->limit = 1000;
+        $text->value = 'Test value';
+
+        $item->config[$tab->id]->elements[$text->id] = $text;
+
+        return [
+            'empty' => [
+                131313,
+                'test item empty',
+                0,
+                0,
+                [],
+                13,
+            ],
+            'custom' => [
+                131313,
+                'test item custom',
+                500,
+                0,
+                $item->config,
+                13,
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider casesItemsPost
+     */
+    public function testItemsPost($projectId, $name, $parentId, $templateId, $config, $resultItemId): void
+    {
         $container = [];
         $history = Middleware::history($container);
         $mock = new MockHandler([
@@ -1660,9 +1705,10 @@ class GatherContentClientTest extends GcBaseTestCase
                 202,
                 [
                     'Content-Type' => 'application/json',
-                    'Location' => $this->gcClientOptions['baseUri'] . '/items/' . $itemId,
+                    'Location' => "{$this->gcClientOptions['baseUri']}/items/$resultItemId",
                 ]
             ),
+            new RequestException('Error Communicating with Server', new Request('POST', 'items'))
         ]);
         $handlerStack = HandlerStack::create($mock);
         $handlerStack->push($history);
@@ -1672,9 +1718,9 @@ class GatherContentClientTest extends GcBaseTestCase
 
         $actual = (new GatherContentClient($client))
           ->setOptions($this->gcClientOptions)
-          ->itemsPost(0, 'test');
+          ->itemsPost($projectId, $name, $parentId, $templateId, $config);
 
-        self::assertEquals($itemId, $actual);
+        static::assertEquals($resultItemId, $actual);
 
         /** @var Request $request */
         $request = $container[0]['request'];
@@ -1687,6 +1733,37 @@ class GatherContentClientTest extends GcBaseTestCase
             "{$this->gcClientOptions['baseUri']}/items",
             (string) $request->getUri()
         );
+
+        $requestBody = $request->getBody();
+        $queryString = $requestBody->getContents();
+        $sentQueryVariables = [];
+        parse_str($queryString, $sentQueryVariables);
+
+        if ($parentId) {
+            static::assertArrayHasKey('parent_id', $sentQueryVariables);
+            static::assertEquals($sentQueryVariables['parent_id'], $parentId);
+        } else {
+            static::assertArrayNotHasKey('parent_id', $sentQueryVariables);
+        }
+
+        if ($templateId) {
+            static::assertArrayHasKey('template_id', $sentQueryVariables);
+            static::assertEquals($sentQueryVariables['template_id'], $templateId);
+        } else {
+            static::assertArrayNotHasKey('template_id', $sentQueryVariables);
+        }
+
+        if ($config) {
+            static::assertArrayHasKey('config', $sentQueryVariables);
+
+            $config = array_values($config);
+            $jsonConfig = \GuzzleHttp\json_encode($config);
+            $encodedConfig = base64_encode($jsonConfig);
+
+            static::assertEquals($sentQueryVariables['config'], $encodedConfig);
+        } else {
+            static::assertArrayNotHasKey('config', $sentQueryVariables);
+        }
     }
 
     public function testItemsPostNoPath()
