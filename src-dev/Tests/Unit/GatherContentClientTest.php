@@ -1512,6 +1512,22 @@ class GatherContentClientTest extends GcBaseTestCase
         static::assertEquals('POST', $request->getMethod());
         static::assertEquals(['application/vnd.gathercontent.v0.5+json'], $request->getHeader('Accept'));
         static::assertEquals(['api.example.com'], $request->getHeader('Host'));
+        static::assertEquals(
+            "{$this->gcClientOptions['baseUri']}/items/{$itemId}/apply_template",
+            (string) $request->getUri()
+        );
+
+        $requestBody = $request->getBody();
+        $queryString = $requestBody->getContents();
+        $sentQueryVariables = [];
+        parse_str($queryString, $sentQueryVariables);
+
+        if ($templateId) {
+            static::assertArrayHasKey('template_id', $sentQueryVariables);
+            static::assertEquals($sentQueryVariables['template_id'], $templateId);
+        } else {
+            static::assertArrayNotHasKey('template_id', $sentQueryVariables);
+        }
     }
 
     public function casesItemApplyTemplatePostFail(): array
@@ -1640,6 +1656,22 @@ class GatherContentClientTest extends GcBaseTestCase
         static::assertEquals('POST', $request->getMethod());
         static::assertEquals(['application/vnd.gathercontent.v0.5+json'], $request->getHeader('Accept'));
         static::assertEquals(['api.example.com'], $request->getHeader('Host'));
+        static::assertEquals(
+            "{$this->gcClientOptions['baseUri']}/items/{$itemId}/choose_status",
+            (string) $request->getUri()
+        );
+
+        $requestBody = $request->getBody();
+        $queryString = $requestBody->getContents();
+        $sentQueryVariables = [];
+        parse_str($queryString, $sentQueryVariables);
+
+        if ($statusId) {
+            static::assertArrayHasKey('status_id', $sentQueryVariables);
+            static::assertEquals($sentQueryVariables['status_id'], $statusId);
+        } else {
+            static::assertArrayNotHasKey('status_id', $sentQueryVariables);
+        }
     }
 
     public function casesItemChooseStatusPostFail(): array
