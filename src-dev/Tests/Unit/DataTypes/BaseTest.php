@@ -3,12 +3,12 @@
 namespace Cheppers\GatherContent\Tests\Unit\DataTypes;
 
 use Cheppers\GatherContent\DataTypes\Base;
-use PHPUnit\Framework\TestCase;
+use Cheppers\GatherContent\Tests\Unit\GcBaseTestCase;
 
 /**
  * @group GatherContentClient
  */
-class BaseTest extends TestCase
+class BaseTest extends GcBaseTestCase
 {
     /**
      * @var string

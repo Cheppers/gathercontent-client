@@ -73,97 +73,24 @@ class ProjectTest extends BaseTest
 
     public function testJsonSerialize(): void
     {
-        $allowedTags = [
-            'a' => [],
-            'p' => ['class' => '*'],
-        ];
+        $projectArray = static::getUniqueResponseProject();
 
-        $allowedTagsJson = json_encode($allowedTags, JSON_PRETTY_PRINT);
-
-        $pairs = [
-            'id' => ['a', 'a'],
-            'name' => ['b', 'b'],
-            'type' => ['c', 'c'],
-            'example' => [false, false],
-            'account_id' => [1, 1],
-            'active' => [true, true],
-            'text_direction' => ['d', 'd'],
-            'allowed_tags' => [$allowedTagsJson, $allowedTagsJson],
-            'created_at' => [2, 2],
-            'updated_at' => [3, 3],
-            'overdue' => [true, true],
-            'statuses' => [
-                [
-                    'data' => [
-                        [
-                            'id' => 'status-01-id',
-                            'is_default' => true,
-                            'position' => 'p1',
-                            'color' => 'c1',
-                            'name' => 'n1',
-                            'description' => 'd1',
-                            'can_edit' => true,
-                        ],
-                        [
-                            'id' => 'status-02-id',
-                            'is_default' => true,
-                            'position' => 'p2',
-                            'color' => 'c2',
-                            'name' => 'n2',
-                            'description' => 'd2',
-                            'can_edit' => false,
-                        ],
-                    ],
-                ],
-                [
-                    'data' => [
-                        [
-                            'id' => 'status-01-id',
-                            'is_default' => true,
-                            'position' => 'p1',
-                            'color' => 'c1',
-                            'name' => 'n1',
-                            'description' => 'd1',
-                            'can_edit' => true,
-                        ],
-                        [
-                            'id' => 'status-02-id',
-                            'is_default' => true,
-                            'position' => 'p2',
-                            'color' => 'c2',
-                            'name' => 'n2',
-                            'description' => 'd2',
-                            'can_edit' => false,
-                        ],
-                    ],
-                ],
-            ],
-            'meta' => [[], []],
-        ];
-
-        $expected = [];
-        $data = [];
-        foreach ($pairs as $key => $pair) {
-            $expected[$key] = $pair[0];
-            $data[$key] = $pair[1];
-        }
         /** @var \Cheppers\GatherContent\DataTypes\Project $project1 */
-        $project1 = new $this->className($data);
-
-        static::assertEquals($allowedTags, $project1->allowedTags);
+        $project1 = new $this->className($projectArray);
 
         $project1->name .= '-MODIFIED';
-        $expected['name'] .= '-MODIFIED';
+        $projectArray['name'] .= '-MODIFIED';
 
         $project1->textDirection .= '-MODIFIED';
-        $expected['text_direction'] .= '-MODIFIED';
+        $projectArray['text_direction'] .= '-MODIFIED';
 
-        $project1->statuses['status-01-id']->color .= '-MODIFIED';
-        $expected['statuses']['data'][0]['color'] .= '-MODIFIED';
+        $statusId = key($project1->statuses);
+        $project1->statuses[$statusId]->color .= '-MODIFIED';
+        $projectArray['statuses']['data'][0]['color'] .= '-MODIFIED';
 
         $json1 = json_encode($project1);
         $actual1 = json_decode($json1, true);
-        foreach ($expected as $key => $value) {
+        foreach ($projectArray as $key => $value) {
             static::assertEquals($value, $actual1[$key], "JSON encode.decode - $key");
         }
 
