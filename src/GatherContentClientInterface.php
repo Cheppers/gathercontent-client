@@ -88,6 +88,17 @@ interface GatherContentClientInterface
     public function itemGet(int $itemId): ?DataTypes\Item;
 
     /**
+     * @see https://docs.gathercontent.com/reference#post-items
+     */
+    public function itemsPost(
+        int $projectId,
+        string $name,
+        int $parentId = 0,
+        int $templateId = 0,
+        array $config = []
+    ): int;
+
+    /**
      * @return \Cheppers\GatherContent\DataTypes\File[]
      */
     public function itemFilesGet(int $itemId): array;

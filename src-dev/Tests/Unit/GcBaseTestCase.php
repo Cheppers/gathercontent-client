@@ -276,6 +276,7 @@ class GcBaseTestCase extends TestCase
             'required' => false,
             'microcopy' => '',
             'options' => static::getUniqueResponseElementChoiceOptions(false),
+            'other_option' => false,
         ];
     }
 

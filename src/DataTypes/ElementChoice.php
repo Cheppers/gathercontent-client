@@ -2,7 +2,7 @@
 
 namespace Cheppers\GatherContent\DataTypes;
 
-class ElementOptions extends Element
+class ElementChoice extends Element
 {
     /**
      * @var array

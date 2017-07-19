@@ -362,6 +362,55 @@ class GatherContentClient implements GatherContentClientInterface
         return empty($body['data']) ? null : new DataTypes\Item($body['data']);
     }
 
+    public function itemsPost(
+        int $projectId,
+        string $name,
+        int $parentId = 0,
+        int $templateId = 0,
+        array $config = []
+    ): int {
+        $form_params = [
+            'project_id' => $projectId,
+            'name' => $name,
+        ];
+
+        if ($parentId) {
+            $form_params['parent_id'] = $parentId;
+        }
+
+        if ($templateId) {
+            $form_params['template_id'] = $templateId;
+        }
+
+        if ($config) {
+            $config = array_values($config);
+            $form_params['config'] = base64_encode(\GuzzleHttp\json_encode($config));
+        }
+
+        $this->response = $this->client->request(
+            'POST',
+            $this->getUri('items'),
+            [
+                'auth' => $this->getRequestAuth(),
+                'headers' => $this->getRequestHeaders([]),
+                'form_params' => $form_params,
+            ]
+        );
+
+        if ($this->response->getStatusCode() !== 202) {
+            throw new \Exception('@todo ' . __METHOD__);
+        }
+
+        $locations = $this->response->getHeader('Location');
+        $locationPath = parse_url(reset($locations), PHP_URL_PATH);
+        $matches = [];
+        if (!preg_match('@/items/(?P<itemId>\d+)$@', $locationPath, $matches)) {
+            throw new \Exception('@todo Where is the new item ID?');
+        }
+
+        return $matches['itemId'];
+    }
+
     public function itemSavePost(int $itemId)
     {
         //

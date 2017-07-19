@@ -47,6 +47,11 @@ class ElementFiles extends Element
     /**
      * {@inheritdoc}
      */
+    public $type = 'files';
+
+    /**
+     * {@inheritdoc}
+     */
     public function getValue()
     {
         return null;

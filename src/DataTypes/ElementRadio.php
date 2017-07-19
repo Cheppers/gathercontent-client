@@ -2,27 +2,17 @@
 
 namespace Cheppers\GatherContent\DataTypes;
 
-class ElementSection extends Element
+class ElementRadio extends ElementChoice
 {
     /**
-     * @var string
+     * @var bool
      */
-    public $title = '';
-
-    /**
-     * @var string
-     */
-    public $subtitle = '';
+    public $otherOption = false;
 
     /**
      * {@inheritdoc}
      */
-    protected $unusedProperties = ['id', 'label', 'required', 'microcopy'];
-
-    /**
-     * {@inheritdoc}
-     */
-    public $type = 'section';
+    public $type = 'choice_radio';
 
     /**
      * {@inheritdoc}
@@ -33,8 +23,7 @@ class ElementSection extends Element
         $this->propertyMapping = array_replace(
             $this->propertyMapping,
             [
-                'title' => 'title',
-                'subtitle' => 'subtitle',
+                'other_option' => 'otherOption',
             ]
         );
 
