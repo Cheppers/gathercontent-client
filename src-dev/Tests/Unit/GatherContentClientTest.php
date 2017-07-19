@@ -1438,7 +1438,7 @@ class GatherContentClientTest extends GcBaseTestCase
         $mock = new MockHandler([
             new Response(
                 $response['code'],
-                ['Content-Type' => 'application/json'],
+                $response['headers'],
                 \GuzzleHttp\json_encode($response['body'])
             ),
             new RequestException('Error Communicating with Server', new Request('GET', 'me'))
@@ -1487,7 +1487,7 @@ class GatherContentClientTest extends GcBaseTestCase
         $mock = new MockHandler([
             new Response(
                 $response['code'],
-                $response['headers'],
+                ['Content-Type' => 'application/json'],
                 \GuzzleHttp\json_encode($response['body'])
             ),
             new RequestException('Error Communicating with Server', new Request('GET', 'me'))
@@ -1631,7 +1631,7 @@ class GatherContentClientTest extends GcBaseTestCase
         $mock = new MockHandler([
             new Response(
                 $response['code'],
-                $response['headers'],
+                ['Content-Type' => 'application/json'],
                 \GuzzleHttp\json_encode($response['body'])
             ),
             new RequestException('Error Communicating with Server', new Request('GET', 'me'))
