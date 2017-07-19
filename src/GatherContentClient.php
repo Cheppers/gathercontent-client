@@ -414,12 +414,10 @@ class GatherContentClient implements GatherContentClientInterface
     public function itemSavePost(int $itemId, array $config): void
     {
         $formParams = [];
-        if ($config) {
-            $config = array_values($config);
-            $jsonConfig = \GuzzleHttp\json_encode($config);
-            $encodedConfig = base64_encode($jsonConfig);
-            $formParams['config'] = $encodedConfig;
-        }
+        $config = array_values($config);
+        $jsonConfig = \GuzzleHttp\json_encode($config);
+        $encodedConfig = base64_encode($jsonConfig);
+        $formParams['config'] = $encodedConfig;
 
         $this->response = $this->client->request(
             'POST',

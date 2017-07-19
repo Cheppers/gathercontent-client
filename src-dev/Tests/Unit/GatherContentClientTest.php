@@ -11,6 +11,7 @@ use Cheppers\GatherContent\DataTypes\Tab;
 use Cheppers\GatherContent\DataTypes\Template;
 use Cheppers\GatherContent\DataTypes\User;
 use Cheppers\GatherContent\GatherContentClient;
+use Cheppers\GatherContent\Tests\Unit\DataTypes\ElementTextTest;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Handler\MockHandler;
@@ -98,15 +99,10 @@ class GatherContentClientTest extends GcBaseTestCase
     public function casesMeGet(): array
     {
         $userData = static::getUniqueResponseUser();
-        $userExpected = $userData;
-        $userExpected['announcements'] = [];
-        foreach ($userData['announcements'] as $announcement) {
-            $userExpected['announcements'][] = $announcement;
-        }
 
         return [
             'basic' => [
-                $userExpected,
+                $userData,
                 ['data' => $userData],
             ],
         ];
@@ -1793,10 +1789,29 @@ class GatherContentClientTest extends GcBaseTestCase
 
     public function casesItemSavePost()
     {
+        $item = new Item();
+
+        $tab = new Tab();
+        $tab->id = 'tab1';
+        $tab->label = 'Tab 1';
+        $tab->hidden = false;
+
+        $text = new ElementText();
+        $text->id = 'test-text';
+        $text->label = 'Test';
+        $text->value = 'Test text';
+
+        $tab->elements[$text->id] = $text;
+        $item->config[$tab->id] = $tab;
+
         return [
             'empty' => [
                 131313,
                 [],
+            ],
+            'basic' => [
+                131313,
+                $item->config,
             ],
         ];
     }
@@ -1833,6 +1848,18 @@ class GatherContentClientTest extends GcBaseTestCase
             "{$this->gcClientOptions['baseUri']}/items/$itemId/save",
             (string) $request->getUri()
         );
+
+        $requestBody = $request->getBody();
+        $queryString = $requestBody->getContents();
+        $sentQueryVariables = [];
+        parse_str($queryString, $sentQueryVariables);
+
+        $config = array_values($config);
+        $jsonConfig = \GuzzleHttp\json_encode($config);
+        $encodedConfig = base64_encode($jsonConfig);
+
+        static::assertArrayHasKey('config', $sentQueryVariables);
+        static::assertEquals($encodedConfig, $sentQueryVariables['config']);
     }
 
     public function testItemSavePostUnexpectedStatusCode()
