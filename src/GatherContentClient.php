@@ -421,7 +421,7 @@ class GatherContentClient implements GatherContentClientInterface
 
         $this->response = $this->client->request(
             'POST',
-            $this->getUri('items/' . $itemId . '/save'),
+            $this->getUri("items/$itemId/save"),
             [
                 'auth' => $this->getRequestAuth(),
                 'headers' => $this->getRequestHeaders([]),
@@ -430,7 +430,7 @@ class GatherContentClient implements GatherContentClientInterface
         );
 
         if ($this->response->getStatusCode() !== 202) {
-            throw new \Exception('@todo ' . __METHOD__);
+            throw new \Exception("Unexpected status code: {$this->response->getStatusCode()}");
         }
     }
 

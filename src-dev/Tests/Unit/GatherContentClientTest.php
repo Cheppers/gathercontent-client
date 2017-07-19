@@ -419,10 +419,6 @@ class GatherContentClientTest extends GcBaseTestCase
         foreach ($data as $project) {
             $expected[$project['id']] = $project;
             $expected[$project['id']]['meta'] = [];
-            $expected[$project['id']]['statuses'] = [];
-            foreach ($project['statuses']['data'] as $status) {
-                $expected[$project['id']]['statuses']['data'][] = $status;
-            }
         }
 
         return [
@@ -546,10 +542,6 @@ class GatherContentClientTest extends GcBaseTestCase
 
         $expected = $data;
         $expected['meta'] = [];
-        $expected['statuses'] = [];
-        foreach ($data['statuses']['data'] as $status) {
-            $expected['statuses']['data'][] = $status;
-        }
 
         return [
             'basic' => [
