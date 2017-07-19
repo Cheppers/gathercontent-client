@@ -258,19 +258,19 @@ class GatherContentClient implements GatherContentClientInterface
             ]
         );
 
-        if ($this->response->getStatusCode() !== 202) {
-            $this->validateResponse();
-            $this->parseResponse();
+        if ($this->response->getStatusCode() === 202) {
+            $locations = $this->response->getHeader('Location');
+            $locationPath = parse_url(reset($locations), PHP_URL_PATH);
+            $matches = [];
+            if (!preg_match('@/projects/(?P<projectId>\d+)$@', $locationPath, $matches)) {
+                throw new \Exception('Invalid response header the project ID is missing');
+            }
+
+            return $matches['projectId'];
         }
 
-        $locations = $this->response->getHeader('Location');
-        $locationPath = parse_url(reset($locations), PHP_URL_PATH);
-        $matches = [];
-        if (!preg_match('@/projects/(?P<projectId>\d+)$@', $locationPath, $matches)) {
-            throw new \Exception('@todo Where is the new project ID?');
-        }
-
-        return $matches['projectId'];
+        $this->validateResponse();
+        $this->parseResponse();
     }
 
     /**
@@ -361,6 +361,9 @@ class GatherContentClient implements GatherContentClientInterface
         //
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function itemApplyTemplatePost(int $itemId, int $templateId): void
     {
         $this->response = $this->client->request(
