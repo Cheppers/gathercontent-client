@@ -423,7 +423,7 @@ class GatherContentClient implements GatherContentClientInterface
     {
         $this->response = $this->client->request(
             'POST',
-            $this->getUri("items/{$itemId}/apply_template"),
+            $this->getUri("items/$itemId/apply_template"),
             [
                 'auth' => $this->getRequestAuth(),
                 'headers' => $this->getRequestHeaders(),
@@ -452,7 +452,7 @@ class GatherContentClient implements GatherContentClientInterface
     {
         $this->response = $this->client->request(
             'POST',
-            $this->getUri('items/' . $itemId . '/choose_status'),
+            $this->getUri("items/$itemId/choose_status"),
             [
                 'auth' => $this->getRequestAuth(),
                 'headers' => $this->getRequestHeaders(),
