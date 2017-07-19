@@ -1428,7 +1428,6 @@ class GatherContentClientTest extends GcBaseTestCase
         );
     }
 
-
     /**
      * @dataProvider casesItemGetFail
      */
