@@ -398,7 +398,7 @@ class GatherContentClient implements GatherContentClientInterface
         );
 
         if ($this->response->getStatusCode() !== 202) {
-            throw new \Exception('@todo ' . __METHOD__);
+            throw new \Exception("Unexpected status code: {$this->response->getStatusCode()}");
         }
 
         $locations = $this->response->getHeader('Location');
