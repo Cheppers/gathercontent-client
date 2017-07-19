@@ -273,7 +273,7 @@ class GatherContentClient implements GatherContentClientInterface
         $locationPath = parse_url(reset($locations), PHP_URL_PATH);
         $matches = [];
         if (!preg_match('@/projects/(?P<projectId>\d+)$@', $locationPath, $matches)) {
-            throw new \Exception('Invalid response header the project ID is missing');
+            throw new \Exception('Invalid response header the project ID is missing', 1);
         }
 
         return $matches['projectId'];
