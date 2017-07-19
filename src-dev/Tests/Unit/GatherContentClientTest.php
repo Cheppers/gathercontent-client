@@ -690,6 +690,200 @@ class GatherContentClientTest extends GcBaseTestCase
         ];
     }
 
+    public function casesProjectsPost(): array
+    {
+        return [
+            'basic' => [
+                [
+                    'code' => 202,
+                    'id' => 42,
+                ],
+                [
+                    'code' => 202,
+                    'body' => [],
+                    'id' => 42,
+                ],
+                42,
+                'Project name',
+                'Project type'
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider casesProjectsPost
+     */
+    public function testProjectsPost(
+        array $expected,
+        array $response,
+        int $accountId,
+        string $projectName,
+        string $projectType
+    ): void {
+        $container = [];
+        $history = Middleware::history($container);
+        $mock = new MockHandler([
+            new Response(
+                $response['code'],
+                [
+                    'Content-Type' => 'application/json',
+                    'Location' => "{$this->gcClientOptions['baseUri']}/projects/{$response['id']}"
+                ],
+                \GuzzleHttp\json_encode($response['body'])
+            ),
+            new RequestException('Error Communicating with Server', new Request('GET', 'me'))
+        ]);
+        $handlerStack = HandlerStack::create($mock);
+        $handlerStack->push($history);
+
+        $client = new Client([
+            'handler' => $handlerStack,
+        ]);
+
+        $client = (new GatherContentClient($client))
+            ->setOptions($this->gcClientOptions);
+        $actual = $client->projectsPost($accountId, $projectName, $projectType);
+
+        static::assertEquals($expected['id'], $actual);
+
+
+        /** @var Request $request */
+        $request = $container[0]['request'];
+
+        static::assertEquals($expected['code'], $client->getResponse()->getStatusCode());
+        static::assertEquals(1, count($container));
+        static::assertEquals('POST', $request->getMethod());
+        static::assertEquals(['application/vnd.gathercontent.v0.5+json'], $request->getHeader('Accept'));
+        static::assertEquals(['application/x-www-form-urlencoded'], $request->getHeader('Content-Type'));
+        static::assertEquals(['api.example.com'], $request->getHeader('Host'));
+        static::assertEquals(
+            "{$this->gcClientOptions['baseUri']}/projects",
+            (string) $request->getUri()
+        );
+
+        $requestBody = $request->getBody();
+        $queryString = $requestBody->getContents();
+        $sentQueryVariables = [];
+        parse_str($queryString, $sentQueryVariables);
+
+        if ($accountId) {
+            static::assertArrayHasKey('account_id', $sentQueryVariables);
+            static::assertEquals($sentQueryVariables['account_id'], $accountId);
+        } else {
+            static::assertArrayNotHasKey('account_id', $sentQueryVariables);
+        }
+
+        if ($projectName) {
+            static::assertArrayHasKey('name', $sentQueryVariables);
+            static::assertEquals($sentQueryVariables['name'], $projectName);
+        } else {
+            static::assertArrayNotHasKey('name', $sentQueryVariables);
+        }
+
+        if ($projectType) {
+            static::assertArrayHasKey('type', $sentQueryVariables);
+            static::assertEquals($sentQueryVariables['type'], $projectType);
+        } else {
+            static::assertArrayNotHasKey('type', $sentQueryVariables);
+        }
+    }
+
+    public function casesProjectsPostFail(): array
+    {
+        $cases = static::basicFailCasesPost(['name' => 'Project name', 'type' => 'Project type']);
+        $cases['missing_item'] = [
+            [
+                'class' => \Exception::class,
+                'code' => 200,
+                'msg' => 'API Error: "Account not found"',
+            ],
+            [
+                'code' => 200,
+                'headers' => ['Content-Type' => 'application/json'],
+                'body' => [
+                    'data' => [
+                        'message' => 'Account not found'
+                    ]
+                ],
+            ],
+            0,
+            'Project name',
+            'Project type'
+        ];
+        $cases['empty_name'] = [
+            [
+                'class' => \Exception::class,
+                'code' => 400,
+                'msg' => '{"error":"Missing name","code":400}',
+            ],
+            [
+                'code' => 400,
+                'headers' => ['Content-Type' => 'application/json'],
+                'body' => [
+                    'error' => 'Missing name',
+                    'code' => 400
+                ],
+            ],
+            42,
+            '',
+            'Project type'
+        ];
+        $cases['missing_project_id'] = [
+            [
+                'class' => \Exception::class,
+                'code' => 1,
+                'msg' => 'Invalid response header the project ID is missing',
+            ],
+            [
+                'code' => 202,
+                'headers' => ['Content-Type' => 'application/json'],
+                'body' => [],
+            ],
+            42,
+            '',
+            'Project type'
+        ];
+
+        return $cases;
+    }
+
+    /**
+     * @dataProvider casesProjectsPostFail
+     */
+    public function testProjectsPostFail(
+        array $expected,
+        array $response,
+        int $accountId,
+        string $projectName,
+        string $projectType
+    ): void {
+        $container = [];
+        $history = Middleware::history($container);
+        $mock = new MockHandler([
+            new Response(
+                $response['code'],
+                $response['headers'],
+                \GuzzleHttp\json_encode($response['body'])
+            ),
+            new RequestException('Error Communicating with Server', new Request('GET', 'me'))
+        ]);
+        $handlerStack = HandlerStack::create($mock);
+        $handlerStack->push($history);
+
+        $client = new Client([
+            'handler' => $handlerStack,
+        ]);
+
+        $gc = (new GatherContentClient($client))
+            ->setOptions($this->gcClientOptions);
+
+        static::expectException($expected['class']);
+        static::expectExceptionCode($expected['code']);
+        static::expectExceptionMessage($expected['msg']);
+
+        $gc->projectsPost($accountId, $projectName, $projectType);
+    }
+
     /**
      * @dataProvider casesProjectStatusesGet
      */

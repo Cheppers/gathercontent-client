@@ -397,7 +397,8 @@ class GcBaseTestCase extends TestCase
                     'body' => '401 Unauthorized',
                 ],
                 42,
-                (isset($data['id'])) ? $data['id'] : null
+                (isset($data['id']) ? $data['id'] : (isset($data['name']) ? $data['name'] : null)),
+                (isset($data['type']) ? $data['type'] : null)
             ],
             'internal-error' => [
                 [
@@ -413,7 +414,8 @@ class GcBaseTestCase extends TestCase
                     ],
                 ],
                 42,
-                (isset($data['id'])) ? $data['id'] : null
+                (isset($data['id']) ? $data['id'] : (isset($data['name']) ? $data['name'] : null)),
+                (isset($data['type']) ? $data['type'] : null)
             ],
         ];
     }
@@ -433,7 +435,8 @@ class GcBaseTestCase extends TestCase
                 'body' => [],
             ],
             42,
-            (isset($data['id'])) ? $data['id'] : null
+            (isset($data['id']) ? $data['id'] : (isset($data['name']) ? $data['name'] : null)),
+            (isset($data['type']) ? $data['type'] : null)
         ];
 
         return $cases;
@@ -454,7 +457,8 @@ class GcBaseTestCase extends TestCase
                 'body' => [],
             ],
             42,
-            (isset($data['id'])) ? $data['id'] : null
+            (isset($data['id']) ? $data['id'] : (isset($data['name']) ? $data['name'] : null)),
+            (isset($data['type']) ? $data['type'] : null)
         ];
 
         return $cases;
