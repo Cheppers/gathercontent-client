@@ -1439,7 +1439,7 @@ class GatherContentClientTest extends GcBaseTestCase
         $mock = new MockHandler([
             new Response(
                 $response['code'],
-                $response['headers'],
+                ['Content-Type' => 'application/json'],
                 \GuzzleHttp\json_encode($response['body'])
             ),
             new RequestException('Error Communicating with Server', new Request('GET', 'me'))
@@ -1518,6 +1518,24 @@ class GatherContentClientTest extends GcBaseTestCase
     public function casesItemApplyTemplatePostFail(): array
     {
         $cases = static::basicFailCasesPost(['id' => 0]);
+        $cases['missing_item'] = [
+            [
+                'class' => \Exception::class,
+                'code' => 200,
+                'msg' => 'API Error: "Item Not Found"',
+            ],
+            [
+                'code' => 200,
+                'headers' => ['Content-Type' => 'application/json'],
+                'body' => [
+                    'data' => [
+                        'message' => 'Item Not Found'
+                    ]
+                ],
+            ],
+            0,
+            423
+        ];
         $cases['empty'] = [
             [
                 'class' => \Exception::class,
@@ -1598,7 +1616,7 @@ class GatherContentClientTest extends GcBaseTestCase
         $mock = new MockHandler([
             new Response(
                 $response['code'],
-                ['Content-Type' => 'application/json'],
+                $response['headers'],
                 \GuzzleHttp\json_encode($response['body'])
             ),
             new RequestException('Error Communicating with Server', new Request('GET', 'me'))
@@ -1627,43 +1645,44 @@ class GatherContentClientTest extends GcBaseTestCase
 
     public function casesItemChooseStatusPostFail(): array
     {
-        return [
-            'missing_item' => [
-                [
-                    'class' => \Exception::class,
-                    'code' => 200,
-                    'msg' => '@todo Cheppers\GatherContent\GatherContentClient::itemChooseStatusPost',
-                ],
-                [
-                    'code' => 200,
-                    'headers' => ['Content-Type' => 'application/json'],
-                    'body' => [
-                        'data' => [
-                            'message' => 'Item Not Found'
-                        ]
-                    ],
-                ],
-                0,
-                423
+        $cases = static::basicFailCasesPost(['id' => 0]);
+        $cases['missing_item'] = [
+            [
+                'class' => \Exception::class,
+                'code' => 200,
+                'msg' => 'API Error: "Item Not Found"',
             ],
-            'missing_status' => [
-                [
-                    'class' => \Exception::class,
-                    'code' => 400,
-                    'msg' => '{"error":"Missing status_id","code":400}',
+            [
+                'code' => 200,
+                'headers' => ['Content-Type' => 'application/json'],
+                'body' => [
+                    'data' => [
+                        'message' => 'Item Not Found'
+                    ]
                 ],
-                [
-                    'code' => 400,
-                    'headers' => ['Content-Type' => 'application/json'],
-                    'body' => [
-                        'error' => 'Missing status_id',
-                        'code' => 400
-                    ],
-                ],
-                42,
-                0
             ],
+            0,
+            423
         ];
+        $cases['empty'] = [
+            [
+                'class' => \Exception::class,
+                'code' => 400,
+                'msg' => '{"error":"Missing status_id","code":400}',
+            ],
+            [
+                'code' => 400,
+                'headers' => ['Content-Type' => 'application/json'],
+                'body' => [
+                    'error' => 'Missing status_id',
+                    'code' => 400
+                ],
+            ],
+            42,
+            0
+        ];
+
+        return $cases;
     }
 
     /**

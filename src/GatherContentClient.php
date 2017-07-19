@@ -445,6 +445,9 @@ class GatherContentClient implements GatherContentClientInterface
         }
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function itemChooseStatusPost(int $itemId, int $statusId): void
     {
         $this->response = $this->client->request(
@@ -460,7 +463,14 @@ class GatherContentClient implements GatherContentClientInterface
         );
 
         if ($this->response->getStatusCode() !== 202) {
-            throw new \Exception('@todo ' . __METHOD__, $this->response->getStatusCode());
+            $responseContentType = $this->response->getHeader('Content-Type');
+            $responseContentType = end($responseContentType);
+
+            if ($responseContentType === 'application/json') {
+                $this->parseResponse();
+            }
+
+            throw new \Exception('Unexpected answer', 1);
         }
     }
 
