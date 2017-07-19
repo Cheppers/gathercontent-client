@@ -157,7 +157,7 @@ class GatherContentClientTest extends GcBaseTestCase
 
     public function casesMeGetFail(): array
     {
-        return static::basicFailCases();
+        return static::basicFailCasesGet();
     }
 
     /**
@@ -259,7 +259,7 @@ class GatherContentClientTest extends GcBaseTestCase
 
     public function casesAccountsGetFail(): array
     {
-        return static::basicFailCases();
+        return static::basicFailCasesGet();
     }
 
     /**
@@ -354,7 +354,7 @@ class GatherContentClientTest extends GcBaseTestCase
     public function casesAccountGetFail(): array
     {
         $data = static::getUniqueResponseAccount();
-        $cases = static::basicFailCases($data);
+        $cases = static::basicFailCasesGet($data);
 
         $cases['not_found'] = [
             [
@@ -487,7 +487,7 @@ class GatherContentClientTest extends GcBaseTestCase
 
     public function casesProjectsGetFail(): array
     {
-        $cases = static::basicFailCases();
+        $cases = static::basicFailCasesGet();
 
         $cases['not_found'] = [
             [
@@ -609,7 +609,7 @@ class GatherContentClientTest extends GcBaseTestCase
 
     public function casesProjectGetFail(): array
     {
-        $cases = static::basicFailCases();
+        $cases = static::basicFailCasesGet();
 
         $cases['not_found'] = [
             [
@@ -734,7 +734,7 @@ class GatherContentClientTest extends GcBaseTestCase
 
     public function casesProjectStatusesGetFail(): array
     {
-        $cases = static::basicFailCases();
+        $cases = static::basicFailCasesGet();
 
         $cases['not_found'] = [
             [
@@ -850,7 +850,7 @@ class GatherContentClientTest extends GcBaseTestCase
     public function casesProjectStatusGetFail(): array
     {
         $data = static::getUniqueResponseStatus();
-        return static::basicFailCases($data);
+        return static::basicFailCasesGet($data);
     }
 
     /**
@@ -975,7 +975,7 @@ class GatherContentClientTest extends GcBaseTestCase
 
     public function casesItemsGetFail(): array
     {
-        $cases = static::basicFailCases();
+        $cases = static::basicFailCasesGet();
 
         $cases['not_found'] = [
             [
@@ -1109,7 +1109,7 @@ class GatherContentClientTest extends GcBaseTestCase
 
     public function casesItemGetFail(): array
     {
-        $cases = static::basicFailCases();
+        $cases = static::basicFailCasesGet();
 
         $cases['not_found'] = [
             [
@@ -1264,6 +1264,116 @@ class GatherContentClientTest extends GcBaseTestCase
         $gc->itemFilesGet($itemId);
     }
 
+    public function casesItemApplyTemplatePost(): array
+    {
+        return [
+            'basic' => [
+                [
+                    'code' => 202,
+                ],
+                [
+                    'code' => 202,
+                    'body' => [],
+                ],
+                42,
+                423
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider casesItemApplyTemplatePost
+     */
+    public function testItemApplyTemplatePost(array $expected, array $response, int $itemId, int $templateId): void
+    {
+        $container = [];
+        $history = Middleware::history($container);
+        $mock = new MockHandler([
+            new Response(
+                $response['code'],
+                ['Content-Type' => 'application/json'],
+                \GuzzleHttp\json_encode($response['body'])
+            ),
+            new RequestException('Error Communicating with Server', new Request('GET', 'me'))
+        ]);
+        $handlerStack = HandlerStack::create($mock);
+        $handlerStack->push($history);
+
+        $client = new Client([
+            'handler' => $handlerStack,
+        ]);
+
+        $client = (new GatherContentClient($client));
+        $client->setOptions($this->gcClientOptions)
+            ->itemApplyTemplatePost($itemId, $templateId);
+
+
+        /** @var Request $request */
+        $request = $container[0]['request'];
+
+        static::assertEquals($expected['code'], $client->getResponse()->getStatusCode());
+        static::assertEquals(1, count($container));
+        static::assertEquals('POST', $request->getMethod());
+        static::assertEquals(['application/vnd.gathercontent.v0.5+json'], $request->getHeader('Accept'));
+        static::assertEquals(['api.example.com'], $request->getHeader('Host'));
+    }
+
+    public function casesItemApplyTemplatePostFail(): array
+    {
+        $cases = static::basicFailCasesPost(['id' => 0]);
+        $cases['empty'] = [
+            [
+                'class' => \Exception::class,
+                'code' => 400,
+                'msg' => '{"error":"Missing template_id","code":400}',
+            ],
+            [
+                'code' => 400,
+                'headers' => ['Content-Type' => 'application/json'],
+                'body' => [
+                    'error' => 'Missing template_id',
+                    'code' => 400
+                ],
+            ],
+            42,
+            0
+        ];
+
+        return $cases;
+    }
+
+    /**
+     * @dataProvider casesItemApplyTemplatePostFail
+     */
+    public function testItemApplyTemplatePostFail(array $expected, array $response, int $itemId, int $templateId): void
+    {
+        $container = [];
+        $history = Middleware::history($container);
+        $mock = new MockHandler([
+            new Response(
+                $response['code'],
+                $response['headers'],
+                \GuzzleHttp\json_encode($response['body'])
+            ),
+            new RequestException('Error Communicating with Server', new Request('GET', 'me'))
+        ]);
+        $handlerStack = HandlerStack::create($mock);
+        $handlerStack->push($history);
+
+        $client = new Client([
+            'handler' => $handlerStack,
+        ]);
+
+        $gc = (new GatherContentClient($client))
+            ->setOptions($this->gcClientOptions);
+
+        static::expectException($expected['class']);
+        static::expectExceptionCode($expected['code']);
+        static::expectExceptionMessage($expected['msg']);
+
+        $gc->itemApplyTemplatePost($itemId, $templateId);
+    }
+
     public function casesTemplatesGet(): array
     {
         $data = [
@@ -1350,7 +1460,7 @@ class GatherContentClientTest extends GcBaseTestCase
 
     public function casesTemplatesGetFail(): array
     {
-        $cases = static::basicFailCases();
+        $cases = static::basicFailCasesGet();
 
         $cases['not_found'] = [
             [
@@ -1485,7 +1595,7 @@ class GatherContentClientTest extends GcBaseTestCase
 
     public function casesTemplateGetFail(): array
     {
-        $cases = static::basicFailCases();
+        $cases = static::basicFailCasesGet();
 
         $cases['not_found'] = [
             [

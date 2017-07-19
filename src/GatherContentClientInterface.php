@@ -93,6 +93,11 @@ interface GatherContentClientInterface
     public function itemFilesGet(int $itemId): array;
 
     /**
+     * @see https://docs.gathercontent.com/reference#post-item-apply_template
+     */
+    public function itemApplyTemplatePost(int $itemId, int $templateId): void;
+
+    /**
      * @see https://docs.gathercontent.com/reference#get-templates
      *
      * @return \Cheppers\GatherContent\DataTypes\Template[]

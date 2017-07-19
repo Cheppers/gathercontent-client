@@ -259,14 +259,21 @@ class GatherContentClient implements GatherContentClientInterface
         );
 
         if ($this->response->getStatusCode() !== 202) {
-            throw new \Exception('@todo ' . __METHOD__);
+            $responseContentType = $this->response->getHeader('Content-Type');
+            $responseContentType = end($responseContentType);
+
+            if ($responseContentType === 'application/json') {
+                $this->parseResponse();
+            }
+
+            throw new \Exception('Unexpected answer', 1);
         }
 
         $locations = $this->response->getHeader('Location');
         $locationPath = parse_url(reset($locations), PHP_URL_PATH);
         $matches = [];
         if (!preg_match('@/projects/(?P<projectId>\d+)$@', $locationPath, $matches)) {
-            throw new \Exception('@todo Where is the new project ID?');
+            throw new \Exception('Invalid response header the project ID is missing');
         }
 
         return $matches['projectId'];
@@ -360,9 +367,33 @@ class GatherContentClient implements GatherContentClientInterface
         //
     }
 
-    public function itemApplyTemplatePost(int $itemId)
+    /**
+     * {@inheritdoc}
+     */
+    public function itemApplyTemplatePost(int $itemId, int $templateId): void
     {
-        //
+        $this->response = $this->client->request(
+            'POST',
+            $this->getUri("items/{$itemId}/apply_template"),
+            [
+                'auth' => $this->getRequestAuth(),
+                'headers' => $this->getRequestHeaders(),
+                'form_params' => [
+                    'template_id' => $templateId,
+                ],
+            ]
+        );
+
+        if ($this->response->getStatusCode() !== 202) {
+            $responseContentType = $this->response->getHeader('Content-Type');
+            $responseContentType = end($responseContentType);
+
+            if ($responseContentType === 'application/json') {
+                $this->parseResponse();
+            }
+
+            throw new \Exception('Unexpected answer', 1);
+        }
     }
 
     public function itemChooseStatusPost(int $itemId)
