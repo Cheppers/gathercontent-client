@@ -22,6 +22,11 @@ class ElementSection extends Element
     /**
      * {@inheritdoc}
      */
+    public $type = 'section';
+
+    /**
+     * {@inheritdoc}
+     */
     protected function initPropertyMapping()
     {
         parent::initPropertyMapping();

@@ -11,8 +11,8 @@ class Element extends Base
         'text' => ElementText::class,
         'files' => ElementFiles::class,
         'section' => ElementSection::class,
-        'choice_checkbox' => ElementOptions::class,
-        'choice_radio' => ElementOptions::class,
+        'choice_checkbox' => ElementCheckbox::class,
+        'choice_radio' => ElementRadio::class,
     ];
 
     /**

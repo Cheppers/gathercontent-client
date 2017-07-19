@@ -8,8 +8,8 @@ class TemplateTab extends Base
         'text' => ElementText::class,
         'files' => Element::class,
         'section' => ElementSection::class,
-        'choice_checkbox' => ElementOptions::class,
-        'choice_radio' => ElementOptions::class,
+        'choice_checkbox' => ElementCheckbox::class,
+        'choice_radio' => ElementRadio::class,
     ];
 
     /**

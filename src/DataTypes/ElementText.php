@@ -27,6 +27,11 @@ class ElementText extends Element
     /**
      * {@inheritdoc}
      */
+    public $type = 'text';
+
+    /**
+     * {@inheritdoc}
+     */
     public function getValue()
     {
         return $this->value;

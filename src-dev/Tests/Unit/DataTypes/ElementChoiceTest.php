@@ -2,17 +2,17 @@
 
 namespace Cheppers\GatherContent\Tests\Unit\DataTypes;
 
-use Cheppers\GatherContent\DataTypes\ElementOptions;
+use Cheppers\GatherContent\DataTypes\ElementChoice;
 
 /**
  * @group GatherContentClient
  */
-class ElementOptionsTest extends BaseTest
+class ElementChoiceTest extends BaseTest
 {
     /**
      * {@inheritdoc}
      */
-    protected $className = ElementOptions::class;
+    protected $className = ElementChoice::class;
 
     /**
      * {@inheritdoc}
@@ -42,7 +42,7 @@ class ElementOptionsTest extends BaseTest
 
     public function testGetSetValue()
     {
-        /** @var \Cheppers\GatherContent\DataTypes\ElementOptions $element */
+        /** @var \Cheppers\GatherContent\DataTypes\ElementChoice $element */
         $element = new $this->className([]);
 
         static::assertEquals([], $element->options);
