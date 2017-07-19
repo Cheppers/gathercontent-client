@@ -414,20 +414,48 @@ class GcBaseTestCase extends TestCase
                 42,
                 (isset($data['id'])) ? $data['id'] : null
             ],
-            'header-error' => [
-                [
-                    'class' => \Exception::class,
-                    'code' => 1,
-                    'msg' => 'Unexpected Content-Type: \'text/css\'',
-                ],
-                [
-                    'code' => 200,
-                    'headers' => ['Content-Type' => 'text/css'],
-                    'body' => [],
-                ],
-                42,
-                (isset($data['id'])) ? $data['id'] : null
-            ],
         ];
+    }
+
+    protected static function basicFailCasesGet($data = null): array
+    {
+        $cases = self::basicFailCases($data);
+        $cases['header-error'] = [
+            [
+                'class' => \Exception::class,
+                'code' => 1,
+                'msg' => 'Unexpected Content-Type: \'text/css\'',
+            ],
+            [
+                'code' => 200,
+                'headers' => ['Content-Type' => 'text/css'],
+                'body' => [],
+            ],
+            42,
+            (isset($data['id'])) ? $data['id'] : null
+        ];
+
+        return $cases;
+    }
+
+    protected static function basicFailCasesPost($data = null): array
+    {
+        $cases = self::basicFailCases($data);
+        $cases['header-error'] = [
+            [
+                'class' => \Exception::class,
+                'code' => 1,
+                'msg' => 'Unexpected answer',
+            ],
+            [
+                'code' => 200,
+                'headers' => ['Content-Type' => 'text/css'],
+                'body' => [],
+            ],
+            42,
+            (isset($data['id'])) ? $data['id'] : null
+        ];
+
+        return $cases;
     }
 }

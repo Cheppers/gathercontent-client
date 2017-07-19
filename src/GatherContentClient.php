@@ -385,8 +385,14 @@ class GatherContentClient implements GatherContentClientInterface
         );
 
         if ($this->response->getStatusCode() !== 202) {
-            $this->validateResponse();
-            $this->parseResponse();
+            $responseContentType = $this->response->getHeader('Content-Type');
+            $responseContentType = end($responseContentType);
+
+            if ($responseContentType === 'application/json') {
+                $this->parseResponse();
+            }
+
+            throw new \Exception('Unexpected answer', 1);
         }
     }
 

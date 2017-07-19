@@ -157,7 +157,7 @@ class GatherContentClientTest extends GcBaseTestCase
 
     public function casesMeGetFail(): array
     {
-        return static::basicFailCases();
+        return static::basicFailCasesGet();
     }
 
     /**
@@ -259,7 +259,7 @@ class GatherContentClientTest extends GcBaseTestCase
 
     public function casesAccountsGetFail(): array
     {
-        return static::basicFailCases();
+        return static::basicFailCasesGet();
     }
 
     /**
@@ -354,7 +354,7 @@ class GatherContentClientTest extends GcBaseTestCase
     public function casesAccountGetFail(): array
     {
         $data = static::getUniqueResponseAccount();
-        $cases = static::basicFailCases($data);
+        $cases = static::basicFailCasesGet($data);
 
         $cases['not_found'] = [
             [
@@ -487,7 +487,7 @@ class GatherContentClientTest extends GcBaseTestCase
 
     public function casesProjectsGetFail(): array
     {
-        $cases = static::basicFailCases();
+        $cases = static::basicFailCasesGet();
 
         $cases['not_found'] = [
             [
@@ -609,7 +609,7 @@ class GatherContentClientTest extends GcBaseTestCase
 
     public function casesProjectGetFail(): array
     {
-        $cases = static::basicFailCases();
+        $cases = static::basicFailCasesGet();
 
         $cases['not_found'] = [
             [
@@ -734,7 +734,7 @@ class GatherContentClientTest extends GcBaseTestCase
 
     public function casesProjectStatusesGetFail(): array
     {
-        $cases = static::basicFailCases();
+        $cases = static::basicFailCasesGet();
 
         $cases['not_found'] = [
             [
@@ -850,7 +850,7 @@ class GatherContentClientTest extends GcBaseTestCase
     public function casesProjectStatusGetFail(): array
     {
         $data = static::getUniqueResponseStatus();
-        return static::basicFailCases($data);
+        return static::basicFailCasesGet($data);
     }
 
     /**
@@ -975,7 +975,7 @@ class GatherContentClientTest extends GcBaseTestCase
 
     public function casesItemsGetFail(): array
     {
-        $cases = static::basicFailCases();
+        $cases = static::basicFailCasesGet();
 
         $cases['not_found'] = [
             [
@@ -1109,7 +1109,7 @@ class GatherContentClientTest extends GcBaseTestCase
 
     public function casesItemGetFail(): array
     {
-        $cases = static::basicFailCases();
+        $cases = static::basicFailCasesGet();
 
         $cases['not_found'] = [
             [
@@ -1320,7 +1320,7 @@ class GatherContentClientTest extends GcBaseTestCase
 
     public function casesItemApplyTemplatePostFail(): array
     {
-        $cases = static::basicFailCases(['id' => 0]);
+        $cases = static::basicFailCasesPost(['id' => 0]);
         $cases['empty'] = [
             [
                 'class' => \Exception::class,
@@ -1460,7 +1460,7 @@ class GatherContentClientTest extends GcBaseTestCase
 
     public function casesTemplatesGetFail(): array
     {
-        $cases = static::basicFailCases();
+        $cases = static::basicFailCasesGet();
 
         $cases['not_found'] = [
             [
@@ -1595,7 +1595,7 @@ class GatherContentClientTest extends GcBaseTestCase
 
     public function casesTemplateGetFail(): array
     {
-        $cases = static::basicFailCases();
+        $cases = static::basicFailCasesGet();
 
         $cases['not_found'] = [
             [
