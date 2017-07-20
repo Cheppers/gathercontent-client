@@ -29,7 +29,7 @@ interface GatherContentClientInterface
     /**
      * @see https://docs.gathercontent.com/reference#get-me
      */
-    public function meGet(): DataTypes\User;
+    public function meGet(): ?DataTypes\User;
 
     /**
      * @see https://docs.gathercontent.com/reference#get-accounts
@@ -41,7 +41,7 @@ interface GatherContentClientInterface
     /**
      * @see https://docs.gathercontent.com/reference#get-accounts
      */
-    public function accountGet(int $accountId): DataTypes\Account;
+    public function accountGet(int $accountId): ?DataTypes\Account;
 
     /**
      * @see https://docs.gathercontent.com/reference#get-projects
@@ -53,7 +53,7 @@ interface GatherContentClientInterface
     /**
      * @see https://docs.gathercontent.com/reference#get-projects
      */
-    public function projectGet(int $projectId): DataTypes\Project;
+    public function projectGet(int $projectId): ?DataTypes\Project;
 
     /**
      * @see https://docs.gathercontent.com/reference#post-projects
@@ -73,7 +73,7 @@ interface GatherContentClientInterface
     /**
      * @see https://docs.gathercontent.com/reference#get-project-statuses-by-id
      */
-    public function projectStatusGet(int $projectId, int $statusId): DataTypes\Status;
+    public function projectStatusGet(int $projectId, int $statusId): ?DataTypes\Status;
 
     /**
      * @see https://docs.gathercontent.com/reference#get-items
