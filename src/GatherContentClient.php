@@ -88,40 +88,6 @@ class GatherContentClient implements GatherContentClientInterface
     // endregion
 
     /**
-     * @return $this
-     */
-    protected function sendGet(string $path, array $options = [])
-    {
-        return $this->sendRequest('GET', $path, $options);
-    }
-
-    /**
-     * @return $this
-     */
-    protected function sendPost(string $path, array $options = [])
-    {
-        return $this->sendRequest('POST', $path, $options);
-    }
-
-    /**
-     * @return $this
-     */
-    protected function sendRequest(string $method, string $path, array $options = [])
-    {
-        $options += [
-            'auth' => $this->getRequestAuth(),
-            'headers' => [],
-        ];
-
-        $options['headers'] += $this->getRequestHeaders();
-
-        $uri = $this->getUri($path);
-        $this->response = $this->client->request($method, $uri, $options);
-
-        return $this;
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function __construct(ClientInterface $client)
@@ -479,6 +445,40 @@ class GatherContentClient implements GatherContentClientInterface
         return $base + [
             'Accept' => 'application/vnd.gathercontent.v0.5+json',
         ];
+    }
+
+    /**
+     * @return $this
+     */
+    protected function sendGet(string $path, array $options = [])
+    {
+        return $this->sendRequest('GET', $path, $options);
+    }
+
+    /**
+     * @return $this
+     */
+    protected function sendPost(string $path, array $options = [])
+    {
+        return $this->sendRequest('POST', $path, $options);
+    }
+
+    /**
+     * @return $this
+     */
+    protected function sendRequest(string $method, string $path, array $options = [])
+    {
+        $options += [
+            'auth' => $this->getRequestAuth(),
+            'headers' => [],
+        ];
+
+        $options['headers'] += $this->getRequestHeaders();
+
+        $uri = $this->getUri($path);
+        $this->response = $this->client->request($method, $uri, $options);
+
+        return $this;
     }
 
     protected function parseResponse(): array
