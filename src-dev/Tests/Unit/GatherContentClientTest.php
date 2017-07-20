@@ -11,6 +11,7 @@ use Cheppers\GatherContent\DataTypes\Tab;
 use Cheppers\GatherContent\DataTypes\Template;
 use Cheppers\GatherContent\DataTypes\User;
 use Cheppers\GatherContent\GatherContentClient;
+use Cheppers\GatherContent\Tests\Unit\DataTypes\ElementTextTest;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Handler\MockHandler;
@@ -98,15 +99,10 @@ class GatherContentClientTest extends GcBaseTestCase
     public function casesMeGet(): array
     {
         $userData = static::getUniqueResponseUser();
-        $userExpected = $userData;
-        $userExpected['announcements'] = [];
-        foreach ($userData['announcements'] as $announcement) {
-            $userExpected['announcements'][$announcement['id']] = $announcement;
-        }
 
         return [
             'basic' => [
-                $userExpected,
+                $userData,
                 ['data' => $userData],
             ],
         ];
@@ -423,10 +419,6 @@ class GatherContentClientTest extends GcBaseTestCase
         foreach ($data as $project) {
             $expected[$project['id']] = $project;
             $expected[$project['id']]['meta'] = [];
-            $expected[$project['id']]['statuses'] = [];
-            foreach ($project['statuses']['data'] as $status) {
-                $expected[$project['id']]['statuses']['data'][$status['id']] = $status;
-            }
         }
 
         return [
@@ -550,10 +542,6 @@ class GatherContentClientTest extends GcBaseTestCase
 
         $expected = $data;
         $expected['meta'] = [];
-        $expected['statuses'] = [];
-        foreach ($data['statuses']['data'] as $status) {
-            $expected['statuses']['data'][$status['id']] = $status;
-        }
 
         return [
             'basic' => [
@@ -1101,15 +1089,6 @@ class GatherContentClientTest extends GcBaseTestCase
         ];
 
         $items = static::reKeyArray($data, 'id');
-        foreach (array_keys($items) as $itemId) {
-            $items[$itemId]['config'] = static::reKeyArray($items[$itemId]['config'], 'name');
-            foreach (array_keys($items[$itemId]['config']) as $tabId) {
-                $items[$itemId]['config'][$tabId]['elements'] = static::reKeyArray(
-                    $items[$itemId]['config'][$tabId]['elements'],
-                    'name'
-                );
-            }
-        }
 
         return [
             'empty' => [
@@ -1231,14 +1210,6 @@ class GatherContentClientTest extends GcBaseTestCase
         $item = static::getUniqueResponseItem([
             ['text', 'choice_checkbox'],
         ]);
-
-        $item['config'] = static::reKeyArray($item['config'], 'name');
-        foreach (array_keys($item['config']) as $tabId) {
-            $item['config'][$tabId]['elements'] = static::reKeyArray(
-                $item['config'][$tabId]['elements'],
-                'name'
-            );
-        }
 
         return [
             'empty' => [
@@ -1587,7 +1558,6 @@ class GatherContentClientTest extends GcBaseTestCase
 
         $templates = static::reKeyArray($data, 'id');
         foreach (array_keys($templates) as $templateId) {
-            $templates[$templateId]['config'] = static::reKeyArray($templates[$templateId]['config'], 'name');
             foreach (array_keys($templates[$templateId]['config']) as $tabId) {
                 $templates[$templateId]['config'][$tabId]['elements'] = static::reKeyArray(
                     $templates[$templateId]['config'][$tabId]['elements'],
@@ -1718,7 +1688,6 @@ class GatherContentClientTest extends GcBaseTestCase
         ]);
 
         $template = $data;
-        $template['config'] = static::reKeyArray($template['config'], 'name');
         foreach (array_keys($template['config']) as $tabId) {
             $template['config'][$tabId]['elements'] = static::reKeyArray(
                 $template['config'][$tabId]['elements'],
@@ -2002,5 +1971,99 @@ class GatherContentClientTest extends GcBaseTestCase
         (new GatherContentClient($client))
           ->setOptions($this->gcClientOptions)
           ->itemsPost(0, 'test');
+    }
+
+    public function casesItemSavePost()
+    {
+        $item = new Item();
+
+        $tab = new Tab();
+        $tab->id = 'tab1';
+        $tab->label = 'Tab 1';
+        $tab->hidden = false;
+
+        $text = new ElementText();
+        $text->id = 'test-text';
+        $text->label = 'Test';
+        $text->value = 'Test text';
+
+        $tab->elements[$text->id] = $text;
+        $item->config[$tab->id] = $tab;
+
+        return [
+            'empty' => [
+                131313,
+                [],
+            ],
+            'basic' => [
+                131313,
+                $item->config,
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider casesItemSavePost
+     */
+    public function testItemSavePost($itemId, $config)
+    {
+        $container = [];
+        $history = Middleware::history($container);
+        $mock = new MockHandler([
+            new Response(202),
+            new RequestException('Error Communicating with Server', new Request('POST', "items/$itemId/save"))
+        ]);
+        $handlerStack = HandlerStack::create($mock);
+        $handlerStack->push($history);
+        $client = new Client([
+            'handler' => $handlerStack,
+        ]);
+
+        (new GatherContentClient($client))
+          ->setOptions($this->gcClientOptions)
+          ->itemSavePost($itemId, $config);
+
+        /** @var Request $request */
+        $request = $container[0]['request'];
+
+        static::assertEquals(1, count($container));
+        static::assertEquals('POST', $request->getMethod());
+        static::assertEquals(['application/vnd.gathercontent.v0.5+json'], $request->getHeader('Accept'));
+        static::assertEquals(['api.example.com'], $request->getHeader('Host'));
+        static::assertEquals(
+            "{$this->gcClientOptions['baseUri']}/items/$itemId/save",
+            (string) $request->getUri()
+        );
+
+        $requestBody = $request->getBody();
+        $queryString = $requestBody->getContents();
+        $sentQueryVariables = [];
+        parse_str($queryString, $sentQueryVariables);
+
+        $config = array_values($config);
+        $jsonConfig = \GuzzleHttp\json_encode($config);
+        $encodedConfig = base64_encode($jsonConfig);
+
+        static::assertArrayHasKey('config', $sentQueryVariables);
+        static::assertEquals($encodedConfig, $sentQueryVariables['config']);
+    }
+
+    public function testItemSavePostUnexpectedStatusCode()
+    {
+        $container = [];
+        $history = Middleware::history($container);
+        $mock = new MockHandler([
+          new Response(200, []),
+        ]);
+        $handlerStack = HandlerStack::create($mock);
+        $handlerStack->push($history);
+        $client = new Client([
+          'handler' => $handlerStack,
+        ]);
+
+        static::expectException(\Exception::class);
+        (new GatherContentClient($client))
+          ->setOptions($this->gcClientOptions)
+          ->itemSavePost(131313, []);
     }
 }

@@ -52,6 +52,10 @@ class Base implements JsonSerializable
 
             $value = $this->{$handler['destination']};
 
+            if ($handler['type'] === 'subConfigs') {
+                $value = array_values($value);
+            }
+
             if ($handler['type'] === 'setJsonDecode') {
                 $value = json_encode($value, JSON_PRETTY_PRINT);
             }

@@ -24,6 +24,14 @@ class Tab extends Base
      */
     protected $unusedProperties = ['id'];
 
+    public function jsonSerialize()
+    {
+        $values = parent::jsonSerialize();
+        $values['elements'] = array_values($values['elements']);
+
+        return $values;
+    }
+
     protected function initPropertyMapping()
     {
         parent::initPropertyMapping();

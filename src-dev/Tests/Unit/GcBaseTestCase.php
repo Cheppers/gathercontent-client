@@ -94,7 +94,6 @@ class GcBaseTestCase extends TestCase
         $allowedTags = [
             'a' => ['class' => '*'],
         ];
-        $allowedTagsJson = json_encode($allowedTags, JSON_PRETTY_PRINT);
 
         return [
             'id' => static::getUniqueInt(),
@@ -104,7 +103,7 @@ class GcBaseTestCase extends TestCase
             'account_id' => static::getUniqueInt(),
             'active' => true,
             'text_direction' => static::getUniqueString('text_direction'),
-            'allowed_tags' => $allowedTagsJson,
+            'allowed_tags' => json_encode($allowedTags, JSON_PRETTY_PRINT),
             'created_at' => static::getUniqueInt(),
             'updated_at' => static::getUniqueInt(),
             'overdue' => true,

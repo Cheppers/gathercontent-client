@@ -99,6 +99,11 @@ interface GatherContentClientInterface
     ): int;
 
     /**
+     * @see https://docs.gathercontent.com/reference#post-item-save
+     */
+    public function itemSavePost(int $itemId, array $config): void;
+
+    /**
      * @return \Cheppers\GatherContent\DataTypes\File[]
      */
     public function itemFilesGet(int $itemId): array;
