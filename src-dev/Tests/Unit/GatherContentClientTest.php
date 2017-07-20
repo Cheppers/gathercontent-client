@@ -1483,11 +1483,45 @@ class GatherContentClientTest extends GcBaseTestCase
         static::assertEquals('POST', $request->getMethod());
         static::assertEquals(['application/vnd.gathercontent.v0.5+json'], $request->getHeader('Accept'));
         static::assertEquals(['api.example.com'], $request->getHeader('Host'));
+        static::assertEquals(
+            "{$this->gcClientOptions['baseUri']}/items/{$itemId}/apply_template",
+            (string) $request->getUri()
+        );
+
+        $requestBody = $request->getBody();
+        $queryString = $requestBody->getContents();
+        $sentQueryVariables = [];
+        parse_str($queryString, $sentQueryVariables);
+
+        if ($templateId) {
+            static::assertArrayHasKey('template_id', $sentQueryVariables);
+            static::assertEquals($sentQueryVariables['template_id'], $templateId);
+        } else {
+            static::assertArrayNotHasKey('template_id', $sentQueryVariables);
+        }
     }
 
     public function casesItemApplyTemplatePostFail(): array
     {
         $cases = static::basicFailCasesPost(['id' => 0]);
+        $cases['missing_item'] = [
+            [
+                'class' => \Exception::class,
+                'code' => 200,
+                'msg' => 'API Error: "Item Not Found"',
+            ],
+            [
+                'code' => 200,
+                'headers' => ['Content-Type' => 'application/json'],
+                'body' => [
+                    'data' => [
+                        'message' => 'Item Not Found'
+                    ]
+                ],
+            ],
+            0,
+            423
+        ];
         $cases['empty'] = [
             [
                 'class' => \Exception::class,
@@ -1539,6 +1573,150 @@ class GatherContentClientTest extends GcBaseTestCase
         static::expectExceptionMessage($expected['msg']);
 
         $gc->itemApplyTemplatePost($itemId, $templateId);
+    }
+
+    public function casesItemChooseStatusPost(): array
+    {
+        return [
+            'basic' => [
+                [
+                    'code' => 202,
+                ],
+                [
+                    'code' => 202,
+                    'body' => [],
+                ],
+                42,
+                423
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider casesItemChooseStatusPost
+     */
+    public function testItemChooseStatusPost(array $expected, array $response, int $itemId, int $statusId): void
+    {
+        $container = [];
+        $history = Middleware::history($container);
+        $mock = new MockHandler([
+            new Response(
+                $response['code'],
+                ['Content-Type' => 'application/json'],
+                \GuzzleHttp\json_encode($response['body'])
+            ),
+            new RequestException('Error Communicating with Server', new Request('GET', 'me'))
+        ]);
+        $handlerStack = HandlerStack::create($mock);
+        $handlerStack->push($history);
+
+        $client = new Client([
+            'handler' => $handlerStack,
+        ]);
+
+        $client = (new GatherContentClient($client));
+        $client->setOptions($this->gcClientOptions)
+            ->itemChooseStatusPost($itemId, $statusId);
+
+
+        /** @var Request $request */
+        $request = $container[0]['request'];
+
+        static::assertEquals($expected['code'], $client->getResponse()->getStatusCode());
+        static::assertEquals(1, count($container));
+        static::assertEquals('POST', $request->getMethod());
+        static::assertEquals(['application/vnd.gathercontent.v0.5+json'], $request->getHeader('Accept'));
+        static::assertEquals(['api.example.com'], $request->getHeader('Host'));
+        static::assertEquals(
+            "{$this->gcClientOptions['baseUri']}/items/{$itemId}/choose_status",
+            (string) $request->getUri()
+        );
+
+        $requestBody = $request->getBody();
+        $queryString = $requestBody->getContents();
+        $sentQueryVariables = [];
+        parse_str($queryString, $sentQueryVariables);
+
+        if ($statusId) {
+            static::assertArrayHasKey('status_id', $sentQueryVariables);
+            static::assertEquals($sentQueryVariables['status_id'], $statusId);
+        } else {
+            static::assertArrayNotHasKey('status_id', $sentQueryVariables);
+        }
+    }
+
+    public function casesItemChooseStatusPostFail(): array
+    {
+        $cases = static::basicFailCasesPost(['id' => 0]);
+        $cases['missing_item'] = [
+            [
+                'class' => \Exception::class,
+                'code' => 200,
+                'msg' => 'API Error: "Item Not Found"',
+            ],
+            [
+                'code' => 200,
+                'headers' => ['Content-Type' => 'application/json'],
+                'body' => [
+                    'data' => [
+                        'message' => 'Item Not Found'
+                    ]
+                ],
+            ],
+            0,
+            423
+        ];
+        $cases['empty'] = [
+            [
+                'class' => \Exception::class,
+                'code' => 400,
+                'msg' => '{"error":"Missing status_id","code":400}',
+            ],
+            [
+                'code' => 400,
+                'headers' => ['Content-Type' => 'application/json'],
+                'body' => [
+                    'error' => 'Missing status_id',
+                    'code' => 400
+                ],
+            ],
+            42,
+            0
+        ];
+
+        return $cases;
+    }
+
+    /**
+     * @dataProvider casesItemChooseStatusPostFail
+     */
+    public function testItemChooseStatusPostFail(array $expected, array $response, int $itemId, int $statusId): void
+    {
+        $container = [];
+        $history = Middleware::history($container);
+        $mock = new MockHandler([
+            new Response(
+                $response['code'],
+                ['Content-Type' => 'application/json'],
+                \GuzzleHttp\json_encode($response['body'])
+            ),
+            new RequestException('Error Communicating with Server', new Request('GET', 'me'))
+        ]);
+        $handlerStack = HandlerStack::create($mock);
+        $handlerStack->push($history);
+
+        $client = new Client([
+            'handler' => $handlerStack,
+        ]);
+
+        $gc = (new GatherContentClient($client))
+            ->setOptions($this->gcClientOptions);
+
+        static::expectException($expected['class']);
+        static::expectExceptionCode($expected['code']);
+        static::expectExceptionMessage($expected['msg']);
+
+        $gc->itemChooseStatusPost($itemId, $statusId);
     }
 
     public function casesTemplatesGet(): array

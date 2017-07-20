@@ -441,7 +441,7 @@ class GatherContentClient implements GatherContentClientInterface
     {
         $this->response = $this->client->request(
             'POST',
-            $this->getUri("items/{$itemId}/apply_template"),
+            $this->getUri("items/$itemId/apply_template"),
             [
                 'auth' => $this->getRequestAuth(),
                 'headers' => $this->getRequestHeaders(),
@@ -463,9 +463,33 @@ class GatherContentClient implements GatherContentClientInterface
         }
     }
 
-    public function itemChooseStatusPost(int $itemId)
+    /**
+     * {@inheritdoc}
+     */
+    public function itemChooseStatusPost(int $itemId, int $statusId): void
     {
-        //
+        $this->response = $this->client->request(
+            'POST',
+            $this->getUri("items/$itemId/choose_status"),
+            [
+                'auth' => $this->getRequestAuth(),
+                'headers' => $this->getRequestHeaders(),
+                'form_params' => [
+                    'status_id' => $statusId,
+                ],
+            ]
+        );
+
+        if ($this->response->getStatusCode() !== 202) {
+            $responseContentType = $this->response->getHeader('Content-Type');
+            $responseContentType = end($responseContentType);
+
+            if ($responseContentType === 'application/json') {
+                $this->parseResponse();
+            }
+
+            throw new \Exception('Unexpected answer', 1);
+        }
     }
 
     /**
