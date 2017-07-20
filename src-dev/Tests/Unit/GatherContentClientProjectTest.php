@@ -5,7 +5,6 @@ namespace Cheppers\GatherContent\Tests\Unit;
 use Cheppers\GatherContent\DataTypes\Project;
 use Cheppers\GatherContent\DataTypes\Status;
 use Cheppers\GatherContent\GatherContentClient;
-use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 
@@ -51,7 +50,6 @@ class GatherContentClientProjectTest extends GcBaseTestCase
                     ['Content-Type' => 'application/json'],
                     \GuzzleHttp\json_encode($responseBody)
                 ),
-                new RequestException('Error Communicating with Server', new Request('GET', 'projects'))
             ]
         );
         $client = $tester['client'];
@@ -115,7 +113,6 @@ class GatherContentClientProjectTest extends GcBaseTestCase
                 $response['headers'],
                 \GuzzleHttp\json_encode($response['body'])
             ),
-            new RequestException('Error Communicating with Server', new Request('GET', 'projects'))
         ]);
         $client = $tester['client'];
 
@@ -156,7 +153,6 @@ class GatherContentClientProjectTest extends GcBaseTestCase
               ['Content-Type' => 'application/json'],
               \GuzzleHttp\json_encode($responseBody)
           ),
-          new RequestException('Error Communicating with Server', new Request('GET', 'project'))
         ]);
         $client = $tester['client'];
         $container = &$tester['container'];
@@ -220,7 +216,6 @@ class GatherContentClientProjectTest extends GcBaseTestCase
                 $response['headers'],
                 \GuzzleHttp\json_encode($response['body'])
             ),
-            new RequestException('Error Communicating with Server', new Request('GET', 'project'))
         ]);
         $client = $tester['client'];
 
@@ -297,7 +292,6 @@ class GatherContentClientProjectTest extends GcBaseTestCase
                 ],
                 \GuzzleHttp\json_encode($response['body'])
             ),
-            new RequestException('Error Communicating with Server', new Request('POST', 'projects'))
         ]);
         $client = $tester['client'];
         $container = &$tester['container'];
@@ -425,7 +419,6 @@ class GatherContentClientProjectTest extends GcBaseTestCase
                 $response['headers'],
                 \GuzzleHttp\json_encode($response['body'])
             ),
-            new RequestException('Error Communicating with Server', new Request('POST', 'projects'))
         ]);
         $client = $tester['client'];
 
@@ -450,7 +443,6 @@ class GatherContentClientProjectTest extends GcBaseTestCase
                 ['Content-Type' => 'application/json'],
                 \GuzzleHttp\json_encode($responseBody)
             ),
-            new RequestException('Error Communicating with Server', new Request('GET', "projects/$projectId/statuses"))
         ]);
         $client = $tester['client'];
         $container = &$tester['container'];
@@ -512,7 +504,6 @@ class GatherContentClientProjectTest extends GcBaseTestCase
                 $response['headers'],
                 \GuzzleHttp\json_encode($response['body'])
             ),
-            new RequestException('Error Communicating with Server', new Request('GET', "projects/$projectId/statuses"))
         ]);
         $client = $tester['client'];
 
@@ -551,10 +542,6 @@ class GatherContentClientProjectTest extends GcBaseTestCase
                 ['Content-Type' => 'application/json'],
                 \GuzzleHttp\json_encode($responseBody)
             ),
-            new RequestException(
-                'Error Communicating with Server',
-                new Request('GET', "projects/$projectId/statuses/$statusId")
-            )
         ]);
         $client = $tester['client'];
         $container = &$tester['container'];
@@ -603,10 +590,6 @@ class GatherContentClientProjectTest extends GcBaseTestCase
                 $response['headers'],
                 \GuzzleHttp\json_encode($response['body'])
             ),
-            new RequestException(
-                'Error Communicating with Server',
-                new Request('GET', "projects/$projectId/statuses/$statusId")
-            )
         ]);
         $client = $tester['client'];
 
