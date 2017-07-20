@@ -3,6 +3,7 @@
 namespace Cheppers\GatherContent;
 
 use GuzzleHttp\ClientInterface;
+use Psr\Http\Message\ResponseInterface;
 
 interface GatherContentClientInterface
 {
@@ -15,6 +16,29 @@ interface GatherContentClientInterface
     const PROJECT_TYPE_EMAIL_MARKETING_CONTENT = 'email-marketing-content';
 
     const PROJECT_TYPE_OTHER = 'other';
+
+    public function getResponse(): ResponseInterface;
+
+    public function getEmail(): string;
+
+    /**
+     * @return $this
+     */
+    public function setEmail(string $value);
+
+    public function getApiKey(): string;
+
+    /**
+     * @return $this
+     */
+    public function setApiKey(string $apiKey);
+
+    public function getBaseUri(): string;
+
+    /**
+     * @return $this
+     */
+    public function setBaseUri(string $value);
 
     /**
      * GatherContentClientInterface constructor.
