@@ -179,9 +179,22 @@ $status = $gc->projectStatusGet($myProjectId, $myStatusId);
 
 Endpoint: **GET: /items**
 
+Return all the items of a project.
+
+Parameters:
+
+- ```int $projectId```: the ID of the project
+
+Return type: ```Item[]```
+
+```
+$items = $gc->itemsGet($myProjectId);
+```
+
 #### itemGet
 
 Endpoint: **GET: /items/:item_id**
+
 
 #### itemsPost
 
