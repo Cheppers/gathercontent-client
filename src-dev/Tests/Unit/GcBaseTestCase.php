@@ -2,10 +2,26 @@
 
 namespace Cheppers\GatherContent\Tests\Unit;
 
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Handler\MockHandler;
+use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Middleware;
+use GuzzleHttp\Psr7\Request;
+use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\TestCase;
 
 class GcBaseTestCase extends TestCase
 {
+    /**
+     * @var array
+     */
+    protected $gcClientOptions = [
+      'baseUri' => 'https://api.example.com',
+      'email' => 'a@b.com',
+      'apiKey' => 'a-b-c-d',
+    ];
+
     protected static $uniqueNumber = 1;
 
     protected static function getUniqueInt(): int
@@ -461,5 +477,23 @@ class GcBaseTestCase extends TestCase
         ];
 
         return $cases;
+    }
+
+    public function getBasicHttpClientTester(array $requests)
+    {
+        $container = [];
+        $history = Middleware::history($container);
+        $mock = new MockHandler($requests);
+        $handlerStack = HandlerStack::create($mock);
+        $handlerStack->push($history);
+        $client = new Client(['handler' => $handlerStack]);
+
+        return [
+            'client' => $client,
+            'container' => &$container,
+            'history' => $history,
+            'handlerStack' => $handlerStack,
+            'mock' => $mock,
+        ];
     }
 }
