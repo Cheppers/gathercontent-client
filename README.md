@@ -195,6 +195,17 @@ $items = $gc->itemsGet($myProjectId);
 
 Endpoint: **GET: /items/:item_id**
 
+Return a specific item.
+
+Parameters:
+
+- ```int $itemId```: the ID of the item
+
+Return type: ```Item```
+
+```
+$item = $gc->itemGet($myItemId);
+```
 
 #### itemsPost
 
