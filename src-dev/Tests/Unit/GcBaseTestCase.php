@@ -481,6 +481,10 @@ class GcBaseTestCase extends TestCase
 
     public function getBasicHttpClientTester(array $requests)
     {
+        $requests[] = new RequestException(
+            'Error Communicating with Server',
+            new Request('GET', 'unexpected_request')
+        );
         $container = [];
         $history = Middleware::history($container);
         $mock = new MockHandler($requests);
