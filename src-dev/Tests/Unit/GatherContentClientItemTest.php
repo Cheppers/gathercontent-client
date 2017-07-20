@@ -57,22 +57,15 @@ class GatherContentClientItemTest extends GcBaseTestCase
      */
     public function testItemsGet(array $expected, array $responseBody, int $projectId): void
     {
-        $container = [];
-        $history = Middleware::history($container);
-        $mock = new MockHandler([
+        $tester = $this->getBasicHttpClientTester([
             new Response(
                 200,
                 ['Content-Type' => 'application/json'],
                 \GuzzleHttp\json_encode($responseBody)
             ),
-            new RequestException('Error Communicating with Server', new Request('GET', 'accounts'))
         ]);
-        $handlerStack = HandlerStack::create($mock);
-        $handlerStack->push($history);
-
-        $client = new Client([
-            'handler' => $handlerStack,
-        ]);
+        $client = $tester['client'];
+        $container = &$tester['container'];
 
         $actual = (new GatherContentClient($client))
             ->setOptions($this->gcClientOptions)
@@ -126,22 +119,14 @@ class GatherContentClientItemTest extends GcBaseTestCase
      */
     public function testItemsGetFail(array $expected, array $response, int $projectId): void
     {
-        $container = [];
-        $history = Middleware::history($container);
-        $mock = new MockHandler([
+        $tester = $this->getBasicHttpClientTester([
             new Response(
                 $response['code'],
                 $response['headers'],
                 \GuzzleHttp\json_encode($response['body'])
             ),
-            new RequestException('Error Communicating with Server', new Request('GET', 'me'))
         ]);
-        $handlerStack = HandlerStack::create($mock);
-        $handlerStack->push($history);
-
-        $client = new Client([
-            'handler' => $handlerStack,
-        ]);
+        $client = $tester['client'];
 
         $gc = (new GatherContentClient($client))
             ->setOptions($this->gcClientOptions);
@@ -178,22 +163,15 @@ class GatherContentClientItemTest extends GcBaseTestCase
      */
     public function testItemGet(?array $expected, array $responseBody, int $itemId): void
     {
-        $container = [];
-        $history = Middleware::history($container);
-        $mock = new MockHandler([
+        $tester = $this->getBasicHttpClientTester([
             new Response(
                 200,
                 ['Content-Type' => 'application/json'],
                 \GuzzleHttp\json_encode($responseBody)
             ),
-            new RequestException('Error Communicating with Server', new Request('GET', 'project'))
         ]);
-        $handlerStack = HandlerStack::create($mock);
-        $handlerStack->push($history);
-
-        $client = new Client([
-            'handler' => $handlerStack,
-        ]);
+        $client = $tester['client'];
+        $container = &$tester['container'];
 
         $actual = (new GatherContentClient($client))
             ->setOptions($this->gcClientOptions)
@@ -252,22 +230,14 @@ class GatherContentClientItemTest extends GcBaseTestCase
      */
     public function testItemGetFail(array $expected, array $response, int $itemId): void
     {
-        $container = [];
-        $history = Middleware::history($container);
-        $mock = new MockHandler([
+        $tester = $this->getBasicHttpClientTester([
             new Response(
                 $response['code'],
                 $response['headers'],
                 \GuzzleHttp\json_encode($response['body'])
             ),
-            new RequestException('Error Communicating with Server', new Request('GET', 'me'))
         ]);
-        $handlerStack = HandlerStack::create($mock);
-        $handlerStack->push($history);
-
-        $client = new Client([
-            'handler' => $handlerStack,
-        ]);
+        $client = $tester['client'];
 
         $gc = (new GatherContentClient($client))
             ->setOptions($this->gcClientOptions);
@@ -308,22 +278,15 @@ class GatherContentClientItemTest extends GcBaseTestCase
      */
     public function testItemFilesGet(array $expected, array $responseBody, int $itemId): void
     {
-        $container = [];
-        $history = Middleware::history($container);
-        $mock = new MockHandler([
+        $tester = $this->getBasicHttpClientTester([
             new Response(
                 200,
                 ['Content-Type' => 'application/json'],
                 \GuzzleHttp\json_encode($responseBody)
             ),
-            new RequestException('Error Communicating with Server', new Request('GET', 'accounts'))
         ]);
-        $handlerStack = HandlerStack::create($mock);
-        $handlerStack->push($history);
-
-        $client = new Client([
-            'handler' => $handlerStack,
-        ]);
+        $client = $tester['client'];
+        $container = &$tester['container'];
 
         $actual = (new GatherContentClient($client))
             ->setOptions($this->gcClientOptions)
@@ -352,22 +315,14 @@ class GatherContentClientItemTest extends GcBaseTestCase
      */
     public function testItemFilesGetFail(array $expected, array $response, int $itemId): void
     {
-        $container = [];
-        $history = Middleware::history($container);
-        $mock = new MockHandler([
+        $tester = $this->getBasicHttpClientTester([
             new Response(
                 $response['code'],
                 $response['headers'],
                 \GuzzleHttp\json_encode($response['body'])
             ),
-            new RequestException('Error Communicating with Server', new Request('GET', 'me'))
         ]);
-        $handlerStack = HandlerStack::create($mock);
-        $handlerStack->push($history);
-
-        $client = new Client([
-            'handler' => $handlerStack,
-        ]);
+        $client = $tester['client'];
 
         $gc = (new GatherContentClient($client))
             ->setOptions($this->gcClientOptions);
@@ -401,22 +356,15 @@ class GatherContentClientItemTest extends GcBaseTestCase
      */
     public function testItemApplyTemplatePost(array $expected, array $response, int $itemId, int $templateId): void
     {
-        $container = [];
-        $history = Middleware::history($container);
-        $mock = new MockHandler([
+        $tester = $this->getBasicHttpClientTester([
             new Response(
                 $response['code'],
                 ['Content-Type' => 'application/json'],
                 \GuzzleHttp\json_encode($response['body'])
             ),
-            new RequestException('Error Communicating with Server', new Request('GET', 'me'))
         ]);
-        $handlerStack = HandlerStack::create($mock);
-        $handlerStack->push($history);
-
-        $client = new Client([
-            'handler' => $handlerStack,
-        ]);
+        $client = $tester['client'];
+        $container = &$tester['container'];
 
         $client = (new GatherContentClient($client));
         $client->setOptions($this->gcClientOptions)
@@ -496,22 +444,14 @@ class GatherContentClientItemTest extends GcBaseTestCase
      */
     public function testItemApplyTemplatePostFail(array $expected, array $response, int $itemId, int $templateId): void
     {
-        $container = [];
-        $history = Middleware::history($container);
-        $mock = new MockHandler([
+        $tester = $this->getBasicHttpClientTester([
             new Response(
                 $response['code'],
                 $response['headers'],
                 \GuzzleHttp\json_encode($response['body'])
             ),
-            new RequestException('Error Communicating with Server', new Request('GET', 'me'))
         ]);
-        $handlerStack = HandlerStack::create($mock);
-        $handlerStack->push($history);
-
-        $client = new Client([
-            'handler' => $handlerStack,
-        ]);
+        $client = $tester['client'];
 
         $gc = (new GatherContentClient($client))
             ->setOptions($this->gcClientOptions);
@@ -545,22 +485,15 @@ class GatherContentClientItemTest extends GcBaseTestCase
      */
     public function testItemChooseStatusPost(array $expected, array $response, int $itemId, int $statusId): void
     {
-        $container = [];
-        $history = Middleware::history($container);
-        $mock = new MockHandler([
+        $tester = $this->getBasicHttpClientTester([
             new Response(
                 $response['code'],
                 ['Content-Type' => 'application/json'],
                 \GuzzleHttp\json_encode($response['body'])
             ),
-            new RequestException('Error Communicating with Server', new Request('GET', 'me'))
         ]);
-        $handlerStack = HandlerStack::create($mock);
-        $handlerStack->push($history);
-
-        $client = new Client([
-            'handler' => $handlerStack,
-        ]);
+        $client = $tester['client'];
+        $container = &$tester['container'];
 
         $client = (new GatherContentClient($client));
         $client->setOptions($this->gcClientOptions)
@@ -640,22 +573,14 @@ class GatherContentClientItemTest extends GcBaseTestCase
      */
     public function testItemChooseStatusPostFail(array $expected, array $response, int $itemId, int $statusId): void
     {
-        $container = [];
-        $history = Middleware::history($container);
-        $mock = new MockHandler([
+        $tester = $this->getBasicHttpClientTester([
             new Response(
                 $response['code'],
                 ['Content-Type' => 'application/json'],
                 \GuzzleHttp\json_encode($response['body'])
             ),
-            new RequestException('Error Communicating with Server', new Request('GET', 'me'))
         ]);
-        $handlerStack = HandlerStack::create($mock);
-        $handlerStack->push($history);
-
-        $client = new Client([
-            'handler' => $handlerStack,
-        ]);
+        $client = $tester['client'];
 
         $gc = (new GatherContentClient($client))
             ->setOptions($this->gcClientOptions);
@@ -713,9 +638,7 @@ class GatherContentClientItemTest extends GcBaseTestCase
      */
     public function testItemsPost($projectId, $name, $parentId, $templateId, $config, $resultItemId): void
     {
-        $container = [];
-        $history = Middleware::history($container);
-        $mock = new MockHandler([
+        $tester = $this->getBasicHttpClientTester([
             new Response(
                 202,
                 [
@@ -723,13 +646,9 @@ class GatherContentClientItemTest extends GcBaseTestCase
                     'Location' => "{$this->gcClientOptions['baseUri']}/items/$resultItemId",
                 ]
             ),
-            new RequestException('Error Communicating with Server', new Request('POST', 'items'))
         ]);
-        $handlerStack = HandlerStack::create($mock);
-        $handlerStack->push($history);
-        $client = new Client([
-            'handler' => $handlerStack,
-        ]);
+        $client = $tester['client'];
+        $container = &$tester['container'];
 
         $actual = (new GatherContentClient($client))
             ->setOptions($this->gcClientOptions)
@@ -783,9 +702,7 @@ class GatherContentClientItemTest extends GcBaseTestCase
 
     public function testItemsPostNoPath()
     {
-        $container = [];
-        $history = Middleware::history($container);
-        $mock = new MockHandler([
+        $tester = $this->getBasicHttpClientTester([
             new Response(
                 202,
                 [
@@ -794,11 +711,7 @@ class GatherContentClientItemTest extends GcBaseTestCase
                 ]
             ),
         ]);
-        $handlerStack = HandlerStack::create($mock);
-        $handlerStack->push($history);
-        $client = new Client([
-            'handler' => $handlerStack,
-        ]);
+        $client = $tester['client'];
 
         static::expectException(\Exception::class);
         (new GatherContentClient($client))
@@ -808,16 +721,10 @@ class GatherContentClientItemTest extends GcBaseTestCase
 
     public function testItemsPostUnexpectedStatusCode()
     {
-        $container = [];
-        $history = Middleware::history($container);
-        $mock = new MockHandler([
+        $tester = $this->getBasicHttpClientTester([
             new Response(200, []),
         ]);
-        $handlerStack = HandlerStack::create($mock);
-        $handlerStack->push($history);
-        $client = new Client([
-            'handler' => $handlerStack,
-        ]);
+        $client = $tester['client'];
 
         static::expectException(\Exception::class);
         (new GatherContentClient($client))
@@ -859,17 +766,11 @@ class GatherContentClientItemTest extends GcBaseTestCase
      */
     public function testItemSavePost($itemId, $config)
     {
-        $container = [];
-        $history = Middleware::history($container);
-        $mock = new MockHandler([
+        $tester = $this->getBasicHttpClientTester([
             new Response(202),
-            new RequestException('Error Communicating with Server', new Request('POST', "items/$itemId/save"))
         ]);
-        $handlerStack = HandlerStack::create($mock);
-        $handlerStack->push($history);
-        $client = new Client([
-            'handler' => $handlerStack,
-        ]);
+        $client = $tester['client'];
+        $container = &$tester['container'];
 
         (new GatherContentClient($client))
             ->setOptions($this->gcClientOptions)
@@ -902,16 +803,10 @@ class GatherContentClientItemTest extends GcBaseTestCase
 
     public function testItemSavePostUnexpectedStatusCode()
     {
-        $container = [];
-        $history = Middleware::history($container);
-        $mock = new MockHandler([
+        $tester = $this->getBasicHttpClientTester([
             new Response(200, []),
         ]);
-        $handlerStack = HandlerStack::create($mock);
-        $handlerStack->push($history);
-        $client = new Client([
-            'handler' => $handlerStack,
-        ]);
+        $client = $tester['client'];
 
         static::expectException(\Exception::class);
         (new GatherContentClient($client))
