@@ -138,14 +138,7 @@ class GatherContentClient implements GatherContentClientInterface
      */
     public function meGet(): ?DataTypes\User
     {
-        $this->response = $this->client->request(
-            'GET',
-            $this->getUri('me'),
-            [
-                'auth' => $this->getRequestAuth(),
-                'headers' => $this->getRequestHeaders(),
-            ]
-        );
+        $this->sendGet('me');
 
         $this->validateResponse();
         $body = $this->parseResponse();
@@ -158,14 +151,7 @@ class GatherContentClient implements GatherContentClientInterface
      */
     public function accountsGet(): array
     {
-        $this->response = $this->client->request(
-            'GET',
-            $this->getUri('accounts'),
-            [
-                'auth' => $this->getRequestAuth(),
-                'headers' => $this->getRequestHeaders(),
-            ]
-        );
+        $this->sendGet('accounts');
 
         $this->validateResponse();
         $body = $this->parseResponse();
@@ -178,14 +164,7 @@ class GatherContentClient implements GatherContentClientInterface
      */
     public function accountGet(int $accountId): ?DataTypes\Account
     {
-        $this->response = $this->client->request(
-            'GET',
-            $this->getUri("accounts/$accountId"),
-            [
-                'auth' => $this->getRequestAuth(),
-                'headers' => $this->getRequestHeaders(),
-            ]
-        );
+        $this->sendGet("accounts/$accountId");
 
         $this->validateResponse();
         $body = $this->parseResponse();
@@ -198,17 +177,7 @@ class GatherContentClient implements GatherContentClientInterface
      */
     public function projectsGet(int $accountId): array
     {
-        $this->response = $this->client->request(
-            'GET',
-            $this->getUri('projects'),
-            [
-                'auth' => $this->getRequestAuth(),
-                'headers' => $this->getRequestHeaders(),
-                'query' => [
-                    'account_id' => $accountId,
-                ],
-            ]
-        );
+        $this->sendGet('projects', ['query' => ['account_id' => $accountId]]);
 
         $this->validateResponse();
         $body = $this->parseResponse();
@@ -221,14 +190,7 @@ class GatherContentClient implements GatherContentClientInterface
      */
     public function projectGet(int $projectId): ?DataTypes\Project
     {
-        $this->response = $this->client->request(
-            'GET',
-            $this->getUri("projects/$projectId"),
-            [
-                'auth' => $this->getRequestAuth(),
-                'headers' => $this->getRequestHeaders(),
-            ]
-        );
+        $this->sendGet("projects/$projectId");
 
         $this->validateResponse();
         $body = $this->parseResponse();
@@ -242,21 +204,16 @@ class GatherContentClient implements GatherContentClientInterface
      */
     public function projectsPost(int $accountId, string $projectName, string $projectType): int
     {
-        $this->response = $this->client->request(
-            'POST',
-            $this->getUri('projects'),
-            [
-                'auth' => $this->getRequestAuth(),
-                'headers' => $this->getRequestHeaders([
-                    'Content-Type' => 'application/x-www-form-urlencoded',
-                ]),
-                'form_params' => [
-                    'account_id' => $accountId,
-                    'name' => $projectName,
-                    'type' => $projectType,
-                ],
-            ]
-        );
+        $this->sendPost('projects', [
+            'headers' => [
+                'Content-Type' => 'application/x-www-form-urlencoded'
+            ],
+            'form_params' => [
+                'account_id' => $accountId,
+                'name' => $projectName,
+                'type' => $projectType,
+            ],
+        ]);
 
         if ($this->response->getStatusCode() !== 202) {
             $responseContentType = $this->response->getHeader('Content-Type');
@@ -284,14 +241,7 @@ class GatherContentClient implements GatherContentClientInterface
      */
     public function projectStatusesGet(int $projectId): array
     {
-        $this->response = $this->client->request(
-            'GET',
-            $this->getUri("projects/$projectId/statuses"),
-            [
-                'auth' => $this->getRequestAuth(),
-                'headers' => $this->getRequestHeaders(),
-            ]
-        );
+        $this->sendGet("projects/$projectId/statuses");
 
         $this->validateResponse();
         $body = $this->parseResponse();
@@ -304,14 +254,7 @@ class GatherContentClient implements GatherContentClientInterface
      */
     public function projectStatusGet(int $projectId, int $statusId): ?DataTypes\Status
     {
-        $this->response = $this->client->request(
-            'GET',
-            $this->getUri("projects/$projectId/statuses/$statusId"),
-            [
-                'auth' => $this->getRequestAuth(),
-                'headers' => $this->getRequestHeaders(),
-            ]
-        );
+        $this->sendGet("projects/$projectId/statuses/$statusId");
 
         $this->validateResponse();
         $body = $this->parseResponse();
@@ -324,17 +267,7 @@ class GatherContentClient implements GatherContentClientInterface
      */
     public function itemsGet(int $projectId): array
     {
-        $this->response = $this->client->request(
-            'GET',
-            $this->getUri('items'),
-            [
-                'auth' => $this->getRequestAuth(),
-                'headers' => $this->getRequestHeaders(),
-                'query' => [
-                    'project_id' => $projectId,
-                ],
-            ]
-        );
+        $this->sendGet('items', ['query' => ['project_id' => $projectId]]);
 
         $this->validateResponse();
         $body = $this->parseResponse();
@@ -347,14 +280,7 @@ class GatherContentClient implements GatherContentClientInterface
      */
     public function itemGet(int $itemId): ?DataTypes\Item
     {
-        $this->response = $this->client->request(
-            'GET',
-            $this->getUri("items/$itemId"),
-            [
-                'auth' => $this->getRequestAuth(),
-                'headers' => $this->getRequestHeaders(),
-            ]
-        );
+        $this->sendGet("items/$itemId");
 
         $this->validateResponse();
         $body = $this->parseResponse();
@@ -387,15 +313,9 @@ class GatherContentClient implements GatherContentClientInterface
             $form_params['config'] = base64_encode(\GuzzleHttp\json_encode($config));
         }
 
-        $this->response = $this->client->request(
-            'POST',
-            $this->getUri('items'),
-            [
-                'auth' => $this->getRequestAuth(),
-                'headers' => $this->getRequestHeaders([]),
-                'form_params' => $form_params,
-            ]
-        );
+        $this->sendPost('items', [
+            'form_params' => $form_params,
+        ]);
 
         if ($this->response->getStatusCode() !== 202) {
             throw new \Exception("Unexpected status code: {$this->response->getStatusCode()}");
@@ -419,15 +339,9 @@ class GatherContentClient implements GatherContentClientInterface
         $encodedConfig = base64_encode($jsonConfig);
         $formParams['config'] = $encodedConfig;
 
-        $this->response = $this->client->request(
-            'POST',
-            $this->getUri("items/$itemId/save"),
-            [
-                'auth' => $this->getRequestAuth(),
-                'headers' => $this->getRequestHeaders([]),
-                'form_params' => $formParams,
-            ]
-        );
+        $this->sendPost("items/$itemId/save", [
+            'form_params' => $formParams,
+        ]);
 
         if ($this->response->getStatusCode() !== 202) {
             throw new \Exception("Unexpected status code: {$this->response->getStatusCode()}");
@@ -439,17 +353,11 @@ class GatherContentClient implements GatherContentClientInterface
      */
     public function itemApplyTemplatePost(int $itemId, int $templateId): void
     {
-        $this->response = $this->client->request(
-            'POST',
-            $this->getUri("items/$itemId/apply_template"),
-            [
-                'auth' => $this->getRequestAuth(),
-                'headers' => $this->getRequestHeaders(),
-                'form_params' => [
-                    'template_id' => $templateId,
-                ],
-            ]
-        );
+        $this->sendPost("items/$itemId/apply_template", [
+            'form_params' => [
+                'template_id' => $templateId,
+            ],
+        ]);
 
         if ($this->response->getStatusCode() !== 202) {
             $responseContentType = $this->response->getHeader('Content-Type');
@@ -468,17 +376,11 @@ class GatherContentClient implements GatherContentClientInterface
      */
     public function itemChooseStatusPost(int $itemId, int $statusId): void
     {
-        $this->response = $this->client->request(
-            'POST',
-            $this->getUri("items/$itemId/choose_status"),
-            [
-                'auth' => $this->getRequestAuth(),
-                'headers' => $this->getRequestHeaders(),
-                'form_params' => [
-                    'status_id' => $statusId,
-                ],
-            ]
-        );
+        $this->sendPost("items/$itemId/choose_status", [
+            'form_params' => [
+                'status_id' => $statusId,
+            ],
+        ]);
 
         if ($this->response->getStatusCode() !== 202) {
             $responseContentType = $this->response->getHeader('Content-Type');
@@ -497,15 +399,7 @@ class GatherContentClient implements GatherContentClientInterface
      */
     public function itemFilesGet(int $itemId): array
     {
-
-        $this->response = $this->client->request(
-            'GET',
-            $this->getUri("items/$itemId/files"),
-            [
-                'auth' => $this->getRequestAuth(),
-                'headers' => $this->getRequestHeaders(),
-            ]
-        );
+        $this->sendGet("items/$itemId/files");
 
         $this->validateResponse();
         $body = $this->parseResponse();
@@ -515,17 +409,7 @@ class GatherContentClient implements GatherContentClientInterface
 
     public function templatesGet(int $projectId): array
     {
-        $this->response = $this->client->request(
-            'GET',
-            $this->getUri('templates'),
-            [
-                'auth' => $this->getRequestAuth(),
-                'headers' => $this->getRequestHeaders(),
-                'query' => [
-                    'project_id' => $projectId,
-                ],
-            ]
-        );
+        $this->sendGet('templates', ['query' => ['project_id' => $projectId]]);
 
         $this->validateResponse();
         $body = $this->parseResponse();
@@ -535,14 +419,7 @@ class GatherContentClient implements GatherContentClientInterface
 
     public function templateGet(int $templateId): ?DataTypes\Template
     {
-        $this->response = $this->client->request(
-            'GET',
-            $this->getUri("templates/$templateId"),
-            [
-                'auth' => $this->getRequestAuth(),
-                'headers' => $this->getRequestHeaders(),
-            ]
-        );
+        $this->sendGet("templates/$templateId");
 
         $this->validateResponse();
         $body = $this->parseResponse();
@@ -568,6 +445,40 @@ class GatherContentClient implements GatherContentClientInterface
         return $base + [
             'Accept' => 'application/vnd.gathercontent.v0.5+json',
         ];
+    }
+
+    /**
+     * @return $this
+     */
+    protected function sendGet(string $path, array $options = [])
+    {
+        return $this->sendRequest('GET', $path, $options);
+    }
+
+    /**
+     * @return $this
+     */
+    protected function sendPost(string $path, array $options = [])
+    {
+        return $this->sendRequest('POST', $path, $options);
+    }
+
+    /**
+     * @return $this
+     */
+    protected function sendRequest(string $method, string $path, array $options = [])
+    {
+        $options += [
+            'auth' => $this->getRequestAuth(),
+            'headers' => [],
+        ];
+
+        $options['headers'] += $this->getRequestHeaders();
+
+        $uri = $this->getUri($path);
+        $this->response = $this->client->request($method, $uri, $options);
+
+        return $this;
     }
 
     protected function parseResponse(): array
