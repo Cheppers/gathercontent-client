@@ -6,11 +6,6 @@ use Cheppers\GatherContent\DataTypes\ElementText;
 use Cheppers\GatherContent\DataTypes\Item;
 use Cheppers\GatherContent\DataTypes\Tab;
 use Cheppers\GatherContent\GatherContentClient;
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\RequestException;
-use GuzzleHttp\Handler\MockHandler;
-use GuzzleHttp\HandlerStack;
-use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 
