@@ -36,7 +36,7 @@ $gc
 
 Endpoint: **GET: /me**
 
-Return the logged in user.
+Returns the logged in user.
 
 Return type: ```User```
 
@@ -50,7 +50,7 @@ $user = $gc->meGet();
 
 Endpoint: **GET: /accounts**
 
-Return all the accounts associated with the logged in user.
+Returns all the accounts associated with the logged in user.
 
 Return type: ```Account[]```
 
@@ -62,7 +62,7 @@ $ąccounts = $gc->accountsGet();
 
 Endpoint: **GET: /accounts/:account_id**
 
-Return a specific account of the logged in user.
+Returns a specific account of the logged in user.
 
 Parameters:
 
@@ -71,7 +71,7 @@ Parameters:
 Return type: ```Account```
 
 ```
-$ąccount = $gc->accountGet($myAccountId);
+$ąccount = $gc->accountGet($accountId);
 ```
 
 ### Projects
@@ -80,7 +80,7 @@ $ąccount = $gc->accountGet($myAccountId);
 
 Endpoint: **GET: /projects**
 
-Return all the projects associated with the given account id.
+Returns all the projects associated with the given account id.
  
 Paramteres:
 
@@ -89,14 +89,14 @@ Paramteres:
 Return type: ```Project[]```
 
 ```
-$projects = $gc->projectsGet($myAccountId);
+$projects = $gc->projectsGet($accountId);
 ```
 
 #### projectGet
 
 Endpoint: **GET: /projects/:project_id**
 
-Return a specific project.
+Returns a specific project.
 
 Paramteres:
 
@@ -105,7 +105,7 @@ Paramteres:
 Return type: ```Project```
 
 ```
-$project = $gc->projectGet($myProjectId);
+$project = $gc->projectGet($projectId);
 ```
 
 #### projectsPost
@@ -113,9 +113,9 @@ $project = $gc->projectGet($myProjectId);
 Endpoint: **POST: /projects**
 
 Create a new project for a specific account.
-Return the id of the newly created project.
+Returns the id of the newly created project.
 
-Paramters:
+Parameters:
 
 - ```int $accountId```: the ID of the account
 
@@ -133,8 +133,8 @@ Return type: ```int```
 
 ```
 $projectId = $gc->projectsPost(
-    $myAccountId,
-    $myNewProjectName,
+    $accountId,
+    $projectName,
     GatherContentClientInterface::PROJECT_TYPE_ONGOING_WEBSITE_CONTENT
 );
 ```
@@ -152,14 +152,14 @@ Parameters:
 Return type: ```Status[]```
 
 ```
-$statuses = $gc->projectStatusesGet($myProjectId);
+$statuses = $gc->projectStatusesGet($projectId);
 ```
 
 #### projectStatusGet
 
 Endpoint: **GET: /projects/:project_id/statuses/:status_id**
 
-Return a project's given status.
+Returns a project's given status.
 
 Parameters:
 
@@ -170,7 +170,7 @@ Parameters:
 Return type: ```Status```
 
 ```
-$status = $gc->projectStatusGet($myProjectId, $myStatusId);
+$status = $gc->projectStatusGet($projectId, $statusId);
 ```
 
 ### Items
@@ -188,7 +188,7 @@ Parameters:
 Return type: ```Item[]```
 
 ```
-$items = $gc->itemsGet($myProjectId);
+$items = $gc->itemsGet($projectId);
 ```
 
 #### itemGet
@@ -204,28 +204,155 @@ Parameters:
 Return type: ```Item```
 
 ```
-$item = $gc->itemGet($myItemId);
+$item = $gc->itemGet($itemId);
 ```
 
 #### itemsPost
 
 Endpoint: **POST: /items**
 
+Create a new item for a specific project.
+Returns the id of the newly created item.
+
+Parameters:
+
+- ```int $projectId```: the ID of the project
+
+- ```string $name```: the name of the new item
+
+- ```int $parentId```: the ID of the parent item
+
+- ```int $templateId```: the ID of the template
+
+- ```array $config```: the config array for the new item
+
+Return type: ```int```
+
+```
+$itemId = $gc->itemsPost(
+    $projectId,
+    $name,
+    $parentId,
+    $templateId,
+    $config
+);
+```
+
+The ```$config``` array should look like this:
+
+```
+$tab = new Tab();
+$tab->label = 'Test tab';
+$tab->id = 'test_tab';
+$tab->hidden = false;
+```
+
+It's first dimension must be a ```Tab``` object, with a unique tab ID.
+
+```
+$config[$tab->id] = $tab;
+```
+
+The tabs contain the field elements.
+
+```
+$text = new ElementText();
+$text->label = 'Test text';
+$text->id = 'test_text';
+$text->type = 'text';
+$text->limitType = 'words';
+$text->limit = 1000;
+$text->value = 'Test value';
+```
+
+And simply put them together like this:
+
+```
+$config[$tab->id]->elements[$text->id] = $text;
+```
+
 #### itemSavePost
 
 Endpoint: **POST: /items/:item_id/save**
+
+Edit an existing item.
+
+Parameters:
+
+- ```int $itemId```: the ID of the item
+
+- ```array $config```: the config array for the new item
+
+Return type: ```void```
+
+```
+$gc->itemSavePost(
+    $itemId,
+    $config
+);
+```
+
+The config is the same as at the ```itemsPost``` method.
 
 #### itemApplyTemplatePost
 
 Endpoint: **POST: /items/:item_id/apply_template**
 
+Edit an existing item.
+
+Parameters:
+
+- ```int $itemId```: the ID of the item
+
+- ```int $templateId```: the ID of the template
+
+Return type: ```void```
+
+```
+$gc->itemApplyTemplatePost(
+    $itemId,
+    $templateId
+);
+```
+
 #### itemChooseStatusPost
 
 Endpoint: **POST: /items/:item_id/choose_status**
 
+Edit an existing item.
+
+Parameters:
+
+- ```int $itemId```: the ID of the item
+
+- ```int $statusId```: the ID of the status
+
+Return type: ```void```
+
+```
+$gc->itemChooseStatusPost(
+    $itemId,
+    $templateId
+);
+```
+
 #### itemFilesGet
 
 Endpoint: **GET: /items/:item_id/files**
+
+Return all the files of an item.
+
+Parameters:
+
+- ```int $itemId```: the ID of the item
+
+Return type: ```File[]```
+
+```
+$files = $gc->itemFilesGet(
+    $itemId
+);
+```
 
 ### Templates
 
@@ -233,6 +360,30 @@ Endpoint: **GET: /items/:item_id/files**
 
 Endpoint: **GET: /templates**
 
+Return all the templates of a project.
+
+Parameters:
+
+- ```int $projectId```: the ID of the project
+
+Return type: ```Template[]```
+
+```
+$templates = $gc->templatesGet($projectId);
+```
+
 #### templateGet
 
 Endpoint: **GET: /templates/:template_id**
+
+Return a specific template.
+
+Parameters:
+
+- ```int $templateId```: the ID of the project
+
+Return type: ```Template```
+
+```
+$template = $gc->templateGet($templateId);
+```
