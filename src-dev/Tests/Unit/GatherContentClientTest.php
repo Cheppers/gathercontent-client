@@ -92,6 +92,10 @@ class GatherContentClientTest extends GcBaseTestCase
         $userData = static::getUniqueResponseUser();
 
         return [
+            'empty' => [
+                null,
+                ['data' => []],
+            ],
             'basic' => [
                 $userData,
                 ['data' => $userData],
@@ -102,7 +106,7 @@ class GatherContentClientTest extends GcBaseTestCase
     /**
      * @dataProvider casesMeGet
      */
-    public function testMeGet(array $expected, array $responseBody): void
+    public function testMeGet(?array $expected, array $responseBody): void
     {
         $container = [];
         $history = Middleware::history($container);
@@ -125,11 +129,15 @@ class GatherContentClientTest extends GcBaseTestCase
             ->setOptions($this->gcClientOptions)
             ->meGet();
 
-        static::assertTrue($user instanceof User, 'Return data type is User');
-        static::assertEquals(
-            json_encode($expected, JSON_PRETTY_PRINT),
-            json_encode($user, JSON_PRETTY_PRINT)
-        );
+        if ($expected) {
+            static::assertTrue($user instanceof User, 'Return data type is User');
+            static::assertEquals(
+                json_encode($expected, JSON_PRETTY_PRINT),
+                json_encode($user, JSON_PRETTY_PRINT)
+            );
+        } else {
+            static::assertNull($user);
+        }
 
         /** @var Request $request */
         $request = $container[0]['request'];
@@ -288,6 +296,10 @@ class GatherContentClientTest extends GcBaseTestCase
         $data = static::getUniqueResponseAccount();
 
         return [
+            'empty' => [
+                null,
+                ['data' => []],
+            ],
             'basic' => [
                 $data,
                 ['data' => $data],
@@ -298,7 +310,7 @@ class GatherContentClientTest extends GcBaseTestCase
     /**
      * @dataProvider casesAccountGet
      */
-    public function testAccountGet(array $expected, array $responseBody): void
+    public function testAccountGet(?array $expected, array $responseBody): void
     {
         $container = [];
         $history = Middleware::history($container);
@@ -317,15 +329,21 @@ class GatherContentClientTest extends GcBaseTestCase
             'handler' => $handlerStack,
         ]);
 
+        $accountId = (isset($responseBody['data']['id']) ? $responseBody['data']['id'] : 0);
+
         $actual = (new GatherContentClient($client))
             ->setOptions($this->gcClientOptions)
-            ->accountGet($responseBody['data']['id']);
+            ->accountGet($accountId);
 
-        static::assertTrue($actual instanceof Account, 'Data type of the return is Account');
-        static::assertEquals(
-            json_encode($expected, JSON_PRETTY_PRINT),
-            json_encode($actual, JSON_PRETTY_PRINT)
-        );
+        if ($expected) {
+            static::assertTrue($actual instanceof Account, 'Data type of the return is Account');
+            static::assertEquals(
+                json_encode($expected, JSON_PRETTY_PRINT),
+                json_encode($actual, JSON_PRETTY_PRINT)
+            );
+        } else {
+            static::assertNull($actual);
+        }
 
         /** @var Request $request */
         $request = $container[0]['request'];
@@ -335,7 +353,7 @@ class GatherContentClientTest extends GcBaseTestCase
         static::assertEquals(['application/vnd.gathercontent.v0.5+json'], $request->getHeader('Accept'));
         static::assertEquals(['api.example.com'], $request->getHeader('Host'));
         static::assertEquals(
-            "{$this->gcClientOptions['baseUri']}/accounts/" . (int) $responseBody['data']['id'],
+            "{$this->gcClientOptions['baseUri']}/accounts/" . (int) $accountId,
             (string) $request->getUri()
         );
     }
