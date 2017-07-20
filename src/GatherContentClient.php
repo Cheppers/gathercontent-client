@@ -136,7 +136,7 @@ class GatherContentClient implements GatherContentClientInterface
     /**
      * {@inheritdoc}
      */
-    public function meGet(): DataTypes\User
+    public function meGet(): ?DataTypes\User
     {
         $this->response = $this->client->request(
             'GET',
@@ -150,7 +150,7 @@ class GatherContentClient implements GatherContentClientInterface
         $this->validateResponse();
         $body = $this->parseResponse();
 
-        return new DataTypes\User($body['data']);
+        return empty($body['data']) ? null : new DataTypes\User($body['data']);
     }
 
     /**
@@ -176,7 +176,7 @@ class GatherContentClient implements GatherContentClientInterface
     /**
      * {@inheritdoc}
      */
-    public function accountGet(int $accountId): DataTypes\Account
+    public function accountGet(int $accountId): ?DataTypes\Account
     {
         $this->response = $this->client->request(
             'GET',
@@ -190,7 +190,7 @@ class GatherContentClient implements GatherContentClientInterface
         $this->validateResponse();
         $body = $this->parseResponse();
 
-        return new DataTypes\Account($body['data']);
+        return empty($body['data']) ? null : new DataTypes\Account($body['data']);
     }
 
     /**
@@ -219,7 +219,7 @@ class GatherContentClient implements GatherContentClientInterface
     /**
      * {@inheritdoc}
      */
-    public function projectGet(int $projectId): DataTypes\Project
+    public function projectGet(int $projectId): ?DataTypes\Project
     {
         $this->response = $this->client->request(
             'GET',
@@ -234,7 +234,7 @@ class GatherContentClient implements GatherContentClientInterface
         $body = $this->parseResponse();
         $body += ['meta' => []];
 
-        return new DataTypes\Project($body['data'] + ['meta' => $body['meta']]);
+        return empty($body['data']) ? null : new DataTypes\Project($body['data'] + ['meta' => $body['meta']]);
     }
 
     /**
@@ -302,7 +302,7 @@ class GatherContentClient implements GatherContentClientInterface
     /**
      * {@inheritdoc}
      */
-    public function projectStatusGet(int $projectId, int $statusId): DataTypes\Status
+    public function projectStatusGet(int $projectId, int $statusId): ?DataTypes\Status
     {
         $this->response = $this->client->request(
             'GET',
@@ -316,7 +316,7 @@ class GatherContentClient implements GatherContentClientInterface
         $this->validateResponse();
         $body = $this->parseResponse();
 
-        return new DataTypes\Status($body['data']);
+        return empty($body['data']) ? null : new DataTypes\Status($body['data']);
     }
 
     /**
