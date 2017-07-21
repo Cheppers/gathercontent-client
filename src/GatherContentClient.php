@@ -336,9 +336,16 @@ class GatherContentClient implements GatherContentClientInterface
         ]);
 
         if ($this->response->getStatusCode() !== 202) {
+            $responseContentType = $this->response->getHeader('Content-Type');
+            $responseContentType = end($responseContentType);
+
+            if ($responseContentType === 'application/json') {
+                $this->parseResponse();
+            }
+
             throw new GatherContentClientException(
-                "Unexpected status code: {$this->response->getStatusCode()}",
-                GatherContentClientException::UNEXPECTED_STATUS_CODE
+                'Unexpected answer',
+                GatherContentClientException::UNEXPECTED_ANSWER
             );
         }
 
@@ -368,9 +375,16 @@ class GatherContentClient implements GatherContentClientInterface
         ]);
 
         if ($this->response->getStatusCode() !== 202) {
+            $responseContentType = $this->response->getHeader('Content-Type');
+            $responseContentType = end($responseContentType);
+
+            if ($responseContentType === 'application/json') {
+                $this->parseResponse();
+            }
+
             throw new GatherContentClientException(
-                "Unexpected status code: {$this->response->getStatusCode()}",
-                GatherContentClientException::UNEXPECTED_STATUS_CODE
+                'Unexpected answer',
+                GatherContentClientException::UNEXPECTED_ANSWER
             );
         }
     }
