@@ -18,6 +18,9 @@ class GatherContentClient implements GatherContentClientInterface
      */
     protected $response;
 
+    /**
+     * {@inheritdoc}
+     */
     public function getResponse(): ResponseInterface
     {
         return $this->response;
@@ -36,7 +39,7 @@ class GatherContentClient implements GatherContentClientInterface
     }
 
     /**
-     * @return $this
+     * {@inheritdoc}
      */
     public function setEmail(string $value)
     {
@@ -52,12 +55,18 @@ class GatherContentClient implements GatherContentClientInterface
      */
     protected $apiKey = '';
 
+    /**
+     * {@inheritdoc}
+     */
     public function getApiKey(): string
     {
         return $this->apiKey;
     }
 
-    public function setApiKey(string $apiKey): self
+    /**
+     * {@inheritdoc}
+     */
+    public function setApiKey(string $apiKey)
     {
         $this->apiKey = $apiKey;
 
@@ -71,13 +80,16 @@ class GatherContentClient implements GatherContentClientInterface
      */
     protected $baseUri = 'https://api.gathercontent.com';
 
+    /**
+     * {@inheritdoc}
+     */
     public function getBaseUri(): string
     {
         return $this->baseUri;
     }
 
     /**
-     * @return $this
+     * {@inheritdoc}
      */
     public function setBaseUri(string $value)
     {
