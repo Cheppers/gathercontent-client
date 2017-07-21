@@ -6,6 +6,7 @@ use Cheppers\GatherContent\DataTypes\ElementText;
 use Cheppers\GatherContent\DataTypes\Item;
 use Cheppers\GatherContent\DataTypes\Tab;
 use Cheppers\GatherContent\GatherContentClient;
+use Cheppers\GatherContent\GatherContentClientException;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 
@@ -90,8 +91,8 @@ class GatherContentClientItemTest extends GcBaseTestCase
 
         $cases['not_found'] = [
             [
-                'class' => \Exception::class,
-                'code' => 200,
+                'class' => GatherContentClientException::class,
+                'code' => GatherContentClientException::API_ERROR,
                 'msg' => 'API Error: "Project Not Found"',
             ],
             [
@@ -201,8 +202,8 @@ class GatherContentClientItemTest extends GcBaseTestCase
 
         $cases['not_found'] = [
             [
-                'class' => \Exception::class,
-                'code' => 200,
+                'class' => GatherContentClientException::class,
+                'code' => GatherContentClientException::API_ERROR,
                 'msg' => 'API Error: "Item Not Found"',
             ],
             [
@@ -397,8 +398,8 @@ class GatherContentClientItemTest extends GcBaseTestCase
         $cases = static::basicFailCasesPost(['id' => 0]);
         $cases['missing_item'] = [
             [
-                'class' => \Exception::class,
-                'code' => 200,
+                'class' => GatherContentClientException::class,
+                'code' => GatherContentClientException::API_ERROR,
                 'msg' => 'API Error: "Item Not Found"',
             ],
             [
@@ -526,8 +527,8 @@ class GatherContentClientItemTest extends GcBaseTestCase
         $cases = static::basicFailCasesPost(['id' => 0]);
         $cases['missing_item'] = [
             [
-                'class' => \Exception::class,
-                'code' => 200,
+                'class' => GatherContentClientException::class,
+                'code' => GatherContentClientException::API_ERROR,
                 'msg' => 'API Error: "Item Not Found"',
             ],
             [

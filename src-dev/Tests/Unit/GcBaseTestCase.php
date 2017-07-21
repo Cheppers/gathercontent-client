@@ -2,6 +2,7 @@
 
 namespace Cheppers\GatherContent\Tests\Unit;
 
+use Cheppers\GatherContent\GatherContentClientException;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Handler\MockHandler;
@@ -439,8 +440,8 @@ class GcBaseTestCase extends TestCase
         $cases = self::basicFailCases($data);
         $cases['header-error'] = [
             [
-                'class' => \Exception::class,
-                'code' => 1,
+                'class' => GatherContentClientException::class,
+                'code' => GatherContentClientException::UNEXPECTED_CONTENT_TYPE,
                 'msg' => 'Unexpected Content-Type: \'text/css\'',
             ],
             [
@@ -461,8 +462,8 @@ class GcBaseTestCase extends TestCase
         $cases = self::basicFailCases($data);
         $cases['header-error'] = [
             [
-                'class' => \Exception::class,
-                'code' => 1,
+                'class' => GatherContentClientException::class,
+                'code' => GatherContentClientException::UNEXPECTED_ANSWER,
                 'msg' => 'Unexpected answer',
             ],
             [

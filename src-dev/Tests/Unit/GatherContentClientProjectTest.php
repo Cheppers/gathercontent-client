@@ -5,6 +5,7 @@ namespace Cheppers\GatherContent\Tests\Unit;
 use Cheppers\GatherContent\DataTypes\Project;
 use Cheppers\GatherContent\DataTypes\Status;
 use Cheppers\GatherContent\GatherContentClient;
+use Cheppers\GatherContent\GatherContentClientException;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 
@@ -83,8 +84,8 @@ class GatherContentClientProjectTest extends GcBaseTestCase
 
         $cases['not_found'] = [
           [
-            'class' => \Exception::class,
-            'code' => 200,
+            'class' => GatherContentClientException::class,
+            'code' => GatherContentClientException::API_ERROR,
             'msg' => 'API Error: "Account not found"',
           ],
           [
@@ -186,8 +187,8 @@ class GatherContentClientProjectTest extends GcBaseTestCase
 
         $cases['not_found'] = [
           [
-            'class' => \Exception::class,
-            'code' => 200,
+            'class' => GatherContentClientException::class,
+            'code' => GatherContentClientException::API_ERROR,
             'msg' => 'API Error: "Project Not Found"',
           ],
           [
@@ -349,8 +350,8 @@ class GatherContentClientProjectTest extends GcBaseTestCase
         $cases = static::basicFailCasesPost(['name' => 'Project name', 'type' => 'Project type']);
         $cases['missing_item'] = [
           [
-            'class' => \Exception::class,
-            'code' => 200,
+            'class' => GatherContentClientException::class,
+            'code' => GatherContentClientException::API_ERROR,
             'msg' => 'API Error: "Account not found"',
           ],
           [
@@ -386,8 +387,8 @@ class GatherContentClientProjectTest extends GcBaseTestCase
         ];
         $cases['missing_project_id'] = [
           [
-            'class' => \Exception::class,
-            'code' => 1,
+            'class' => GatherContentClientException::class,
+            'code' => GatherContentClientException::INVALID_RESPONSE_HEADER,
             'msg' => 'Invalid response header the project ID is missing',
           ],
           [
