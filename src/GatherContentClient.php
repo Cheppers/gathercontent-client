@@ -235,14 +235,20 @@ class GatherContentClient implements GatherContentClientInterface
                 $this->parseResponse();
             }
 
-            throw new \Exception('Unexpected answer', 1);
+            throw new GatherContentClientException(
+                'Unexpected answer',
+                GatherContentClientException::UNEXPECTED_ANSWER
+            );
         }
 
         $locations = $this->response->getHeader('Location');
         $locationPath = parse_url(reset($locations), PHP_URL_PATH);
         $matches = [];
         if (!preg_match('@/projects/(?P<projectId>\d+)$@', $locationPath, $matches)) {
-            throw new \Exception('Invalid response header the project ID is missing', 1);
+            throw new GatherContentClientException(
+                'Invalid response header the project ID is missing',
+                GatherContentClientException::INVALID_RESPONSE_HEADER
+            );
         }
 
         return $matches['projectId'];
@@ -330,14 +336,20 @@ class GatherContentClient implements GatherContentClientInterface
         ]);
 
         if ($this->response->getStatusCode() !== 202) {
-            throw new \Exception("Unexpected status code: {$this->response->getStatusCode()}");
+            throw new GatherContentClientException(
+                "Unexpected status code: {$this->response->getStatusCode()}",
+                GatherContentClientException::UNEXPECTED_STATUS_CODE
+            );
         }
 
         $locations = $this->response->getHeader('Location');
         $locationPath = parse_url(reset($locations), PHP_URL_PATH);
         $matches = [];
         if (!preg_match('@/items/(?P<itemId>\d+)$@', $locationPath, $matches)) {
-            throw new \Exception('@todo Where is the new item ID?');
+            throw new GatherContentClientException(
+                'Invalid response header the item ID is missing',
+                GatherContentClientException::INVALID_RESPONSE_HEADER
+            );
         }
 
         return $matches['itemId'];
@@ -356,7 +368,10 @@ class GatherContentClient implements GatherContentClientInterface
         ]);
 
         if ($this->response->getStatusCode() !== 202) {
-            throw new \Exception("Unexpected status code: {$this->response->getStatusCode()}");
+            throw new GatherContentClientException(
+                "Unexpected status code: {$this->response->getStatusCode()}",
+                GatherContentClientException::UNEXPECTED_STATUS_CODE
+            );
         }
     }
 
@@ -379,7 +394,10 @@ class GatherContentClient implements GatherContentClientInterface
                 $this->parseResponse();
             }
 
-            throw new \Exception('Unexpected answer', 1);
+            throw new GatherContentClientException(
+                'Unexpected answer',
+                GatherContentClientException::UNEXPECTED_ANSWER
+            );
         }
     }
 
@@ -402,7 +420,10 @@ class GatherContentClient implements GatherContentClientInterface
                 $this->parseResponse();
             }
 
-            throw new \Exception('Unexpected answer', 1);
+            throw new GatherContentClientException(
+                'Unexpected answer',
+                GatherContentClientException::UNEXPECTED_ANSWER
+            );
         }
     }
 
@@ -497,7 +518,10 @@ class GatherContentClient implements GatherContentClientInterface
     {
         $body = \GuzzleHttp\json_decode($this->response->getBody(), true);
         if (!empty($body['data']['message'])) {
-            throw new \Exception('API Error: "' . $body['data']['message'] . '"', $this->response->getStatusCode());
+            throw new GatherContentClientException(
+                'API Error: "' . $body['data']['message'] . '"',
+                GatherContentClientException::API_ERROR
+            );
         }
 
         return $body;
@@ -527,7 +551,10 @@ class GatherContentClient implements GatherContentClientInterface
         $responseContentType = $this->response->getHeader('Content-Type');
         $responseContentType = end($responseContentType);
         if ($responseContentType !== 'application/json') {
-            throw new \Exception("Unexpected Content-Type: '$responseContentType'", 1);
+            throw new GatherContentClientException(
+                "Unexpected Content-Type: '$responseContentType'",
+                GatherContentClientException::UNEXPECTED_CONTENT_TYPE
+            );
         }
     }
 }

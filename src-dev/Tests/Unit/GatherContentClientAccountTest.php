@@ -4,6 +4,7 @@ namespace Cheppers\GatherContent\Tests\Unit;
 
 use Cheppers\GatherContent\DataTypes\Account;
 use Cheppers\GatherContent\GatherContentClient;
+use Cheppers\GatherContent\GatherContentClientException;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 
@@ -153,8 +154,8 @@ class GatherContentClientAccountTest extends GcBaseTestCase
 
         $cases['not_found'] = [
             [
-                'class' => \Exception::class,
-                'code' => 200,
+                'class' => GatherContentClientException::class,
+                'code' => GatherContentClientException::API_ERROR,
                 'msg' => 'API Error: "Account not found"',
             ],
             [
