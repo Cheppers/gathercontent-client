@@ -49,6 +49,12 @@ class ElementFiles extends Element
      */
     public $type = 'files';
 
+    protected $unusedProperties = [
+        'id', 'user_id', 'item_id',
+        'field', 'url', 'filename',
+        'size', 'created_at', 'updated_at'
+    ];
+
     /**
      * {@inheritdoc}
      */

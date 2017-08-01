@@ -34,6 +34,10 @@ class GatherContentClientItemTest extends GcBaseTestCase
 
         $items = static::reKeyArray($data, 'id');
 
+        foreach ($items as &$item) {
+            $item = new Item($item);
+        }
+
         return [
             'empty' => [
                 [],
