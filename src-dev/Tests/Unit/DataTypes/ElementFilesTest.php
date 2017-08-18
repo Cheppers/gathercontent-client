@@ -21,10 +21,10 @@ class ElementFilesTest extends BaseTest
     {
         $cases = parent::casesConstructor();
         $cases['basic'][0] = [
-            'type' => 'files'
+            'type' => 'file'
         ];
         $cases['basic'][1] = [
-            'type' => 'files'
+            'type' => 'file'
         ];
 
         return $cases;
