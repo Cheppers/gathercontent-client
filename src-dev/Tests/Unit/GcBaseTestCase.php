@@ -24,22 +24,22 @@ class GcBaseTestCase extends TestCase
 
     protected static $uniqueNumber = 1;
 
-    public static function getUniqueInt(): int
+    public static function getUniqueInt()
     {
         return static::$uniqueNumber++;
     }
 
-    public static function getUniqueFloat(): float
+    public static function getUniqueFloat()
     {
         return static::$uniqueNumber++ + (rand(1, 9) / 10);
     }
 
-    public static function getUniqueString(string $prefix): string
+    public static function getUniqueString($prefix)
     {
         return "$prefix-" . static::$uniqueNumber++;
     }
 
-    public static function getUniqueEmail(string $prefix): string
+    public static function getUniqueEmail($prefix)
     {
         return sprintf(
             '%s@%s.com',
@@ -48,12 +48,12 @@ class GcBaseTestCase extends TestCase
         );
     }
 
-    public static function getUniqueDate(): string
+    public static function getUniqueDate()
     {
         return date('Y-m-d H:i:s', rand(0, time()));
     }
 
-    public static function getUniqueResponseAnnouncement(): array
+    public static function getUniqueResponseAnnouncement()
     {
         return [
             'id' => static::getUniqueInt(),
@@ -62,7 +62,7 @@ class GcBaseTestCase extends TestCase
         ];
     }
 
-    public static function getUniqueResponseFile():array
+    public static function getUniqueResponseFile()
     {
         return [
             'id' => static::getUniqueInt(),
@@ -78,7 +78,7 @@ class GcBaseTestCase extends TestCase
         ];
     }
 
-    public static function getUniqueResponseUser(): array
+    public static function getUniqueResponseUser()
     {
         return [
             'email' => 'email',
@@ -95,7 +95,7 @@ class GcBaseTestCase extends TestCase
         ];
     }
 
-    public static function getUniqueResponseAccount(): array
+    public static function getUniqueResponseAccount()
     {
         return [
             'id' => static::getUniqueInt(),
@@ -105,7 +105,7 @@ class GcBaseTestCase extends TestCase
         ];
     }
 
-    public static function getUniqueResponseProject(): array
+    public static function getUniqueResponseProject()
     {
         $allowedTags = [
             'a' => ['class' => '*'],
@@ -133,7 +133,7 @@ class GcBaseTestCase extends TestCase
         ];
     }
 
-    public static function getUniqueResponseDate(): array
+    public static function getUniqueResponseDate()
     {
         return [
             'date' => static::getUniqueDate(),
@@ -142,7 +142,7 @@ class GcBaseTestCase extends TestCase
         ];
     }
 
-    public static function getUniqueResponseStatus(): array
+    public static function getUniqueResponseStatus()
     {
         return [
             'id' => static::getUniqueInt(),
@@ -155,7 +155,7 @@ class GcBaseTestCase extends TestCase
         ];
     }
 
-    public static function getUniqueResponseTab(array $elements): array
+    public static function getUniqueResponseTab(array $elements)
     {
         $tab = [
             'name' => static::getUniqueString('tab'),
@@ -191,7 +191,7 @@ class GcBaseTestCase extends TestCase
         return $tab;
     }
 
-    public static function getUniqueResponseTemplateTab(array $elements): array
+    public static function getUniqueResponseTemplateTab(array $elements)
     {
         $tab = [
             'name' => static::getUniqueString('tab'),
@@ -227,7 +227,7 @@ class GcBaseTestCase extends TestCase
         return $tab;
     }
 
-    public static function getUniqueResponseElementTemplateFiles(): array
+    public static function getUniqueResponseElementTemplateFiles()
     {
         return [
             'name' => static::getUniqueString('el'),
@@ -238,7 +238,7 @@ class GcBaseTestCase extends TestCase
         ];
     }
 
-    public static function getUniqueResponseElementText(): array
+    public static function getUniqueResponseElementText()
     {
         return [
             'name' => static::getUniqueString('el'),
@@ -253,7 +253,7 @@ class GcBaseTestCase extends TestCase
         ];
     }
 
-    public static function getUniqueResponseElementFiles(): array
+    public static function getUniqueResponseElementFiles()
     {
         return [
             'name' => static::getUniqueString('el'),
@@ -272,7 +272,7 @@ class GcBaseTestCase extends TestCase
         ];
     }
 
-    public static function getUniqueResponseElementSection(): array
+    public static function getUniqueResponseElementSection()
     {
         return [
             'name' => static::getUniqueString('el'),
@@ -282,7 +282,7 @@ class GcBaseTestCase extends TestCase
         ];
     }
 
-    public static function getUniqueResponseElementChoiceRadio(): array
+    public static function getUniqueResponseElementChoiceRadio()
     {
         return [
             'name' => static::getUniqueString('el'),
@@ -295,7 +295,7 @@ class GcBaseTestCase extends TestCase
         ];
     }
 
-    public static function getUniqueResponseElementChoiceCheckbox(): array
+    public static function getUniqueResponseElementChoiceCheckbox()
     {
         return [
             'name' => static::getUniqueString('el'),
@@ -307,7 +307,7 @@ class GcBaseTestCase extends TestCase
         ];
     }
 
-    public static function getUniqueResponseElementChoiceOptions(bool $multiple): array
+    public static function getUniqueResponseElementChoiceOptions($multiple)
     {
         $amount = rand(1, 5);
         $keys = range(1, $amount);
@@ -325,7 +325,7 @@ class GcBaseTestCase extends TestCase
         return $options;
     }
 
-    public static function getUniqueResponseItem(array $tabs): array
+    public static function getUniqueResponseItem(array $tabs)
     {
         $item = [
             'id' => static::getUniqueInt(),
@@ -362,7 +362,7 @@ class GcBaseTestCase extends TestCase
         return $item;
     }
 
-    public static function getUniqueResponseTemplate(array $tabs): array
+    public static function getUniqueResponseTemplate(array $tabs)
     {
         $template = [
             'id' => static::getUniqueInt(),
@@ -387,7 +387,7 @@ class GcBaseTestCase extends TestCase
         return $template;
     }
 
-    public static function reKeyArray(array $array, string $key): array
+    public static function reKeyArray(array $array, $key)
     {
         $items = [];
         foreach ($array as $item) {
@@ -397,7 +397,7 @@ class GcBaseTestCase extends TestCase
         return $items;
     }
 
-    protected static function basicFailCases($data = null): array
+    protected static function basicFailCases($data = null)
     {
         return [
             'unauthorized' => [
@@ -435,7 +435,7 @@ class GcBaseTestCase extends TestCase
         ];
     }
 
-    protected static function basicFailCasesGet($data = null): array
+    protected static function basicFailCasesGet($data = null)
     {
         $cases = self::basicFailCases($data);
         $cases['header-error'] = [
@@ -457,7 +457,7 @@ class GcBaseTestCase extends TestCase
         return $cases;
     }
 
-    protected static function basicFailCasesPost($data = null): array
+    protected static function basicFailCasesPost($data = null)
     {
         $cases = self::basicFailCases($data);
         $cases['header-error'] = [

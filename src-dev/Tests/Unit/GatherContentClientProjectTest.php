@@ -11,7 +11,7 @@ use GuzzleHttp\Psr7\Response;
 
 class GatherContentClientProjectTest extends GcBaseTestCase
 {
-    public function casesProjectsGet(): array
+    public function casesProjectsGet()
     {
         $data = [
             static::getUniqueResponseProject(),
@@ -42,7 +42,7 @@ class GatherContentClientProjectTest extends GcBaseTestCase
     /**
      * @dataProvider casesProjectsGet
      */
-    public function testProjectsGet(array $expected, array $responseBody, int $accountId): void
+    public function testProjectsGet(array $expected, array $responseBody, $accountId)
     {
         $tester = $this->getBasicHttpClientTester(
             [
@@ -78,7 +78,7 @@ class GatherContentClientProjectTest extends GcBaseTestCase
         );
     }
 
-    public function casesProjectsGetFail(): array
+    public function casesProjectsGetFail()
     {
         $cases = static::basicFailCasesGet();
 
@@ -106,7 +106,7 @@ class GatherContentClientProjectTest extends GcBaseTestCase
     /**
      * @dataProvider casesProjectsGetFail
      */
-    public function testProjectsGetFail(array $expected, array $response, int $accountId): void
+    public function testProjectsGetFail(array $expected, array $response, $accountId)
     {
         $tester = $this->getBasicHttpClientTester([
             new Response(
@@ -127,7 +127,7 @@ class GatherContentClientProjectTest extends GcBaseTestCase
         $gc->projectsGet($accountId);
     }
 
-    public function casesProjectGet(): array
+    public function casesProjectGet()
     {
         $data = static::getUniqueResponseProject();
 
@@ -146,7 +146,7 @@ class GatherContentClientProjectTest extends GcBaseTestCase
     /**
      * @dataProvider casesProjectGet
      */
-    public function testProjectGet(array $expected, array $responseBody, int $projectId): void
+    public function testProjectGet(array $expected, array $responseBody, $projectId)
     {
         $tester = $this->getBasicHttpClientTester([
           new Response(
@@ -181,7 +181,7 @@ class GatherContentClientProjectTest extends GcBaseTestCase
         );
     }
 
-    public function casesProjectGetFail(): array
+    public function casesProjectGetFail()
     {
         $cases = static::basicFailCasesGet();
 
@@ -209,7 +209,7 @@ class GatherContentClientProjectTest extends GcBaseTestCase
     /**
      * @dataProvider casesProjectGetFail
      */
-    public function testProjectGetFail(array $expected, array $response, int $projectId): void
+    public function testProjectGetFail(array $expected, array $response, $projectId)
     {
         $tester = $this->getBasicHttpClientTester([
             new Response(
@@ -230,7 +230,7 @@ class GatherContentClientProjectTest extends GcBaseTestCase
         $gc->projectGet($projectId);
     }
 
-    public function casesProjectStatusesGet(): array
+    public function casesProjectStatusesGet()
     {
         $data = [
           static::getUniqueResponseStatus(),
@@ -254,7 +254,7 @@ class GatherContentClientProjectTest extends GcBaseTestCase
         ];
     }
 
-    public function casesProjectsPost(): array
+    public function casesProjectsPost()
     {
         return [
           'basic' => [
@@ -280,10 +280,10 @@ class GatherContentClientProjectTest extends GcBaseTestCase
     public function testProjectsPost(
         array $expected,
         array $response,
-        int $accountId,
-        string $projectName,
-        string $projectType
-    ): void {
+        $accountId,
+        $projectName,
+        $projectType
+    ) {
         $tester = $this->getBasicHttpClientTester([
             new Response(
                 $response['code'],
@@ -345,7 +345,7 @@ class GatherContentClientProjectTest extends GcBaseTestCase
         }
     }
 
-    public function casesProjectsPostFail(): array
+    public function casesProjectsPostFail()
     {
         $cases = static::basicFailCasesPost(['name' => 'Project name', 'type' => 'Project type']);
         $cases['missing_item'] = [
@@ -410,10 +410,10 @@ class GatherContentClientProjectTest extends GcBaseTestCase
     public function testProjectsPostFail(
         array $expected,
         array $response,
-        int $accountId,
-        string $projectName,
-        string $projectType
-    ): void {
+        $accountId,
+        $projectName,
+        $projectType
+    ) {
         $tester = $this->getBasicHttpClientTester([
             new Response(
                 $response['code'],
@@ -436,7 +436,7 @@ class GatherContentClientProjectTest extends GcBaseTestCase
     /**
      * @dataProvider casesProjectStatusesGet
      */
-    public function testProjectStatusesGet(array $expected, array $responseBody, int $projectId): void
+    public function testProjectStatusesGet(array $expected, array $responseBody, $projectId)
     {
         $tester = $this->getBasicHttpClientTester([
             new Response(
@@ -470,7 +470,7 @@ class GatherContentClientProjectTest extends GcBaseTestCase
         );
     }
 
-    public function casesProjectStatusesGetFail(): array
+    public function casesProjectStatusesGetFail()
     {
         $cases = static::basicFailCasesGet();
 
@@ -497,7 +497,7 @@ class GatherContentClientProjectTest extends GcBaseTestCase
     /**
      * @dataProvider casesProjectStatusesGetFail
      */
-    public function testProjectStatusesGetFail(array $expected, array $response, int $projectId): void
+    public function testProjectStatusesGetFail(array $expected, array $response, $projectId)
     {
         $tester = $this->getBasicHttpClientTester([
             new Response(
@@ -518,7 +518,7 @@ class GatherContentClientProjectTest extends GcBaseTestCase
         $gc->projectStatusesGet($projectId);
     }
 
-    public function casesProjectStatusGet(): array
+    public function casesProjectStatusGet()
     {
         $data = static::getUniqueResponseStatus();
 
@@ -535,7 +535,7 @@ class GatherContentClientProjectTest extends GcBaseTestCase
     /**
      * @dataProvider casesProjectStatusGet
      */
-    public function testProjectStatusGet(array $expected, array $responseBody, int $projectId, int $statusId): void
+    public function testProjectStatusGet(array $expected, array $responseBody, $projectId, $statusId)
     {
         $tester = $this->getBasicHttpClientTester([
             new Response(
@@ -570,7 +570,7 @@ class GatherContentClientProjectTest extends GcBaseTestCase
         );
     }
 
-    public function casesProjectStatusGetFail(): array
+    public function casesProjectStatusGetFail()
     {
         $data = static::getUniqueResponseStatus();
         return static::basicFailCasesGet($data);
@@ -582,9 +582,9 @@ class GatherContentClientProjectTest extends GcBaseTestCase
     public function testProjectStatusGetFail(
         array $expected,
         array $response,
-        int $projectId,
-        int $statusId
-    ): void {
+        $projectId,
+        $statusId
+    ) {
         $tester = $this->getBasicHttpClientTester([
             new Response(
                 $response['code'],
