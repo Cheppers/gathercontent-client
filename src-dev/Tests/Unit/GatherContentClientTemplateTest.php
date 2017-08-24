@@ -10,7 +10,7 @@ use GuzzleHttp\Psr7\Response;
 
 class GatherContentClientTemplateTest extends GcBaseTestCase
 {
-    public function casesTemplatesGet(): array
+    public function casesTemplatesGet()
     {
         $data = [
             static::getUniqueResponseTemplate([
@@ -52,7 +52,7 @@ class GatherContentClientTemplateTest extends GcBaseTestCase
     /**
      * @dataProvider casesTemplatesGet
      */
-    public function testTemplatesGet(array $expected, array $responseBody, int $projectId): void
+    public function testTemplatesGet(array $expected, array $responseBody, $projectId)
     {
         $tester = $this->getBasicHttpClientTester(
             [
@@ -88,7 +88,7 @@ class GatherContentClientTemplateTest extends GcBaseTestCase
         );
     }
 
-    public function casesTemplatesGetFail(): array
+    public function casesTemplatesGetFail()
     {
         $cases = static::basicFailCasesGet();
 
@@ -116,7 +116,7 @@ class GatherContentClientTemplateTest extends GcBaseTestCase
     /**
      * @dataProvider casesTemplatesGetFail
      */
-    public function testTemplatesGetFail(array $expected, array $response, int $projectId): void
+    public function testTemplatesGetFail(array $expected, array $response, $projectId)
     {
         $tester = $this->getBasicHttpClientTester(
             [
@@ -139,7 +139,7 @@ class GatherContentClientTemplateTest extends GcBaseTestCase
         $gc->templatesGet($projectId);
     }
 
-    public function casesTemplateGet(): array
+    public function casesTemplateGet()
     {
         $data = static::getUniqueResponseTemplate([
             ['text', 'files', 'section', 'choice_radio', 'choice_checkbox'],
@@ -155,7 +155,7 @@ class GatherContentClientTemplateTest extends GcBaseTestCase
 
         return [
             'empty' => [
-                null,
+                [],
                 ['data' => []],
                 42,
             ],
@@ -170,7 +170,7 @@ class GatherContentClientTemplateTest extends GcBaseTestCase
     /**
      * @dataProvider casesTemplateGet
      */
-    public function testTemplateGet(?array $expected, array $responseBody, int $templateId): void
+    public function testTemplateGet(array $expected, array $responseBody, $templateId)
     {
         $tester = $this->getBasicHttpClientTester(
             [
@@ -211,7 +211,7 @@ class GatherContentClientTemplateTest extends GcBaseTestCase
         );
     }
 
-    public function casesTemplateGetFail(): array
+    public function casesTemplateGetFail()
     {
         $cases = static::basicFailCasesGet();
 
@@ -239,7 +239,7 @@ class GatherContentClientTemplateTest extends GcBaseTestCase
     /**
      * @dataProvider casesTemplateGetFail
      */
-    public function testTemplateGetFail(array $expected, array $response, int $templateId): void
+    public function testTemplateGetFail(array $expected, array $response, $templateId)
     {
         $tester = $this->getBasicHttpClientTester(
             [

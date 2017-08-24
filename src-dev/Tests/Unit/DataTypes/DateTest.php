@@ -17,7 +17,7 @@ class DateTest extends BaseTest
     /**
      * {@inheritdoc}
      */
-    public function casesConstructor(): array
+    public function casesConstructor()
     {
         return [
             'empty' => [

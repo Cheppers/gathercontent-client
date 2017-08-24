@@ -165,7 +165,7 @@ class Base implements JsonSerializable, \Serializable
         return $this;
     }
 
-    protected function setDataDefaultValues(array $data): array
+    protected function setDataDefaultValues(array $data)
     {
         return array_replace_recursive($this->dataDefaultValues, $data);
     }

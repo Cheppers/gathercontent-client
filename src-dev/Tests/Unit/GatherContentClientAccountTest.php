@@ -10,7 +10,7 @@ use GuzzleHttp\Psr7\Response;
 
 class GatherContentClientAccountTest extends GcBaseTestCase
 {
-    public function casesAccountsGet(): array
+    public function casesAccountsGet()
     {
         $data = [
             static::getUniqueResponseAccount(),
@@ -34,7 +34,7 @@ class GatherContentClientAccountTest extends GcBaseTestCase
     /**
      * @dataProvider casesAccountsGet
      */
-    public function testAccountsGet(array $expected, array $responseBody): void
+    public function testAccountsGet(array $expected, array $responseBody)
     {
         $tester = $this->getBasicHttpClientTester([
             new Response(
@@ -68,7 +68,7 @@ class GatherContentClientAccountTest extends GcBaseTestCase
         );
     }
 
-    public function casesAccountsGetFail(): array
+    public function casesAccountsGetFail()
     {
         return static::basicFailCasesGet();
     }
@@ -76,7 +76,7 @@ class GatherContentClientAccountTest extends GcBaseTestCase
     /**
      * @dataProvider casesAccountsGetFail
      */
-    public function testAccountsGetFail(array $expected, array $response): void
+    public function testAccountsGetFail(array $expected, array $response)
     {
         $tester = $this->getBasicHttpClientTester([
             new Response(
@@ -97,7 +97,7 @@ class GatherContentClientAccountTest extends GcBaseTestCase
         $gc->accountsGet();
     }
 
-    public function casesAccountGet(): array
+    public function casesAccountGet()
     {
         $data = static::getUniqueResponseAccount();
 
@@ -112,7 +112,7 @@ class GatherContentClientAccountTest extends GcBaseTestCase
     /**
      * @dataProvider casesAccountGet
      */
-    public function testAccountGet(array $expected, array $responseBody): void
+    public function testAccountGet(array $expected, array $responseBody)
     {
         $tester = $this->getBasicHttpClientTester([
             new Response(
@@ -147,7 +147,7 @@ class GatherContentClientAccountTest extends GcBaseTestCase
         );
     }
 
-    public function casesAccountGetFail(): array
+    public function casesAccountGetFail()
     {
         $data = static::getUniqueResponseAccount();
         $cases = static::basicFailCasesGet($data);
@@ -176,7 +176,7 @@ class GatherContentClientAccountTest extends GcBaseTestCase
     /**
      * @dataProvider casesAccountGetFail
      */
-    public function testAccountGetFail(array $expected, array $response, int $account_id): void
+    public function testAccountGetFail(array $expected, array $response, $account_id)
     {
         $tester = $this->getBasicHttpClientTester([
             new Response(

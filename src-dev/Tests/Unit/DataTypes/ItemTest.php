@@ -14,7 +14,7 @@ class ItemTest extends BaseTest
      */
     protected $className = Item::class;
 
-    public function testJsonSerialize(): void
+    public function testJsonSerialize()
     {
         $itemArray = static::getUniqueResponseItem([
           ['text', 'files', 'choice_radio', 'choice_checkbox'],
