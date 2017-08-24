@@ -146,7 +146,7 @@ class GatherContentClientItemTest extends GcBaseTestCase
 
         return [
             'empty' => [
-                null,
+                [],
                 ['data' => []],
                 42,
             ],
@@ -161,7 +161,7 @@ class GatherContentClientItemTest extends GcBaseTestCase
     /**
      * @dataProvider casesItemGet
      */
-    public function testItemGet(?array $expected, array $responseBody, $itemId)
+    public function testItemGet(array $expected, array $responseBody, $itemId)
     {
         $tester = $this->getBasicHttpClientTester([
             new Response(

@@ -85,7 +85,7 @@ class GatherContentClientTest extends GcBaseTestCase
 
         return [
             'empty' => [
-                null,
+                [],
                 ['data' => []],
             ],
             'basic' => [
@@ -98,7 +98,7 @@ class GatherContentClientTest extends GcBaseTestCase
     /**
      * @dataProvider casesMeGet
      */
-    public function testMeGet(?array $expected, array $responseBody)
+    public function testMeGet(array $expected, array $responseBody)
     {
         $container = [];
         $history = Middleware::history($container);
