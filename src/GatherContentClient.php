@@ -474,6 +474,16 @@ class GatherContentClient implements GatherContentClientInterface
         return empty($body['data']) ? null : new DataTypes\Template($body['data']);
     }
 
+    public function foldersGet(int $projectId): array
+    {
+        $this->sendGet('folders', ['query' => ['project_id' => $projectId]]);
+
+        $this->validateResponse();
+        $body = $this->parseResponse();
+
+        return $this->parseResponseDataItems($body['data'], DataTypes\Folder::class);
+    }
+
     protected function getUri(string $path): string
     {
         return $this->getBaseUri() . "/$path";

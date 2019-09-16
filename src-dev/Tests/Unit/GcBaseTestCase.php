@@ -387,6 +387,19 @@ class GcBaseTestCase extends TestCase
         return $template;
     }
 
+    protected static function getUniqueResponseFolder(): array
+    {
+        return [
+            'id' => static::getUniqueInt(),
+            'name' => static::getUniqueString('name'),
+            'position' => static::getUniqueString('position'),
+            'parent_uuid' => static::getUniqueInt(),
+            'project_id' => static::getUniqueInt(),
+            'type' => static::getUniqueString('type'),
+            'archived_at' => static::getUniqueInt(),
+        ];
+    }
+
     protected static function reKeyArray(array $array, string $key): array
     {
         $items = [];
