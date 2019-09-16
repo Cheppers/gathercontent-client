@@ -4,8 +4,10 @@ namespace Cheppers\GatherContent\DataTypes;
 
 use Cheppers\GatherContent\Utils\NestedArray;
 use JsonSerializable;
+use ReflectionObject;
+use ReflectionProperty;
 
-class Base implements JsonSerializable
+class Base implements JsonSerializable, \Serializable
 {
     /**
      * @var string
@@ -163,8 +165,37 @@ class Base implements JsonSerializable
         return $this;
     }
 
-    protected function setDataDefaultValues(array $data): array
+    protected function setDataDefaultValues(array $data)
     {
         return array_replace_recursive($this->dataDefaultValues, $data);
+    }
+
+    /**
+    * Serialize only public non-static properties.
+    */
+    public function serialize()
+    {
+        $toSerialize = [];
+        $reflection = new ReflectionObject($this);
+        $publicProperties = $reflection->getProperties(ReflectionProperty::IS_PUBLIC);
+        $staticProperties = $reflection->getProperties(ReflectionProperty::IS_STATIC);
+        $properties = array_diff($publicProperties, $staticProperties);
+
+        foreach ($properties as $property) {
+            $name = $property->name;
+            $toSerialize[$name] = $this->{$name};
+        }
+
+        return serialize($toSerialize);
+    }
+
+    /**
+    * {@inheritdoc}
+    */
+    public function unserialize($serialized)
+    {
+        foreach (unserialize($serialized) as $propertyName => $propertyValue) {
+            $this->{$propertyName} = $propertyValue;
+        }
     }
 }

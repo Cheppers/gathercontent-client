@@ -17,28 +17,28 @@ interface GatherContentClientInterface
 
     const PROJECT_TYPE_OTHER = 'other';
 
-    public function getResponse(): ResponseInterface;
+    public function getResponse();
 
-    public function getEmail(): string;
-
-    /**
-     * @return $this
-     */
-    public function setEmail(string $value);
-
-    public function getApiKey(): string;
+    public function getEmail();
 
     /**
      * @return $this
      */
-    public function setApiKey(string $apiKey);
+    public function setEmail($value);
 
-    public function getBaseUri(): string;
+    public function getApiKey();
 
     /**
      * @return $this
      */
-    public function setBaseUri(string $value);
+    public function setApiKey($apiKey);
+
+    public function getBaseUri();
+
+    /**
+     * @return $this
+     */
+    public function setBaseUri($value);
 
     /**
      * GatherContentClientInterface constructor.
@@ -48,36 +48,36 @@ interface GatherContentClientInterface
     /**
      * @return string[]
      */
-    public function projectTypes(): array;
+    public function projectTypes();
 
     /**
      * @see https://docs.gathercontent.com/reference#get-me
      */
-    public function meGet(): ?DataTypes\User;
+    public function meGet();
 
     /**
      * @see https://docs.gathercontent.com/reference#get-accounts
      *
      * @return \Cheppers\GatherContent\DataTypes\Account[]
      */
-    public function accountsGet(): array;
+    public function accountsGet();
 
     /**
      * @see https://docs.gathercontent.com/reference#get-accounts
      */
-    public function accountGet(int $accountId): ?DataTypes\Account;
+    public function accountGet($accountId);
 
     /**
      * @see https://docs.gathercontent.com/reference#get-projects
      *
      * @return \Cheppers\GatherContent\DataTypes\Project[]
      */
-    public function projectsGet(int $accountId): array;
+    public function projectsGet($accountId);
 
     /**
      * @see https://docs.gathercontent.com/reference#get-projects
      */
-    public function projectGet(int $projectId): ?DataTypes\Project;
+    public function projectGet($projectId);
 
     /**
      * @see https://docs.gathercontent.com/reference#post-projects
@@ -85,79 +85,79 @@ interface GatherContentClientInterface
      * @return int
      *   Id of the newly created project.
      */
-    public function projectsPost(int $accountId, string $projectName, string $projectType): int;
+    public function projectsPost($accountId, $projectName, $projectType);
 
     /**
      * @see https://docs.gathercontent.com/reference#get-project-statuses
      *
      * @return \Cheppers\GatherContent\DataTypes\Status[]
      */
-    public function projectStatusesGet(int $projectId): array;
+    public function projectStatusesGet($projectId);
 
     /**
      * @see https://docs.gathercontent.com/reference#get-project-statuses-by-id
      */
-    public function projectStatusGet(int $projectId, int $statusId): ?DataTypes\Status;
+    public function projectStatusGet($projectId, $statusId);
 
     /**
      * @see https://docs.gathercontent.com/reference#get-items
      *
      * @return \Cheppers\GatherContent\DataTypes\Item[]
      */
-    public function itemsGet(int $projectId): array;
+    public function itemsGet($projectId);
 
     /**
      * @see https://docs.gathercontent.com/reference#get-items-by-id
      */
-    public function itemGet(int $itemId): ?DataTypes\Item;
+    public function itemGet($itemId);
 
     /**
      * @see https://docs.gathercontent.com/reference#post-items
      */
     public function itemsPost(
-        int $projectId,
-        string $name,
-        int $parentId = 0,
-        int $templateId = 0,
+        $projectId,
+        $name,
+        $parentId = 0,
+        $templateId = 0,
         array $config = []
-    ): int;
+    );
 
     /**
      * @see https://docs.gathercontent.com/reference#post-item-save
      */
-    public function itemSavePost(int $itemId, array $config): void;
+    public function itemSavePost($itemId, array $config);
 
     /**
      * @return \Cheppers\GatherContent\DataTypes\File[]
      */
-    public function itemFilesGet(int $itemId): array;
+    public function itemFilesGet($itemId);
 
     /**
      * @see https://docs.gathercontent.com/reference#post-item-apply_template
      */
-    public function itemApplyTemplatePost(int $itemId, int $templateId): void;
+    public function itemApplyTemplatePost($itemId, $templateId);
 
     /**
      * @see https://docs.gathercontent.com/reference#post-item-choose_status
      */
-    public function itemChooseStatusPost(int $itemId, int $statusId): void;
+    public function itemChooseStatusPost($itemId, $statusId);
 
     /**
      * @see https://docs.gathercontent.com/reference#get-templates
      *
      * @return \Cheppers\GatherContent\DataTypes\Template[]
      */
-    public function templatesGet(int $projectId): array;
+    public function templatesGet($projectId);
 
     /**
      * @see https://docs.gathercontent.com/reference#get-template-by-id
      */
-    public function templateGet(int $templateId): ?DataTypes\Template;
+    public function templateGet($templateId);
 
     /**
      * @see https://docs.gathercontent.com/reference#get-folders
      *
      * @return \Cheppers\GatherContent\DataTypes\Folder[]
      */
-    public function foldersGet(int $projectId): array;
+    public function foldersGet($projectId);
 }

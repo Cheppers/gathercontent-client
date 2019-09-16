@@ -15,7 +15,7 @@ class BaseTest extends GcBaseTestCase
      */
     protected $className = Base::class;
 
-    public function testPropertyMapping(): void
+    public function testPropertyMapping()
     {
         $className = $this->className;
         $instance = new $className();
@@ -51,7 +51,7 @@ class BaseTest extends GcBaseTestCase
         static::assertEquals([], $missing, 'All public property is mapped');
     }
 
-    public function casesConstructor(): array
+    public function casesConstructor()
     {
         return [
             'empty' => [

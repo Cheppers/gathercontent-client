@@ -19,7 +19,7 @@ use GuzzleHttp\Psr7\Response;
  */
 class GatherContentClientTest extends GcBaseTestCase
 {
-    public function testGetSetEmail(): void
+    public function testGetSetEmail()
     {
         $client = new Client();
         $gc = new GatherContentClient($client);
@@ -29,7 +29,7 @@ class GatherContentClientTest extends GcBaseTestCase
         static::assertEquals('a@b.c', $gc->getEmail());
     }
 
-    public function testGetSetApiKey(): void
+    public function testGetSetApiKey()
     {
         $client = new Client();
         $gc = new GatherContentClient($client);
@@ -39,7 +39,7 @@ class GatherContentClientTest extends GcBaseTestCase
         static::assertEquals('a-b-c-d', $gc->getApiKey());
     }
 
-    public function testGetSetBaseUri(): void
+    public function testGetSetBaseUri()
     {
         $client = new Client();
         $gc = new GatherContentClient($client);
@@ -49,7 +49,7 @@ class GatherContentClientTest extends GcBaseTestCase
         static::assertEquals('https://example.com', $gc->getBaseUri());
     }
 
-    public function testSetOptions(): void
+    public function testSetOptions()
     {
         $client = new Client();
         $gc = new GatherContentClient($client);
@@ -63,7 +63,7 @@ class GatherContentClientTest extends GcBaseTestCase
         static::assertEquals('https://example.com', $gc->getBaseUri());
     }
 
-    public function testProjectTypes(): void
+    public function testProjectTypes()
     {
         $client = new Client();
         $gc = new GatherContentClient($client);
@@ -79,13 +79,13 @@ class GatherContentClientTest extends GcBaseTestCase
         );
     }
 
-    public function casesMeGet(): array
+    public function casesMeGet()
     {
         $userData = static::getUniqueResponseUser();
 
         return [
             'empty' => [
-                null,
+                [],
                 ['data' => []],
             ],
             'basic' => [
@@ -98,7 +98,7 @@ class GatherContentClientTest extends GcBaseTestCase
     /**
      * @dataProvider casesMeGet
      */
-    public function testMeGet(?array $expected, array $responseBody): void
+    public function testMeGet(array $expected, array $responseBody)
     {
         $container = [];
         $history = Middleware::history($container);
@@ -144,7 +144,7 @@ class GatherContentClientTest extends GcBaseTestCase
         );
     }
 
-    public function casesMeGetFail(): array
+    public function casesMeGetFail()
     {
         return static::basicFailCasesGet();
     }
@@ -152,7 +152,7 @@ class GatherContentClientTest extends GcBaseTestCase
     /**
      * @dataProvider casesMeGetFail
      */
-    public function testMeGetFail(array $expected, array $response): void
+    public function testMeGetFail(array $expected, array $response)
     {
         $container = [];
         $history = Middleware::history($container);

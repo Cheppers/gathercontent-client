@@ -1,6 +1,9 @@
 
 # GatherContent REST client
 
+[![Build Status](https://travis-ci.org/Cheppers/gathercontent-client.svg?branch=master)](https://travis-ci.org/Cheppers/gathercontent-client)
+[![codecov](https://codecov.io/gh/Cheppers/gathercontent-client/branch/master/graph/badge.svg)](https://codecov.io/gh/Cheppers/gathercontent-client)
+
 Compatible with `application/vnd.gathercontent.v0.5+json`
 
 

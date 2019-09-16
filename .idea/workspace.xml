@@ -2,11 +2,30 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="1251c327-f42f-4770-bf9e-4a7f1b9bf53c" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src-dev/Tests/Unit/DataTypes/FolderTest.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src-dev/Tests/Unit/GatherContentClientFolderTest.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/DataTypes/Folder.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.travis.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/composer.json" beforeDir="false" afterPath="$PROJECT_DIR$/composer.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/composer.lock" beforeDir="false" afterPath="$PROJECT_DIR$/composer.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src-dev/Tests/Unit/DataTypes/AccountTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/src-dev/Tests/Unit/DataTypes/AccountTest.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src-dev/Tests/Unit/DataTypes/AnnouncementTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/src-dev/Tests/Unit/DataTypes/AnnouncementTest.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src-dev/Tests/Unit/DataTypes/BaseTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/src-dev/Tests/Unit/DataTypes/BaseTest.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src-dev/Tests/Unit/DataTypes/DateTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/src-dev/Tests/Unit/DataTypes/DateTest.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src-dev/Tests/Unit/DataTypes/ElementChoiceTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/src-dev/Tests/Unit/DataTypes/ElementChoiceTest.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src-dev/Tests/Unit/DataTypes/ElementFilesTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/src-dev/Tests/Unit/DataTypes/ElementFilesTest.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src-dev/Tests/Unit/DataTypes/ElementSectionTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/src-dev/Tests/Unit/DataTypes/ElementSectionTest.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src-dev/Tests/Unit/DataTypes/ElementTextTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/src-dev/Tests/Unit/DataTypes/ElementTextTest.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src-dev/Tests/Unit/DataTypes/FileTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/src-dev/Tests/Unit/DataTypes/FileTest.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src-dev/Tests/Unit/DataTypes/ItemTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/src-dev/Tests/Unit/DataTypes/ItemTest.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src-dev/Tests/Unit/DataTypes/ProjectTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/src-dev/Tests/Unit/DataTypes/ProjectTest.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src-dev/Tests/Unit/GatherContentClientAccountTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/src-dev/Tests/Unit/GatherContentClientAccountTest.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src-dev/Tests/Unit/GatherContentClientItemTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/src-dev/Tests/Unit/GatherContentClientItemTest.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src-dev/Tests/Unit/GatherContentClientProjectTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/src-dev/Tests/Unit/GatherContentClientProjectTest.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src-dev/Tests/Unit/GatherContentClientTemplateTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/src-dev/Tests/Unit/GatherContentClientTemplateTest.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src-dev/Tests/Unit/GatherContentClientTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/src-dev/Tests/Unit/GatherContentClientTest.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src-dev/Tests/Unit/GcBaseTestCase.php" beforeDir="false" afterPath="$PROJECT_DIR$/src-dev/Tests/Unit/GcBaseTestCase.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DataTypes/Base.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/DataTypes/Base.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DataTypes/ElementChoice.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/DataTypes/ElementChoice.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DataTypes/ElementFiles.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/DataTypes/ElementFiles.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/GatherContentClient.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/GatherContentClient.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/GatherContentClientInterface.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/GatherContentClientInterface.php" afterDir="false" />
     </list>
@@ -27,8 +46,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/GatherContentClient.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="848">
-              <caret line="569" column="41" lean-forward="true" selection-start-line="569" selection-start-column="41" selection-end-line="569" selection-end-column="41" />
+            <state relative-caret-position="698">
+              <caret line="563" column="41" selection-start-line="563" selection-start-column="41" selection-end-line="563" selection-end-column="41" />
               <folding>
                 <element signature="e#42#73#0#PHP" expanded="true" />
               </folding>
@@ -48,8 +67,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src-dev/Tests/Unit/GcBaseTestCase.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="534">
-              <caret line="392" column="43" lean-forward="true" selection-start-line="392" selection-start-column="43" selection-end-line="392" selection-end-column="43" />
+            <state relative-caret-position="789">
+              <caret line="422" column="34" selection-start-line="422" selection-start-column="34" selection-end-line="422" selection-end-column="34" />
             </state>
           </provider>
         </entry>
@@ -76,7 +95,7 @@
         <entry file="file://$PROJECT_DIR$/src/DataTypes/Folder.php">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="270">
-              <caret line="18" column="7" lean-forward="true" selection-start-line="18" selection-start-column="7" selection-end-line="18" selection-end-column="7" />
+              <caret line="18" column="7" selection-start-line="18" selection-start-column="7" selection-end-line="18" selection-end-column="7" />
             </state>
           </provider>
         </entry>
@@ -84,8 +103,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/DataTypes/Base.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="422">
-              <caret line="120" column="13" lean-forward="true" selection-start-line="120" selection-start-column="13" selection-end-line="120" selection-end-column="13" />
+            <state relative-caret-position="452">
+              <caret line="122" column="13" selection-start-line="122" selection-start-column="13" selection-end-line="122" selection-end-column="13" />
             </state>
           </provider>
         </entry>
@@ -114,14 +133,14 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/GatherContentClient.php" />
-        <option value="$PROJECT_DIR$/src/GatherContentClientInterface.php" />
         <option value="$PROJECT_DIR$/src-dev/Tests/Unit/DataTypes/FolderTest.php" />
         <option value="$PROJECT_DIR$/src-dev/Tests/Unit/GatherContentClientProjectTest.php" />
         <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/src-dev/Tests/Unit/GatherContentClientFolderTest.php" />
         <option value="$PROJECT_DIR$/src/DataTypes/Base.php" />
         <option value="$PROJECT_DIR$/src/DataTypes/Folder.php" />
+        <option value="$PROJECT_DIR$/src/GatherContentClient.php" />
+        <option value="$PROJECT_DIR$/src/GatherContentClientInterface.php" />
         <option value="$PROJECT_DIR$/src-dev/Tests/Unit/GcBaseTestCase.php" />
       </list>
     </option>
@@ -293,6 +312,7 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/src-dev/Tests/Unit" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
@@ -345,7 +365,7 @@
       <option name="presentableId" value="Default" />
       <updated>1567177019834</updated>
       <workItem from="1567177021408" duration="1442000" />
-      <workItem from="1568643534519" duration="3943000" />
+      <workItem from="1568643534519" duration="4280000" />
     </task>
     <servers />
   </component>
@@ -358,10 +378,11 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="5385000" />
+    <option name="totallyTimeSpent" value="5722000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="1280" y="-1097" width="1080" height="1897" extended-state="0" />
+    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.25433525" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -466,8 +487,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/GatherContentClient.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="848">
-          <caret line="569" column="41" lean-forward="true" selection-start-line="569" selection-start-column="41" selection-end-line="569" selection-end-column="41" />
+        <state relative-caret-position="698">
+          <caret line="563" column="41" selection-start-line="563" selection-start-column="41" selection-end-line="563" selection-end-column="41" />
           <folding>
             <element signature="e#42#73#0#PHP" expanded="true" />
           </folding>
@@ -476,8 +497,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/DataTypes/Base.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="422">
-          <caret line="120" column="13" lean-forward="true" selection-start-line="120" selection-start-column="13" selection-end-line="120" selection-end-column="13" />
+        <state relative-caret-position="452">
+          <caret line="122" column="13" selection-start-line="122" selection-start-column="13" selection-end-line="122" selection-end-column="13" />
         </state>
       </provider>
     </entry>
@@ -491,7 +512,7 @@
     <entry file="file://$PROJECT_DIR$/src/DataTypes/Folder.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="270">
-          <caret line="18" column="7" lean-forward="true" selection-start-line="18" selection-start-column="7" selection-end-line="18" selection-end-column="7" />
+          <caret line="18" column="7" selection-start-line="18" selection-start-column="7" selection-end-line="18" selection-end-column="7" />
         </state>
       </provider>
     </entry>
@@ -532,8 +553,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src-dev/Tests/Unit/GcBaseTestCase.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="534">
-          <caret line="392" column="43" lean-forward="true" selection-start-line="392" selection-start-column="43" selection-end-line="392" selection-end-column="43" />
+        <state relative-caret-position="789">
+          <caret line="422" column="34" selection-start-line="422" selection-start-column="34" selection-end-line="422" selection-end-column="34" />
         </state>
       </provider>
     </entry>

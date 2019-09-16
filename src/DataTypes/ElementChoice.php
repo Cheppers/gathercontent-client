@@ -40,7 +40,7 @@ class ElementChoice extends Element
         return $this;
     }
 
-    public function getOptions(): array
+    public function getOptions()
     {
         $options = [];
         foreach ($this->options as $option) {

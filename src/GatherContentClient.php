@@ -3,7 +3,6 @@
 namespace Cheppers\GatherContent;
 
 use GuzzleHttp\ClientInterface;
-use Psr\Http\Message\ResponseInterface;
 
 class GatherContentClient implements GatherContentClientInterface
 {
@@ -21,7 +20,7 @@ class GatherContentClient implements GatherContentClientInterface
     /**
      * {@inheritdoc}
      */
-    public function getResponse(): ResponseInterface
+    public function getResponse()
     {
         return $this->response;
     }
@@ -33,7 +32,7 @@ class GatherContentClient implements GatherContentClientInterface
      */
     protected $email = '';
 
-    public function getEmail(): string
+    public function getEmail()
     {
         return $this->email;
     }
@@ -41,7 +40,7 @@ class GatherContentClient implements GatherContentClientInterface
     /**
      * {@inheritdoc}
      */
-    public function setEmail(string $value)
+    public function setEmail($value)
     {
         $this->email = $value;
 
@@ -58,7 +57,7 @@ class GatherContentClient implements GatherContentClientInterface
     /**
      * {@inheritdoc}
      */
-    public function getApiKey(): string
+    public function getApiKey()
     {
         return $this->apiKey;
     }
@@ -66,7 +65,7 @@ class GatherContentClient implements GatherContentClientInterface
     /**
      * {@inheritdoc}
      */
-    public function setApiKey(string $apiKey)
+    public function setApiKey($apiKey)
     {
         $this->apiKey = $apiKey;
 
@@ -83,7 +82,7 @@ class GatherContentClient implements GatherContentClientInterface
     /**
      * {@inheritdoc}
      */
-    public function getBaseUri(): string
+    public function getBaseUri()
     {
         return $this->baseUri;
     }
@@ -91,7 +90,7 @@ class GatherContentClient implements GatherContentClientInterface
     /**
      * {@inheritdoc}
      */
-    public function setBaseUri(string $value)
+    public function setBaseUri($value)
     {
         $this->baseUri = $value;
 
@@ -134,7 +133,7 @@ class GatherContentClient implements GatherContentClientInterface
     /**
      * {@inheritdoc}
      */
-    public function projectTypes(): array
+    public function projectTypes()
     {
         return [
             static::PROJECT_TYPE_WEBSITE_BUILDING,
@@ -148,7 +147,7 @@ class GatherContentClient implements GatherContentClientInterface
     /**
      * {@inheritdoc}
      */
-    public function meGet(): ?DataTypes\User
+    public function meGet()
     {
         $this->sendGet('me');
 
@@ -161,7 +160,7 @@ class GatherContentClient implements GatherContentClientInterface
     /**
      * {@inheritdoc}
      */
-    public function accountsGet(): array
+    public function accountsGet()
     {
         $this->sendGet('accounts');
 
@@ -174,7 +173,7 @@ class GatherContentClient implements GatherContentClientInterface
     /**
      * {@inheritdoc}
      */
-    public function accountGet(int $accountId): ?DataTypes\Account
+    public function accountGet($accountId)
     {
         $this->sendGet("accounts/$accountId");
 
@@ -187,7 +186,7 @@ class GatherContentClient implements GatherContentClientInterface
     /**
      * {@inheritdoc}
      */
-    public function projectsGet(int $accountId): array
+    public function projectsGet($accountId)
     {
         $this->sendGet('projects', ['query' => ['account_id' => $accountId]]);
 
@@ -200,7 +199,7 @@ class GatherContentClient implements GatherContentClientInterface
     /**
      * {@inheritdoc}
      */
-    public function projectGet(int $projectId): ?DataTypes\Project
+    public function projectGet($projectId)
     {
         $this->sendGet("projects/$projectId");
 
@@ -214,7 +213,7 @@ class GatherContentClient implements GatherContentClientInterface
     /**
      * {@inheritdoc}
      */
-    public function projectsPost(int $accountId, string $projectName, string $projectType): int
+    public function projectsPost($accountId, $projectName, $projectType)
     {
         $this->sendPost('projects', [
             'headers' => [
@@ -257,7 +256,7 @@ class GatherContentClient implements GatherContentClientInterface
     /**
      * {@inheritdoc}
      */
-    public function projectStatusesGet(int $projectId): array
+    public function projectStatusesGet($projectId)
     {
         $this->sendGet("projects/$projectId/statuses");
 
@@ -270,7 +269,7 @@ class GatherContentClient implements GatherContentClientInterface
     /**
      * {@inheritdoc}
      */
-    public function projectStatusGet(int $projectId, int $statusId): ?DataTypes\Status
+    public function projectStatusGet($projectId, $statusId)
     {
         $this->sendGet("projects/$projectId/statuses/$statusId");
 
@@ -283,7 +282,7 @@ class GatherContentClient implements GatherContentClientInterface
     /**
      * {@inheritdoc}
      */
-    public function itemsGet(int $projectId): array
+    public function itemsGet($projectId)
     {
         $this->sendGet('items', ['query' => ['project_id' => $projectId]]);
 
@@ -296,7 +295,7 @@ class GatherContentClient implements GatherContentClientInterface
     /**
      * {@inheritdoc}
      */
-    public function itemGet(int $itemId): ?DataTypes\Item
+    public function itemGet($itemId)
     {
         $this->sendGet("items/$itemId");
 
@@ -306,13 +305,8 @@ class GatherContentClient implements GatherContentClientInterface
         return empty($body['data']) ? null : new DataTypes\Item($body['data']);
     }
 
-    public function itemsPost(
-        int $projectId,
-        string $name,
-        int $parentId = 0,
-        int $templateId = 0,
-        array $config = []
-    ): int {
+    public function itemsPost($projectId, $name, $parentId = 0, $templateId = 0, array $config = [])
+    {
         $form_params = [
             'project_id' => $projectId,
             'name' => $name,
@@ -362,7 +356,7 @@ class GatherContentClient implements GatherContentClientInterface
         return $matches['itemId'];
     }
 
-    public function itemSavePost(int $itemId, array $config): void
+    public function itemSavePost($itemId, array $config)
     {
         $formParams = [];
         $config = array_values($config);
@@ -392,7 +386,7 @@ class GatherContentClient implements GatherContentClientInterface
     /**
      * {@inheritdoc}
      */
-    public function itemApplyTemplatePost(int $itemId, int $templateId): void
+    public function itemApplyTemplatePost($itemId, $templateId)
     {
         $this->sendPost("items/$itemId/apply_template", [
             'form_params' => [
@@ -418,7 +412,7 @@ class GatherContentClient implements GatherContentClientInterface
     /**
      * {@inheritdoc}
      */
-    public function itemChooseStatusPost(int $itemId, int $statusId): void
+    public function itemChooseStatusPost($itemId, $statusId)
     {
         $this->sendPost("items/$itemId/choose_status", [
             'form_params' => [
@@ -444,7 +438,7 @@ class GatherContentClient implements GatherContentClientInterface
     /**
      * {@inheritdoc}
      */
-    public function itemFilesGet(int $itemId): array
+    public function itemFilesGet($itemId)
     {
         $this->sendGet("items/$itemId/files");
 
@@ -454,7 +448,7 @@ class GatherContentClient implements GatherContentClientInterface
         return $this->parseResponseDataItems($body['data'], DataTypes\File::class);
     }
 
-    public function templatesGet(int $projectId): array
+    public function templatesGet($projectId)
     {
         $this->sendGet('templates', ['query' => ['project_id' => $projectId]]);
 
@@ -464,7 +458,7 @@ class GatherContentClient implements GatherContentClientInterface
         return $this->parseResponseDataItems($body['data'], DataTypes\Template::class);
     }
 
-    public function templateGet(int $templateId): ?DataTypes\Template
+    public function templateGet($templateId)
     {
         $this->sendGet("templates/$templateId");
 
@@ -474,7 +468,12 @@ class GatherContentClient implements GatherContentClientInterface
         return empty($body['data']) ? null : new DataTypes\Template($body['data']);
     }
 
-    public function foldersGet(int $projectId): array
+    protected function getUri($path)
+    {
+        return $this->getBaseUri() . "/$path";
+    }
+
+    public function foldersGet($projectId)
     {
         $this->sendGet('folders', ['query' => ['project_id' => $projectId]]);
 
@@ -484,12 +483,7 @@ class GatherContentClient implements GatherContentClientInterface
         return $this->parseResponseDataItems($body['data'], DataTypes\Folder::class);
     }
 
-    protected function getUri(string $path): string
-    {
-        return $this->getBaseUri() . "/$path";
-    }
-
-    protected function getRequestAuth(): array
+    protected function getRequestAuth()
     {
         return [
             $this->getEmail(),
@@ -497,7 +491,7 @@ class GatherContentClient implements GatherContentClientInterface
         ];
     }
 
-    protected function getRequestHeaders(array $base = []): array
+    protected function getRequestHeaders(array $base = [])
     {
         return $base + [
             'Accept' => 'application/vnd.gathercontent.v0.5+json',
@@ -507,7 +501,7 @@ class GatherContentClient implements GatherContentClientInterface
     /**
      * @return $this
      */
-    protected function sendGet(string $path, array $options = [])
+    protected function sendGet($path, array $options = [])
     {
         return $this->sendRequest('GET', $path, $options);
     }
@@ -515,7 +509,7 @@ class GatherContentClient implements GatherContentClientInterface
     /**
      * @return $this
      */
-    protected function sendPost(string $path, array $options = [])
+    protected function sendPost($path, array $options = [])
     {
         return $this->sendRequest('POST', $path, $options);
     }
@@ -523,7 +517,7 @@ class GatherContentClient implements GatherContentClientInterface
     /**
      * @return $this
      */
-    protected function sendRequest(string $method, string $path, array $options = [])
+    protected function sendRequest($method, $path, array $options = [])
     {
         $options += [
             'auth' => $this->getRequestAuth(),
@@ -538,7 +532,7 @@ class GatherContentClient implements GatherContentClientInterface
         return $this;
     }
 
-    protected function parseResponse(): array
+    protected function parseResponse()
     {
         $body = \GuzzleHttp\json_decode($this->response->getBody(), true);
         if (!empty($body['data']['message'])) {
@@ -554,7 +548,7 @@ class GatherContentClient implements GatherContentClientInterface
     /**
      * @return \Cheppers\GatherContent\DataTypes\Base[]
      */
-    protected function parseResponseDataItems(array $data, string $class): array
+    protected function parseResponseDataItems(array $data, $class)
     {
         $items = [];
         foreach ($data as $itemData) {
@@ -565,12 +559,12 @@ class GatherContentClient implements GatherContentClientInterface
         return $items;
     }
 
-    protected function parseResponseDataItem(array $data, string $class): DataTypes\Base
+    protected function parseResponseDataItem(array $data, $class)
     {
         return $item = new $class($data);
     }
 
-    protected function validateResponse(): void
+    protected function validateResponse()
     {
         $responseContentType = $this->response->getHeader('Content-Type');
         $responseContentType = end($responseContentType);

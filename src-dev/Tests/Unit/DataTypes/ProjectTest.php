@@ -17,7 +17,7 @@ class ProjectTest extends BaseTest
     /**
      * {@inheritdoc}
      */
-    public function casesConstructor(): array
+    public function casesConstructor()
     {
         $cases = parent::casesConstructor();
 
@@ -71,7 +71,7 @@ class ProjectTest extends BaseTest
         return $cases;
     }
 
-    public function testJsonSerialize(): void
+    public function testJsonSerialize()
     {
         $projectArray = static::getUniqueResponseProject();
 

@@ -17,7 +17,7 @@ use GuzzleHttp\Psr7\Response;
  */
 class GatherContentClientItemTest extends GcBaseTestCase
 {
-    public function casesItemsGet(): array
+    public function casesItemsGet()
     {
         $data = [
             static::getUniqueResponseItem([
@@ -33,6 +33,10 @@ class GatherContentClientItemTest extends GcBaseTestCase
         ];
 
         $items = static::reKeyArray($data, 'id');
+
+        foreach ($items as &$item) {
+            $item = new Item($item);
+        }
 
         return [
             'empty' => [
@@ -51,7 +55,7 @@ class GatherContentClientItemTest extends GcBaseTestCase
     /**
      * @dataProvider casesItemsGet
      */
-    public function testItemsGet(array $expected, array $responseBody, int $projectId): void
+    public function testItemsGet(array $expected, array $responseBody, $projectId)
     {
         $tester = $this->getBasicHttpClientTester([
             new Response(
@@ -85,7 +89,7 @@ class GatherContentClientItemTest extends GcBaseTestCase
         );
     }
 
-    public function casesItemsGetFail(): array
+    public function casesItemsGetFail()
     {
         $cases = static::basicFailCasesGet();
 
@@ -113,7 +117,7 @@ class GatherContentClientItemTest extends GcBaseTestCase
     /**
      * @dataProvider casesItemsGetFail
      */
-    public function testItemsGetFail(array $expected, array $response, int $projectId): void
+    public function testItemsGetFail(array $expected, array $response, $projectId)
     {
         $tester = $this->getBasicHttpClientTester([
             new Response(
@@ -134,7 +138,7 @@ class GatherContentClientItemTest extends GcBaseTestCase
         $gc->itemsGet($projectId);
     }
 
-    public function casesItemGet(): array
+    public function casesItemGet()
     {
         $item = static::getUniqueResponseItem([
             ['text', 'choice_checkbox'],
@@ -142,7 +146,7 @@ class GatherContentClientItemTest extends GcBaseTestCase
 
         return [
             'empty' => [
-                null,
+                [],
                 ['data' => []],
                 42,
             ],
@@ -157,7 +161,7 @@ class GatherContentClientItemTest extends GcBaseTestCase
     /**
      * @dataProvider casesItemGet
      */
-    public function testItemGet(?array $expected, array $responseBody, int $itemId): void
+    public function testItemGet(array $expected, array $responseBody, $itemId)
     {
         $tester = $this->getBasicHttpClientTester([
             new Response(
@@ -196,7 +200,7 @@ class GatherContentClientItemTest extends GcBaseTestCase
         );
     }
 
-    public function casesItemGetFail(): array
+    public function casesItemGetFail()
     {
         $cases = static::basicFailCasesGet();
 
@@ -224,7 +228,7 @@ class GatherContentClientItemTest extends GcBaseTestCase
     /**
      * @dataProvider casesItemGetFail
      */
-    public function testItemGetFail(array $expected, array $response, int $itemId): void
+    public function testItemGetFail(array $expected, array $response, $itemId)
     {
         $tester = $this->getBasicHttpClientTester([
             new Response(
@@ -245,7 +249,7 @@ class GatherContentClientItemTest extends GcBaseTestCase
         $gc->itemGet($itemId);
     }
 
-    public function casesItemFilesGet(): array
+    public function casesItemFilesGet()
     {
         $data = [
             static::getUniqueResponseFile(),
@@ -272,7 +276,7 @@ class GatherContentClientItemTest extends GcBaseTestCase
     /**
      * @dataProvider casesItemFilesGet
      */
-    public function testItemFilesGet(array $expected, array $responseBody, int $itemId): void
+    public function testItemFilesGet(array $expected, array $responseBody, $itemId)
     {
         $tester = $this->getBasicHttpClientTester([
             new Response(
@@ -309,7 +313,7 @@ class GatherContentClientItemTest extends GcBaseTestCase
     /**
      * @dataProvider casesItemGetFail
      */
-    public function testItemFilesGetFail(array $expected, array $response, int $itemId): void
+    public function testItemFilesGetFail(array $expected, array $response, $itemId)
     {
         $tester = $this->getBasicHttpClientTester([
             new Response(
@@ -330,7 +334,7 @@ class GatherContentClientItemTest extends GcBaseTestCase
         $gc->itemFilesGet($itemId);
     }
 
-    public function casesItemApplyTemplatePost(): array
+    public function casesItemApplyTemplatePost()
     {
         return [
             'basic' => [
@@ -350,7 +354,7 @@ class GatherContentClientItemTest extends GcBaseTestCase
     /**
      * @dataProvider casesItemApplyTemplatePost
      */
-    public function testItemApplyTemplatePost(array $expected, array $response, int $itemId, int $templateId): void
+    public function testItemApplyTemplatePost(array $expected, array $response, $itemId, $templateId)
     {
         $tester = $this->getBasicHttpClientTester([
             new Response(
@@ -393,7 +397,7 @@ class GatherContentClientItemTest extends GcBaseTestCase
         }
     }
 
-    public function casesItemApplyTemplatePostFail(): array
+    public function casesItemApplyTemplatePostFail()
     {
         $cases = static::basicFailCasesPost(['id' => 0]);
         $cases['missing_item'] = [
@@ -438,7 +442,7 @@ class GatherContentClientItemTest extends GcBaseTestCase
     /**
      * @dataProvider casesItemApplyTemplatePostFail
      */
-    public function testItemApplyTemplatePostFail(array $expected, array $response, int $itemId, int $templateId): void
+    public function testItemApplyTemplatePostFail(array $expected, array $response, $itemId, $templateId)
     {
         $tester = $this->getBasicHttpClientTester([
             new Response(
@@ -459,7 +463,7 @@ class GatherContentClientItemTest extends GcBaseTestCase
         $gc->itemApplyTemplatePost($itemId, $templateId);
     }
 
-    public function casesItemChooseStatusPost(): array
+    public function casesItemChooseStatusPost()
     {
         return [
             'basic' => [
@@ -479,7 +483,7 @@ class GatherContentClientItemTest extends GcBaseTestCase
     /**
      * @dataProvider casesItemChooseStatusPost
      */
-    public function testItemChooseStatusPost(array $expected, array $response, int $itemId, int $statusId): void
+    public function testItemChooseStatusPost(array $expected, array $response, $itemId, $statusId)
     {
         $tester = $this->getBasicHttpClientTester([
             new Response(
@@ -522,7 +526,7 @@ class GatherContentClientItemTest extends GcBaseTestCase
         }
     }
 
-    public function casesItemChooseStatusPostFail(): array
+    public function casesItemChooseStatusPostFail()
     {
         $cases = static::basicFailCasesPost(['id' => 0]);
         $cases['missing_item'] = [
@@ -567,7 +571,7 @@ class GatherContentClientItemTest extends GcBaseTestCase
     /**
      * @dataProvider casesItemChooseStatusPostFail
      */
-    public function testItemChooseStatusPostFail(array $expected, array $response, int $itemId, int $statusId): void
+    public function testItemChooseStatusPostFail(array $expected, array $response, $itemId, $statusId)
     {
         $tester = $this->getBasicHttpClientTester([
             new Response(
@@ -632,7 +636,7 @@ class GatherContentClientItemTest extends GcBaseTestCase
     /**
      * @dataProvider casesItemsPost
      */
-    public function testItemsPost($projectId, $name, $parentId, $templateId, $config, $resultItemId): void
+    public function testItemsPost($projectId, $name, $parentId, $templateId, $config, $resultItemId)
     {
         $tester = $this->getBasicHttpClientTester([
             new Response(

@@ -17,7 +17,7 @@ class ElementChoiceTest extends BaseTest
     /**
      * {@inheritdoc}
      */
-    public function casesConstructor(): array
+    public function casesConstructor()
     {
         $cases = parent::casesConstructor();
         $cases['basic'][0] = [

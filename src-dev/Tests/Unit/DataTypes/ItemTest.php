@@ -14,7 +14,7 @@ class ItemTest extends BaseTest
      */
     protected $className = Item::class;
 
-    public function testJsonSerialize(): void
+    public function testJsonSerialize()
     {
         $itemArray = static::getUniqueResponseItem([
           ['text', 'files', 'choice_radio', 'choice_checkbox'],
@@ -31,9 +31,11 @@ class ItemTest extends BaseTest
 
         $json1 = json_encode($item1);
         $actual1 = json_decode($json1, true);
-        foreach ($itemArray as $key => $value) {
-            static::assertEquals($value, $actual1[$key], "JSON encode.decode - $key");
-        }
+
+        static::assertEquals(
+            \GuzzleHttp\json_encode($item1, JSON_PRETTY_PRINT),
+            \GuzzleHttp\json_encode($actual1, JSON_PRETTY_PRINT)
+        );
 
         /** @var \Cheppers\GatherContent\DataTypes\Item $item2 */
         $item2 = new $this->className($actual1);

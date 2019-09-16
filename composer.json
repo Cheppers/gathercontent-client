@@ -11,7 +11,6 @@
         "optimize-autoloader": true
     },
     "require": {
-        "php": ">=7.1",
         "guzzlehttp/guzzle": "^6.3"
     },
     "require-dev": {
