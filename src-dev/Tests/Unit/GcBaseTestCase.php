@@ -135,11 +135,7 @@ class GcBaseTestCase extends TestCase
 
     public static function getUniqueResponseDate()
     {
-        return [
-            'date' => static::getUniqueDate(),
-            'timezone_type' => static::getUniqueInt(),
-            'timezone' => static::getUniqueString('timezone'),
-        ];
+        return static::getUniqueDate();
     }
 
     public static function getUniqueResponseStatus()
@@ -155,40 +151,35 @@ class GcBaseTestCase extends TestCase
         ];
     }
 
-    public static function getUniqueResponseTab(array $elements)
+    public static function getUniqueResponseElements(array $elementTypes)
     {
-        $tab = [
-            'name' => static::getUniqueString('tab'),
-            'label' => static::getUniqueString('label'),
-            'hidden' => false,
-            'elements' => [],
-        ];
+        $elements = [];
 
-        foreach ($elements as $elementType) {
+        foreach ($elementTypes as $elementType) {
             switch ($elementType) {
                 case 'text':
-                    $tab['elements'][] = static::getUniqueResponseElementText();
+                    $elements[] = static::getUniqueResponseElementText();
                     break;
 
                 case 'files':
-                    $tab['elements'][] = static::getUniqueResponseElementFiles();
+                    $elements[] = static::getUniqueResponseElementFiles();
                     break;
 
                 case 'section':
-                    $tab['elements'][] = static::getUniqueResponseElementSection();
+                    $elements[] = static::getUniqueResponseElementSection();
                     break;
 
                 case 'choice_radio':
-                    $tab['elements'][] = static::getUniqueResponseElementChoiceRadio();
+                    $elements[] = static::getUniqueResponseElementChoiceRadio();
                     break;
 
                 case 'choice_checkbox':
-                    $tab['elements'][] = static::getUniqueResponseElementChoiceCheckbox();
+                    $elements[] = static::getUniqueResponseElementChoiceCheckbox();
                     break;
             }
         }
 
-        return $tab;
+        return $elements;
     }
 
     public static function getUniqueResponseTemplateTab(array $elements)
@@ -325,40 +316,41 @@ class GcBaseTestCase extends TestCase
         return $options;
     }
 
-    public static function getUniqueResponseItem(array $tabs)
+    public static function getUniqueResponseAssignedUsers()
+    {
+        $amount = rand(1, 5);
+        $userIds = [];
+        for ($i = 0; $i < $amount; $i++) {
+            $userIds[] = static::getUniqueInt();
+        }
+
+        return $userIds;
+    }
+
+    public static function getUniqueResponseItem(array $elementTypes)
     {
         $item = [
             'id' => static::getUniqueInt(),
             'project_id' => static::getUniqueInt(),
-            'parent_id' => static::getUniqueInt(),
             'folder_uuid' => static::getUniqueString('folder_uuid'),
             'template_id' => static::getUniqueInt(),
-            'custom_state_id' => static::getUniqueInt(),
+            'structure_uuid' => static::getUniqueString('structure_uuid'),
             'position' => static::getUniqueString('position'),
             'name' => static::getUniqueString('name'),
-            'config' => [],
-            'notes' => static::getUniqueString('notes'),
-            'type' => 'item',
-            'overdue' => false,
             'archived_by' => static::getUniqueInt(),
             'archived_at' => static::getUniqueInt(),
-            'created_at' => static::getUniqueResponseDate(),
-            'updated_at' => static::getUniqueResponseDate(),
-            'status' => [
-                'data' => static::getUniqueResponseStatus(),
-            ],
-            'due_dates' => [
-                'data' => [
-                    static::getUniqueResponseDate(),
-                    static::getUniqueResponseDate(),
-                    static::getUniqueResponseDate(),
-                ],
-            ],
+            'created_at' => static::getUniqueDate(),
+            'updated_at' => static::getUniqueDate(),
+            'next_due_at' => static::getUniqueDate(),
+            'completed_at' => static::getUniqueDate(),
+            'content' => [],
+            'status_id' => static::getUniqueInt(),
+            'assigned_user_ids' => static::getUniqueResponseAssignedUsers(),
+            'assignee_count' => static::getUniqueInt(),
+            'approval_count' => static::getUniqueInt(),
         ];
 
-        foreach ($tabs as $elements) {
-            $item['config'][] = static::getUniqueResponseTab($elements);
-        }
+        $item['content'] = static::getUniqueResponseElements($elementTypes);
 
         return $item;
     }

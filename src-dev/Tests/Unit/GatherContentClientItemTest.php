@@ -21,14 +21,13 @@ class GatherContentClientItemTest extends GcBaseTestCase
     {
         $data = [
             static::getUniqueResponseItem([
-                ['text', 'files', 'choice_radio', 'choice_checkbox'],
+                'text', 'files', 'choice_radio', 'choice_checkbox'
             ]),
             static::getUniqueResponseItem([
-                ['text', 'choice_radio', 'choice_checkbox'],
-                ['text', 'choice_radio'],
+                'text', 'choice_radio', 'choice_checkbox', 'text', 'choice_radio'
             ]),
             static::getUniqueResponseItem([
-                ['choice_radio', 'choice_checkbox'],
+                'choice_radio', 'choice_checkbox'
             ]),
         ];
 
@@ -141,7 +140,7 @@ class GatherContentClientItemTest extends GcBaseTestCase
     public function casesItemGet()
     {
         $item = static::getUniqueResponseItem([
-            ['text', 'choice_checkbox'],
+            'text', 'choice_checkbox'
         ]);
 
         return [

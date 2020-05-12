@@ -10,11 +10,6 @@ class Item extends Base
     public $projectId = 0;
 
     /**
-     * @var int
-     */
-    public $parentId = 0;
-
-    /**
      * @var string
      */
     public $folderUuid = '';
@@ -25,9 +20,9 @@ class Item extends Base
     public $templateId = 0;
 
     /**
-     * @var int
+     * @var string
      */
-    public $customStateId = 0;
+    public $structureUuid = '';
 
     /**
      * @var string
@@ -40,49 +35,59 @@ class Item extends Base
     public $name = '';
 
     /**
-     * @var \Cheppers\GatherContent\DataTypes\Tab[]
-     */
-    public $config = [];
-
-    /**
-     * @var string
-     */
-    public $notes = '';
-
-    /**
-     * @var bool
-     */
-    public $overdue = false;
-
-    /**
      * @var null|int
      */
     public $archivedBy = null;
 
     /**
-     * @var null|\Cheppers\GatherContent\DataTypes\Date
+     * @var string
      */
-    public $archivedAt = null;
+    public $archivedAt = '';
 
     /**
-     * @var \Cheppers\GatherContent\DataTypes\Date
+     * @var string
      */
-    public $createdAt = null;
+    public $createdAt = '';
 
     /**
-     * @var null|\Cheppers\GatherContent\DataTypes\Date
+     * @var string
      */
-    public $updatedAt = null;
+    public $updatedAt = '';
 
     /**
-     * @var \Cheppers\GatherContent\DataTypes\Status
+     * @var string
      */
-    public $status = null;
+    public $nextDueAt = '';
 
     /**
-     * @var \Cheppers\GatherContent\DataTypes\Date[]
+     * @var string
      */
-    public $dueDates = [];
+    public $completedAt = '';
+
+    /**
+     * @var \Cheppers\GatherContent\DataTypes\Element[]
+     */
+    public $content = [];
+
+    /**
+     * @var null|int
+     */
+    public $statusId = null;
+
+    /**
+     * @var array
+     */
+    public $assignedUserIds = [];
+
+    /**
+     * @var null|int
+     */
+    public $assigneeCount = null;
+
+    /**
+     * @var null|int
+     */
+    public $approvalCount = null;
 
     protected function initPropertyMapping()
     {
@@ -91,42 +96,35 @@ class Item extends Base
             $this->propertyMapping,
             [
                 'project_id' => 'projectId',
-                'parent_id' => 'parentId',
                 'folder_uuid' => 'folderUuid',
                 'template_id' => 'templateId',
-                'custom_state_id' => 'customStateId',
+                'structure_uuid' => 'structureUuid',
                 'position' => 'position',
                 'name' => 'name',
-                'config' => [
-                    'type' => 'subConfigs',
-                    'class' => Tab::class,
-                ],
-                'notes' => 'notes',
-                'type' => 'item',
-                'overdue' => 'overdue',
                 'archived_by' => 'archivedBy',
                 'archived_at' => 'archivedAt',
-                'created_at' => [
-                    'type' => 'subConfig',
-                    'destination' => 'createdAt',
-                    'class' => Date::class,
+                'created_at' => 'createdAt',
+                'updated_at' => 'updatedAt',
+                'next_due_at' => 'nextDueAt',
+                'completed_at' => 'completedAt',
+                'content' => [
+                    'type' => 'closure',
+                    'closure' => function (array $data) {
+                        $elements = [];
+                        foreach ($data as $key => $elementData) {
+                            $class = Element::$type2Class[$elementData['type']];
+                            /** @var \Cheppers\GatherContent\DataTypes\Element $element */
+                            $element = new $class($elementData);
+                            $elements[$key] = $element;
+                        }
+
+                        return $elements;
+                    },
                 ],
-                'updated_at' => [
-                    'type' => 'subConfig',
-                    'destination' => 'updatedAt',
-                    'class' => Date::class,
-                ],
-                'status' => [
-                    'type' => 'subConfig',
-                    'class' => Status::class,
-                    'parents' => ['data'],
-                ],
-                'due_dates' => [
-                    'type' => 'subConfigs',
-                    'destination' => 'dueDates',
-                    'class' => Date::class,
-                    'parents' => ['data'],
-                ],
+                'status_id' => 'statusId',
+                'assigned_user_ids' => 'assignedUserIds',
+                'assignee_count' => 'assigneeCount',
+                'approval_count' => 'approvalCount',
             ]
         );
 
