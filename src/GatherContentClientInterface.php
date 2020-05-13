@@ -42,6 +42,13 @@ interface GatherContentClientInterface
      */
     public function setBaseUri($value);
 
+    public function getUseLegacy();
+
+    /**
+     * @return $this
+     */
+    public function setUseLegacy($value);
+
     /**
      * @return string[]
      */

@@ -20,15 +20,9 @@ class GatherContentClientItemTest extends GcBaseTestCase
     public function casesItemsGet()
     {
         $data = [
-            static::getUniqueResponseItem([
-                'text', 'files', 'choice_radio', 'choice_checkbox'
-            ]),
-            static::getUniqueResponseItem([
-                'text', 'choice_radio', 'choice_checkbox', 'text', 'choice_radio'
-            ]),
-            static::getUniqueResponseItem([
-                'choice_radio', 'choice_checkbox'
-            ]),
+            static::getUniqueResponseItem(),
+            static::getUniqueResponseItem(),
+            static::getUniqueResponseItem(),
         ];
 
         $items = static::reKeyArray($data, 'id');
@@ -80,7 +74,7 @@ class GatherContentClientItemTest extends GcBaseTestCase
 
         static::assertEquals(1, count($container));
         static::assertEquals('GET', $request->getMethod());
-        static::assertEquals(['application/vnd.gathercontent.v0.5+json'], $request->getHeader('Accept'));
+        static::assertEquals(['application/vnd.gathercontent.v2+json'], $request->getHeader('Accept'));
         static::assertEquals(['api.example.com'], $request->getHeader('Host'));
         static::assertEquals(
             "{$this->gcClientOptions['baseUri']}/items?project_id=$projectId",
@@ -191,7 +185,7 @@ class GatherContentClientItemTest extends GcBaseTestCase
 
         static::assertEquals(1, count($container));
         static::assertEquals('GET', $request->getMethod());
-        static::assertEquals(['application/vnd.gathercontent.v0.5+json'], $request->getHeader('Accept'));
+        static::assertEquals(['application/vnd.gathercontent.v2+json'], $request->getHeader('Accept'));
         static::assertEquals(['api.example.com'], $request->getHeader('Host'));
         static::assertEquals(
             "{$this->gcClientOptions['baseUri']}/items/$itemId",
@@ -301,7 +295,7 @@ class GatherContentClientItemTest extends GcBaseTestCase
 
         static::assertEquals(1, count($container));
         static::assertEquals('GET', $request->getMethod());
-        static::assertEquals(['application/vnd.gathercontent.v0.5+json'], $request->getHeader('Accept'));
+        static::assertEquals(['application/vnd.gathercontent.v2+json'], $request->getHeader('Accept'));
         static::assertEquals(['api.example.com'], $request->getHeader('Host'));
         static::assertEquals(
             "{$this->gcClientOptions['baseUri']}/items/$itemId/files",
@@ -376,7 +370,7 @@ class GatherContentClientItemTest extends GcBaseTestCase
         static::assertEquals($expected['code'], $client->getResponse()->getStatusCode());
         static::assertEquals(1, count($container));
         static::assertEquals('POST', $request->getMethod());
-        static::assertEquals(['application/vnd.gathercontent.v0.5+json'], $request->getHeader('Accept'));
+        static::assertEquals(['application/vnd.gathercontent.v2+json'], $request->getHeader('Accept'));
         static::assertEquals(['api.example.com'], $request->getHeader('Host'));
         static::assertEquals(
             "{$this->gcClientOptions['baseUri']}/items/{$itemId}/apply_template",
@@ -660,7 +654,7 @@ class GatherContentClientItemTest extends GcBaseTestCase
 
         static::assertEquals(1, count($container));
         static::assertEquals('POST', $request->getMethod());
-        static::assertEquals(['application/vnd.gathercontent.v0.5+json'], $request->getHeader('Accept'));
+        static::assertEquals(['application/vnd.gathercontent.v2+json'], $request->getHeader('Accept'));
         static::assertEquals(['api.example.com'], $request->getHeader('Host'));
         static::assertEquals(
             "{$this->gcClientOptions['baseUri']}/items",
@@ -780,7 +774,7 @@ class GatherContentClientItemTest extends GcBaseTestCase
 
         static::assertEquals(1, count($container));
         static::assertEquals('POST', $request->getMethod());
-        static::assertEquals(['application/vnd.gathercontent.v0.5+json'], $request->getHeader('Accept'));
+        static::assertEquals(['application/vnd.gathercontent.v2+json'], $request->getHeader('Accept'));
         static::assertEquals(['api.example.com'], $request->getHeader('Host'));
         static::assertEquals(
             "{$this->gcClientOptions['baseUri']}/items/$itemId/save",

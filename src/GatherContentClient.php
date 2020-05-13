@@ -11,7 +11,6 @@ class GatherContentClient implements GatherContentClientInterface
      */
     protected $client;
 
-    //region response
     /**
      * @var \Psr\Http\Message\ResponseInterface
      */
@@ -24,9 +23,7 @@ class GatherContentClient implements GatherContentClientInterface
     {
         return $this->response;
     }
-    //endregion
 
-    // region Option - email.
     /**
      * @var string
      */
@@ -46,9 +43,7 @@ class GatherContentClient implements GatherContentClientInterface
 
         return $this;
     }
-    // endregion
 
-    //region Option - apiKey
     /**
      * @var string
      */
@@ -71,9 +66,7 @@ class GatherContentClient implements GatherContentClientInterface
 
         return $this;
     }
-    //endregion
 
-    // region Option - baseUri.
     /**
      * @var string
      */
@@ -96,7 +89,29 @@ class GatherContentClient implements GatherContentClientInterface
 
         return $this;
     }
-    // endregion
+
+    /**
+     * @var bool
+     */
+    protected $useLegacy = false;
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getUseLegacy()
+    {
+        return $this->useLegacy;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setUseLegacy($value)
+    {
+        $this->useLegacy = $value;
+
+        return $this;
+    }
 
     /**
      * {@inheritdoc}
@@ -157,6 +172,7 @@ class GatherContentClient implements GatherContentClientInterface
      */
     public function meGet()
     {
+        $this->setUseLegacy(true);
         $this->sendGet('me');
 
         $this->validateResponse();
@@ -170,6 +186,7 @@ class GatherContentClient implements GatherContentClientInterface
      */
     public function accountsGet()
     {
+        $this->setUseLegacy(true);
         $this->sendGet('accounts');
 
         $this->validateResponse();
@@ -183,6 +200,7 @@ class GatherContentClient implements GatherContentClientInterface
      */
     public function accountGet($accountId)
     {
+        $this->setUseLegacy(true);
         $this->sendGet("accounts/$accountId");
 
         $this->validateResponse();
@@ -196,6 +214,7 @@ class GatherContentClient implements GatherContentClientInterface
      */
     public function projectsGet($accountId)
     {
+        $this->setUseLegacy(true);
         $this->sendGet('projects', ['query' => ['account_id' => $accountId]]);
 
         $this->validateResponse();
@@ -209,6 +228,7 @@ class GatherContentClient implements GatherContentClientInterface
      */
     public function projectGet($projectId)
     {
+        $this->setUseLegacy(true);
         $this->sendGet("projects/$projectId");
 
         $this->validateResponse();
@@ -223,6 +243,7 @@ class GatherContentClient implements GatherContentClientInterface
      */
     public function projectsPost($accountId, $projectName, $projectType)
     {
+        $this->setUseLegacy(true);
         $this->sendPost('projects', [
             'headers' => [
                 'Content-Type' => 'application/x-www-form-urlencoded'
@@ -266,6 +287,7 @@ class GatherContentClient implements GatherContentClientInterface
      */
     public function projectStatusesGet($projectId)
     {
+        $this->setUseLegacy(true);
         $this->sendGet("projects/$projectId/statuses");
 
         $this->validateResponse();
@@ -279,6 +301,7 @@ class GatherContentClient implements GatherContentClientInterface
      */
     public function projectStatusGet($projectId, $statusId)
     {
+        $this->setUseLegacy(true);
         $this->sendGet("projects/$projectId/statuses/$statusId");
 
         $this->validateResponse();
@@ -422,6 +445,7 @@ class GatherContentClient implements GatherContentClientInterface
      */
     public function itemChooseStatusPost($itemId, $statusId)
     {
+        $this->setUseLegacy(true);
         $this->sendPost("items/$itemId/choose_status", [
             'form_params' => [
                 'status_id' => $statusId,
@@ -501,8 +525,13 @@ class GatherContentClient implements GatherContentClientInterface
 
     protected function getRequestHeaders(array $base = [])
     {
+        $accept = 'application/vnd.gathercontent.v2+json';
+        if ($this->useLegacy) {
+            $accept = 'application/vnd.gathercontent.v0.5+json';
+        }
+
         return $base + [
-            'Accept' => 'application/vnd.gathercontent.v0.5+json',
+            'Accept' => $accept,
             'User-Agent' => $this->getVersionString(),
         ];
     }

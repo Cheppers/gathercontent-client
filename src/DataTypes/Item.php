@@ -65,7 +65,7 @@ class Item extends Base
     public $completedAt = '';
 
     /**
-     * @var \Cheppers\GatherContent\DataTypes\Element[]
+     * @var \Cheppers\GatherContent\DataTypes\ElementBase[]
      */
     public $content = [];
 
@@ -107,27 +107,44 @@ class Item extends Base
                 'updated_at' => 'updatedAt',
                 'next_due_at' => 'nextDueAt',
                 'completed_at' => 'completedAt',
+                'status_id' => 'statusId',
+                'assigned_user_ids' => 'assignedUserIds',
+                'assignee_count' => 'assigneeCount',
+                'approval_count' => 'approvalCount',
                 'content' => [
                     'type' => 'closure',
                     'closure' => function (array $data) {
                         $elements = [];
                         foreach ($data as $key => $elementData) {
-                            $class = Element::$type2Class[$elementData['type']];
-                            /** @var \Cheppers\GatherContent\DataTypes\Element $element */
-                            $element = new $class($elementData);
-                            $elements[$key] = $element;
+                            if (!is_array($elementData)) {
+                                $elements[$key] = new ElementSimpleText(['value' => $elementData]);
+                                continue;
+                            }
+
+                            $elements[$key] = $this->getSubElements($elementData);
                         }
 
                         return $elements;
                     },
                 ],
-                'status_id' => 'statusId',
-                'assigned_user_ids' => 'assignedUserIds',
-                'assignee_count' => 'assigneeCount',
-                'approval_count' => 'approvalCount',
             ]
         );
 
         return $this;
+    }
+
+    protected function getSubElements(array $elementData) {
+        $elements = [];
+
+        foreach ($elementData as $element) {
+            $class = ElementSimpleChoice::class;
+            if (isset($element['file_id'])) {
+                $class = ElementSimpleFile::class;
+            }
+            /** @var \Cheppers\GatherContent\DataTypes\ElementBase[] $elements */
+            $elements[] = new $class($element);
+        }
+
+        return $elements;
     }
 }

@@ -80,7 +80,7 @@ class GatherContentClientTemplateTest extends GcBaseTestCase
 
         static::assertEquals(1, count($container));
         static::assertEquals('GET', $request->getMethod());
-        static::assertEquals(['application/vnd.gathercontent.v0.5+json'], $request->getHeader('Accept'));
+        static::assertEquals(['application/vnd.gathercontent.v2+json'], $request->getHeader('Accept'));
         static::assertEquals(['api.example.com'], $request->getHeader('Host'));
         static::assertEquals(
             "{$this->gcClientOptions['baseUri']}/templates?project_id=$projectId",
@@ -203,7 +203,7 @@ class GatherContentClientTemplateTest extends GcBaseTestCase
 
         static::assertEquals(1, count($container));
         static::assertEquals('GET', $request->getMethod());
-        static::assertEquals(['application/vnd.gathercontent.v0.5+json'], $request->getHeader('Accept'));
+        static::assertEquals(['application/vnd.gathercontent.v2+json'], $request->getHeader('Accept'));
         static::assertEquals(['api.example.com'], $request->getHeader('Host'));
         static::assertEquals(
             "{$this->gcClientOptions['baseUri']}/templates/$templateId",

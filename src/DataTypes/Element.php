@@ -2,8 +2,13 @@
 
 namespace Cheppers\GatherContent\DataTypes;
 
-class Element extends Base
+class Element extends ElementBase
 {
+    /**
+     * {@inheritdoc}
+     */
+    protected $unusedProperties = ['id'];
+
     /**
      * @var array
      */
@@ -36,29 +41,6 @@ class Element extends Base
      * @var string
      */
     public $microCopy = '';
-
-    /**
-     * {@inheritdoc}
-     */
-    protected $unusedProperties = ['id'];
-
-    /**
-     * @return mixed
-     */
-    public function getValue()
-    {
-        return null;
-    }
-
-    /**
-     * @param mixed $value
-     *
-     * @return $this
-     */
-    public function setValue($value)
-    {
-        return $this;
-    }
 
     /**
      * {@inheritdoc}

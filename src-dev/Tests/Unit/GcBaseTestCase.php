@@ -158,23 +158,14 @@ class GcBaseTestCase extends TestCase
         foreach ($elementTypes as $elementType) {
             switch ($elementType) {
                 case 'text':
-                    $elements[] = static::getUniqueResponseElementText();
+                case 'section':
+                    $elements[static::getUniqueString('uuid')] = static::getUniqueResponseElementText();
                     break;
 
                 case 'files':
-                    $elements[] = static::getUniqueResponseElementFiles();
-                    break;
-
-                case 'section':
-                    $elements[] = static::getUniqueResponseElementSection();
-                    break;
-
                 case 'choice_radio':
-                    $elements[] = static::getUniqueResponseElementChoiceRadio();
-                    break;
-
                 case 'choice_checkbox':
-                    $elements[] = static::getUniqueResponseElementChoiceCheckbox();
+                    $elements[static::getUniqueString('uuid')] = static::getUniqueResponseElementArray($elementType);
                     break;
             }
         }
@@ -194,7 +185,7 @@ class GcBaseTestCase extends TestCase
         foreach ($elements as $elementType) {
             switch ($elementType) {
                 case 'text':
-                    $tab['elements'][] = static::getUniqueResponseElementText();
+                    $tab['elements'][] = static::getUniqueResponseElementTemplateText();
                     break;
 
                 case 'files':
@@ -202,20 +193,68 @@ class GcBaseTestCase extends TestCase
                     break;
 
                 case 'section':
-                    $tab['elements'][] = static::getUniqueResponseElementSection();
+                    $tab['elements'][] = static::getUniqueResponseElementTemplateSection();
                     break;
 
                 case 'choice_radio':
-                    $tab['elements'][] = static::getUniqueResponseElementChoiceRadio();
+                    $tab['elements'][] = static::getUniqueResponseElementTemplateChoiceRadio();
                     break;
 
                 case 'choice_checkbox':
-                    $tab['elements'][] = static::getUniqueResponseElementChoiceCheckbox();
+                    $tab['elements'][] = static::getUniqueResponseElementTemplateChoiceCheckbox();
                     break;
             }
         }
 
         return $tab;
+    }
+
+    public static function getUniqueResponseElementText()
+    {
+        return static::getUniqueString('value');
+    }
+
+    public static function getUniqueResponseElementArray($elementType, $amount = null)
+    {
+        $elements = [];
+        if (!$amount) {
+            $amount = rand(1, 5);
+        }
+
+        for ($i = 0; $i < $amount; $i++) {
+            switch ($elementType) {
+                case 'files':
+                    $elements[] = static::getUniqueResponseElementFile();
+                    break;
+
+                case 'choice_radio':
+                case 'choice_checkbox':
+                    $elements[] = static::getUniqueResponseElementChoice();
+                    break;
+            }
+        }
+
+        return $elements;
+    }
+
+    public static function getUniqueResponseElementFile()
+    {
+        return [
+            'file_id' => static::getUniqueInt(),
+            'filename' => static::getUniqueString('file'),
+            'mime_type' => static::getUniqueString('mime_type'),
+            'url' => static::getUniqueString('url'),
+            'optimised_image_url' => self::getUniqueString('optimised_image_url'),
+            'size' => static::getUniqueInt(),
+        ];
+    }
+
+    public static function getUniqueResponseElementChoice()
+    {
+        return [
+            'id' => static::getUniqueInt(),
+            'label' => static::getUniqueString('label'),
+        ];
     }
 
     public static function getUniqueResponseElementTemplateFiles()
@@ -229,7 +268,7 @@ class GcBaseTestCase extends TestCase
         ];
     }
 
-    public static function getUniqueResponseElementText()
+    public static function getUniqueResponseElementTemplateText()
     {
         return [
             'name' => static::getUniqueString('el'),
@@ -263,7 +302,7 @@ class GcBaseTestCase extends TestCase
         ];
     }
 
-    public static function getUniqueResponseElementSection()
+    public static function getUniqueResponseElementTemplateSection()
     {
         return [
             'name' => static::getUniqueString('el'),
@@ -273,7 +312,7 @@ class GcBaseTestCase extends TestCase
         ];
     }
 
-    public static function getUniqueResponseElementChoiceRadio()
+    public static function getUniqueResponseElementTemplateChoiceRadio()
     {
         return [
             'name' => static::getUniqueString('el'),
@@ -286,7 +325,7 @@ class GcBaseTestCase extends TestCase
         ];
     }
 
-    public static function getUniqueResponseElementChoiceCheckbox()
+    public static function getUniqueResponseElementTemplateChoiceCheckbox()
     {
         return [
             'name' => static::getUniqueString('el'),
@@ -327,7 +366,7 @@ class GcBaseTestCase extends TestCase
         return $userIds;
     }
 
-    public static function getUniqueResponseItem(array $elementTypes)
+    public static function getUniqueResponseItem(array $elementTypes = [])
     {
         $item = [
             'id' => static::getUniqueInt(),
@@ -343,14 +382,15 @@ class GcBaseTestCase extends TestCase
             'updated_at' => static::getUniqueDate(),
             'next_due_at' => static::getUniqueDate(),
             'completed_at' => static::getUniqueDate(),
-            'content' => [],
             'status_id' => static::getUniqueInt(),
             'assigned_user_ids' => static::getUniqueResponseAssignedUsers(),
             'assignee_count' => static::getUniqueInt(),
             'approval_count' => static::getUniqueInt(),
         ];
 
-        $item['content'] = static::getUniqueResponseElements($elementTypes);
+        if (!empty($elementTypes)) {
+            $item['content'] = static::getUniqueResponseElements($elementTypes);
+        }
 
         return $item;
     }
