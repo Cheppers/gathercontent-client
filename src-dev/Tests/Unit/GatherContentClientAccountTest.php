@@ -52,7 +52,7 @@ class GatherContentClientAccountTest extends GcBaseTestCase
 
         static::assertEquals(
             json_encode($expected, JSON_PRETTY_PRINT),
-            json_encode($accounts, JSON_PRETTY_PRINT)
+            json_encode($accounts['data'], JSON_PRETTY_PRINT)
         );
 
         /** @var Request $request */

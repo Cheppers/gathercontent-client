@@ -72,7 +72,7 @@ class GatherContentClientTemplateTest extends GcBaseTestCase
 
         static::assertEquals(
             json_encode($expected, JSON_PRETTY_PRINT),
-            json_encode($actual, JSON_PRETTY_PRINT)
+            json_encode($actual['data'], JSON_PRETTY_PRINT)
         );
 
         /** @var Request $request */
@@ -96,15 +96,14 @@ class GatherContentClientTemplateTest extends GcBaseTestCase
             [
                 'class' => GatherContentClientException::class,
                 'code' => GatherContentClientException::API_ERROR,
-                'msg' => 'API Error: "Project Not Found"',
+                'msg' => 'API Error: "Project Not Found", Code: 404',
             ],
             [
                 'code' => 200,
                 'headers' => ['Content-Type' => 'application/json'],
                 'body' => [
-                    'data' => [
-                        'message' => 'Project Not Found'
-                    ]
+                    'error' => 'Project Not Found',
+                    'code' => 404
                 ],
             ],
             42
@@ -219,15 +218,14 @@ class GatherContentClientTemplateTest extends GcBaseTestCase
             [
                 'class' => GatherContentClientException::class,
                 'code' => GatherContentClientException::API_ERROR,
-                'msg' => 'API Error: "Template Not Found"',
+                'msg' => 'API Error: "Template Not Found", Code: 404',
             ],
             [
                 'code' => 200,
                 'headers' => ['Content-Type' => 'application/json'],
                 'body' => [
-                    'data' => [
-                        'message' => 'Template Not Found'
-                    ]
+                    'error' => 'Template Not Found',
+                    'code' => 404
                 ],
             ],
             42

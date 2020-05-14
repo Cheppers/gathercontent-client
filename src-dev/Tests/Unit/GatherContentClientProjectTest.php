@@ -62,7 +62,7 @@ class GatherContentClientProjectTest extends GcBaseTestCase
 
         static::assertEquals(
             json_encode($expected, JSON_PRETTY_PRINT),
-            json_encode($projects, JSON_PRETTY_PRINT)
+            json_encode($projects['data'], JSON_PRETTY_PRINT)
         );
 
         /** @var Request $request */
@@ -454,7 +454,7 @@ class GatherContentClientProjectTest extends GcBaseTestCase
 
         static::assertEquals(
             json_encode($expected, JSON_PRETTY_PRINT),
-            json_encode($statuses, JSON_PRETTY_PRINT)
+            json_encode($statuses['data'], JSON_PRETTY_PRINT)
         );
 
         /** @var Request $request */
