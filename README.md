@@ -102,7 +102,7 @@ catch (\Exception $e) {
     
     exit(1);
 }
-echo "Fires content's name = {$items['data'][0]->name}" . PHP_EOL;
+echo "First content's name = {$items['data'][0]->name}" . PHP_EOL;
 echo "Pagination total = {$items['pagination']->total}" . PHP_EOL;
 echo "Pagination current page = {$items['pagination']->currentPage}" . PHP_EOL;
 ```
