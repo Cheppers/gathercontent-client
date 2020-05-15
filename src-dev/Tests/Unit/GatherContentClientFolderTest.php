@@ -11,7 +11,7 @@ use GuzzleHttp\Psr7\Response;
 
 class GatherContentClientFolderTest extends GcBaseTestCase
 {
-    public function casesFoldersGet(): array
+    public function casesFoldersGet()
     {
         $data = [
             static::getUniqueResponseFolder(),
@@ -38,7 +38,7 @@ class GatherContentClientFolderTest extends GcBaseTestCase
     /**
      * @dataProvider casesFoldersGet
      */
-    public function testFoldersGet(array $expected, array $responseBody, int $projectId): void
+    public function testFoldersGet(array $expected, array $responseBody, int $projectId)
     {
         $tester = $this->getBasicHttpClientTester(
             [
@@ -53,12 +53,12 @@ class GatherContentClientFolderTest extends GcBaseTestCase
         $container = &$tester['container'];
 
         $folders = (new GatherContentClient($client))
-          ->setOptions($this->gcClientOptions)
-          ->foldersGet($projectId);
+            ->setOptions($this->gcClientOptions)
+            ->foldersGet($projectId);
 
         static::assertEquals(
             json_encode($expected, JSON_PRETTY_PRINT),
-            json_encode($folders, JSON_PRETTY_PRINT)
+            json_encode($folders['data'], JSON_PRETTY_PRINT)
         );
 
         /** @var Request $request */
@@ -66,7 +66,7 @@ class GatherContentClientFolderTest extends GcBaseTestCase
 
         static::assertEquals(1, count($container));
         static::assertEquals('GET', $request->getMethod());
-        static::assertEquals(['application/vnd.gathercontent.v0.5+json'], $request->getHeader('Accept'));
+        static::assertEquals(['application/vnd.gathercontent.v2+json'], $request->getHeader('Accept'));
         static::assertEquals(['api.example.com'], $request->getHeader('Host'));
         static::assertEquals(
             "{$this->gcClientOptions['baseUri']}/folders?project_id=$projectId",
@@ -74,26 +74,25 @@ class GatherContentClientFolderTest extends GcBaseTestCase
         );
     }
 
-    public function casesFoldersGetFail(): array
+    public function casesFoldersGetFail()
     {
         $cases = static::basicFailCasesGet();
 
         $cases['not_found'] = [
-          [
-            'class' => GatherContentClientException::class,
-            'code' => GatherContentClientException::API_ERROR,
-            'msg' => 'API Error: "Folders not found"',
-          ],
-          [
-            'code' => 200,
-            'headers' => ['Content-Type' => 'application/json'],
-            'body' => [
-              'data' => [
-                'message' => 'Folders not found'
-              ]
+            [
+                'class' => GatherContentClientException::class,
+                'code' => GatherContentClientException::API_ERROR,
+                'msg' => 'API Error: "Folders not found", Code: 404',
             ],
-          ],
-          42
+            [
+                'code' => 200,
+                'headers' => ['Content-Type' => 'application/json'],
+                'body' => [
+                    'error' => 'Folders not found',
+                    'code' => 404
+                ],
+            ],
+            42
         ];
 
         return $cases;
@@ -102,7 +101,7 @@ class GatherContentClientFolderTest extends GcBaseTestCase
     /**
      * @dataProvider casesFoldersGetFail
      */
-    public function testFoldersGetFail(array $expected, array $response, int $projectId): void
+    public function testFoldersGetFail(array $expected, array $response, int $projectId)
     {
         $tester = $this->getBasicHttpClientTester([
             new Response(
@@ -114,7 +113,7 @@ class GatherContentClientFolderTest extends GcBaseTestCase
         $client = $tester['client'];
 
         $gc = (new GatherContentClient($client))
-          ->setOptions($this->gcClientOptions);
+            ->setOptions($this->gcClientOptions);
 
         static::expectException($expected['class']);
         static::expectExceptionCode($expected['code']);

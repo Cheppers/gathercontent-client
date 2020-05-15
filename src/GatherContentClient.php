@@ -2,6 +2,8 @@
 
 namespace Cheppers\GatherContent;
 
+use Cheppers\GatherContent\DataTypes\Item;
+use Cheppers\GatherContent\DataTypes\Pagination;
 use GuzzleHttp\ClientInterface;
 
 class GatherContentClient implements GatherContentClientInterface
@@ -11,7 +13,6 @@ class GatherContentClient implements GatherContentClientInterface
      */
     protected $client;
 
-    //region response
     /**
      * @var \Psr\Http\Message\ResponseInterface
      */
@@ -24,9 +25,7 @@ class GatherContentClient implements GatherContentClientInterface
     {
         return $this->response;
     }
-    //endregion
 
-    // region Option - email.
     /**
      * @var string
      */
@@ -46,9 +45,7 @@ class GatherContentClient implements GatherContentClientInterface
 
         return $this;
     }
-    // endregion
 
-    //region Option - apiKey
     /**
      * @var string
      */
@@ -71,9 +68,7 @@ class GatherContentClient implements GatherContentClientInterface
 
         return $this;
     }
-    //endregion
 
-    // region Option - baseUri.
     /**
      * @var string
      */
@@ -96,7 +91,29 @@ class GatherContentClient implements GatherContentClientInterface
 
         return $this;
     }
-    // endregion
+
+    /**
+     * @var bool
+     */
+    protected $useLegacy = false;
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getUseLegacy()
+    {
+        return $this->useLegacy;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setUseLegacy($value)
+    {
+        $this->useLegacy = $value;
+
+        return $this;
+    }
 
     /**
      * {@inheritdoc}
@@ -157,12 +174,13 @@ class GatherContentClient implements GatherContentClientInterface
      */
     public function meGet()
     {
+        $this->setUseLegacy(true);
         $this->sendGet('me');
 
         $this->validateResponse();
         $body = $this->parseResponse();
 
-        return empty($body['data']) ? null : new DataTypes\User($body['data']);
+        return empty($body['data']) ? null : $this->parseResponseDataItem($body['data'], DataTypes\User::class);
     }
 
     /**
@@ -170,12 +188,13 @@ class GatherContentClient implements GatherContentClientInterface
      */
     public function accountsGet()
     {
+        $this->setUseLegacy(true);
         $this->sendGet('accounts');
 
         $this->validateResponse();
         $body = $this->parseResponse();
 
-        return $this->parseResponseDataItems($body['data'], DataTypes\Account::class);
+        return $this->parseResponseItems($body, DataTypes\Account::class);
     }
 
     /**
@@ -183,12 +202,13 @@ class GatherContentClient implements GatherContentClientInterface
      */
     public function accountGet($accountId)
     {
+        $this->setUseLegacy(true);
         $this->sendGet("accounts/$accountId");
 
         $this->validateResponse();
         $body = $this->parseResponse();
 
-        return empty($body['data']) ? null : new DataTypes\Account($body['data']);
+        return empty($body['data']) ? null : $this->parseResponseDataItem($body['data'], DataTypes\Account::class);
     }
 
     /**
@@ -196,12 +216,13 @@ class GatherContentClient implements GatherContentClientInterface
      */
     public function projectsGet($accountId)
     {
+        $this->setUseLegacy(true);
         $this->sendGet('projects', ['query' => ['account_id' => $accountId]]);
 
         $this->validateResponse();
         $body = $this->parseResponse();
 
-        return $this->parseResponseDataItems($body['data'], DataTypes\Project::class);
+        return $this->parseResponseItems($body, DataTypes\Project::class);
     }
 
     /**
@@ -209,13 +230,15 @@ class GatherContentClient implements GatherContentClientInterface
      */
     public function projectGet($projectId)
     {
+        $this->setUseLegacy(true);
         $this->sendGet("projects/$projectId");
 
         $this->validateResponse();
         $body = $this->parseResponse();
         $body += ['meta' => []];
 
-        return empty($body['data']) ? null : new DataTypes\Project($body['data'] + ['meta' => $body['meta']]);
+        return empty($body['data']) ? null : $this->parseResponseDataItem($body['data'] + ['meta' => $body['meta']],
+            DataTypes\Project::class);
     }
 
     /**
@@ -223,6 +246,7 @@ class GatherContentClient implements GatherContentClientInterface
      */
     public function projectsPost($accountId, $projectName, $projectType)
     {
+        $this->setUseLegacy(true);
         $this->sendPost('projects', [
             'headers' => [
                 'Content-Type' => 'application/x-www-form-urlencoded'
@@ -234,19 +258,7 @@ class GatherContentClient implements GatherContentClientInterface
             ],
         ]);
 
-        if ($this->response->getStatusCode() !== 202) {
-            $responseContentType = $this->response->getHeader('Content-Type');
-            $responseContentType = end($responseContentType);
-
-            if ($responseContentType === 'application/json') {
-                $this->parseResponse();
-            }
-
-            throw new GatherContentClientException(
-                'Unexpected answer',
-                GatherContentClientException::UNEXPECTED_ANSWER
-            );
-        }
+        $this->validatePostResponse(202);
 
         $locations = $this->response->getHeader('Location');
         $locationPath = parse_url(reset($locations), PHP_URL_PATH);
@@ -266,12 +278,13 @@ class GatherContentClient implements GatherContentClientInterface
      */
     public function projectStatusesGet($projectId)
     {
+        $this->setUseLegacy(true);
         $this->sendGet("projects/$projectId/statuses");
 
         $this->validateResponse();
         $body = $this->parseResponse();
 
-        return $this->parseResponseDataItems($body['data'], DataTypes\Status::class);
+        return $this->parseResponseItems($body, DataTypes\Status::class);
     }
 
     /**
@@ -279,25 +292,26 @@ class GatherContentClient implements GatherContentClientInterface
      */
     public function projectStatusGet($projectId, $statusId)
     {
+        $this->setUseLegacy(true);
         $this->sendGet("projects/$projectId/statuses/$statusId");
 
         $this->validateResponse();
         $body = $this->parseResponse();
 
-        return empty($body['data']) ? null : new DataTypes\Status($body['data']);
+        return empty($body['data']) ? null : $this->parseResponseDataItem($body['data'], DataTypes\Status::class);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function itemsGet($projectId)
+    public function itemsGet($projectId, $query = [])
     {
-        $this->sendGet('items', ['query' => ['project_id' => $projectId]]);
+        $this->sendGet("projects/$projectId/items", ['query' => $query]);
 
         $this->validateResponse();
         $body = $this->parseResponse();
 
-        return $this->parseResponseDataItems($body['data'], DataTypes\Item::class);
+        return $this->parseResponseItems($body, DataTypes\Item::class);
     }
 
     /**
@@ -310,85 +324,76 @@ class GatherContentClient implements GatherContentClientInterface
         $this->validateResponse();
         $body = $this->parseResponse();
 
-        return empty($body['data']) ? null : new DataTypes\Item($body['data']);
+        return empty($body['data']) ? null : $this->parseResponseDataItem($body['data'], DataTypes\Item::class);
     }
 
-    public function itemsPost($projectId, $name, $parentId = 0, $templateId = 0, array $config = [])
+    /**
+     * {@inheritdoc}
+     */
+    public function itemPost($projectId, Item $item)
     {
-        $form_params = [
-            'project_id' => $projectId,
-            'name' => $name,
-        ];
-
-        if ($parentId) {
-            $form_params['parent_id'] = $parentId;
-        }
-
-        if ($templateId) {
-            $form_params['template_id'] = $templateId;
-        }
-
-        if ($config) {
-            $config = array_values($config);
-            $form_params['config'] = base64_encode(\GuzzleHttp\json_encode($config));
-        }
-
-        $this->sendPost('items', [
-            'form_params' => $form_params,
+        $item->setSkipEmptyProperties(true);
+        $this->sendPost("projects/$projectId/items", [
+            'body' => \GuzzleHttp\json_encode($item),
         ]);
 
-        if ($this->response->getStatusCode() !== 202) {
-            $responseContentType = $this->response->getHeader('Content-Type');
-            $responseContentType = end($responseContentType);
+        $this->validatePostResponse(201);
+        $body = $this->parseResponse();
 
-            if ($responseContentType === 'application/json') {
-                $this->parseResponse();
-            }
-
-            throw new GatherContentClientException(
-                'Unexpected answer',
-                GatherContentClientException::UNEXPECTED_ANSWER
-            );
-        }
-
-        $locations = $this->response->getHeader('Location');
-        $locationPath = parse_url(reset($locations), PHP_URL_PATH);
-        $matches = [];
-        if (!preg_match('@/items/(?P<itemId>\d+)$@', $locationPath, $matches)) {
-            throw new GatherContentClientException(
-                'Invalid response header the item ID is missing',
-                GatherContentClientException::INVALID_RESPONSE_HEADER
-            );
-        }
-
-        return $matches['itemId'];
+        return empty($body['data']) ? null : $this->parseResponseDataItem($body['data'], DataTypes\Item::class);
     }
 
-    public function itemSavePost($itemId, array $config)
+    /**
+     * {@inheritdoc}
+     */
+    public function itemUpdatePost($itemId, array $content = [])
     {
-        $formParams = [];
-        $config = array_values($config);
-        $jsonConfig = \GuzzleHttp\json_encode($config);
-        $encodedConfig = base64_encode($jsonConfig);
-        $formParams['config'] = $encodedConfig;
-
-        $this->sendPost("items/$itemId/save", [
-            'form_params' => $formParams,
+        $this->sendPost("items/$itemId/content", [
+            'body' => \GuzzleHttp\json_encode(['content' => $content]),
         ]);
 
-        if ($this->response->getStatusCode() !== 202) {
-            $responseContentType = $this->response->getHeader('Content-Type');
-            $responseContentType = end($responseContentType);
+        $this->validatePostResponse(202);
+    }
 
-            if ($responseContentType === 'application/json') {
-                $this->parseResponse();
-            }
+    /**
+     * {@inheritdoc}
+     */
+    public function itemRenamePost($itemId, $name)
+    {
+        $this->sendPost("items/$itemId/rename", [
+            'body' => \GuzzleHttp\json_encode(['name' => $name]),
+        ]);
 
-            throw new GatherContentClientException(
-                'Unexpected answer',
-                GatherContentClientException::UNEXPECTED_ANSWER
-            );
+        $this->validatePostResponse(200);
+        $body = $this->parseResponse();
+
+        return empty($body['data']) ? null : $this->parseResponseDataItem($body['data'], DataTypes\Item::class);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function itemMovePost($itemId, $position = null, $folderUuid = '')
+    {
+        $request = [];
+
+        if ($position !== null) {
+            $request['position'] = $position;
         }
+
+        if (!empty($folderUuid)) {
+            $request['folder_uuid'] = $folderUuid;
+        }
+
+        $this->sendPost("items/$itemId/move", [
+            'body' => \GuzzleHttp\json_encode($request),
+        ]);
+
+        $this->validatePostResponse(200);
+        $body = $this->parseResponse();
+
+        // TODO: change later, because now the data is not returned even though the documentation says so.
+        return empty($body['data']) ? null : $this->parseResponseDataItem($body['data'], DataTypes\Item::class);
     }
 
     /**
@@ -397,24 +402,41 @@ class GatherContentClient implements GatherContentClientInterface
     public function itemApplyTemplatePost($itemId, $templateId)
     {
         $this->sendPost("items/$itemId/apply_template", [
-            'form_params' => [
-                'template_id' => $templateId,
-            ],
+            'body' => \GuzzleHttp\json_encode([
+                'template_id' => $templateId
+            ]),
         ]);
 
-        if ($this->response->getStatusCode() !== 202) {
-            $responseContentType = $this->response->getHeader('Content-Type');
-            $responseContentType = end($responseContentType);
+        $this->validatePostResponse(200);
+        $body = $this->parseResponse();
 
-            if ($responseContentType === 'application/json') {
-                $this->parseResponse();
-            }
+        return empty($body['data']) ? null : $this->parseResponseDataItem($body['data'], DataTypes\Item::class);
+    }
 
-            throw new GatherContentClientException(
-                'Unexpected answer',
-                GatherContentClientException::UNEXPECTED_ANSWER
-            );
-        }
+    /**
+     * {@inheritdoc}
+     */
+    public function itemDisconnectTemplatePost($itemId)
+    {
+        $this->sendPost("items/$itemId/disconnect_template");
+
+        $this->validatePostResponse(200);
+        $body = $this->parseResponse();
+
+        return empty($body['data']) ? null : $this->parseResponseDataItem($body['data'], DataTypes\Item::class);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function itemDuplicatePost($itemId)
+    {
+        $this->sendPost("items/$itemId/duplicate");
+
+        $this->validatePostResponse(200);
+        $body = $this->parseResponse();
+
+        return empty($body['data']) ? null : $this->parseResponseDataItem($body['data'], DataTypes\Item::class);
     }
 
     /**
@@ -422,38 +444,14 @@ class GatherContentClient implements GatherContentClientInterface
      */
     public function itemChooseStatusPost($itemId, $statusId)
     {
+        $this->setUseLegacy(true);
         $this->sendPost("items/$itemId/choose_status", [
             'form_params' => [
                 'status_id' => $statusId,
             ],
         ]);
 
-        if ($this->response->getStatusCode() !== 202) {
-            $responseContentType = $this->response->getHeader('Content-Type');
-            $responseContentType = end($responseContentType);
-
-            if ($responseContentType === 'application/json') {
-                $this->parseResponse();
-            }
-
-            throw new GatherContentClientException(
-                'Unexpected answer',
-                GatherContentClientException::UNEXPECTED_ANSWER
-            );
-        }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function itemFilesGet($itemId)
-    {
-        $this->sendGet("items/$itemId/files");
-
-        $this->validateResponse();
-        $body = $this->parseResponse();
-
-        return $this->parseResponseDataItems($body['data'], DataTypes\File::class);
+        $this->validatePostResponse(202);
     }
 
     public function templatesGet($projectId)
@@ -463,7 +461,7 @@ class GatherContentClient implements GatherContentClientInterface
         $this->validateResponse();
         $body = $this->parseResponse();
 
-        return $this->parseResponseDataItems($body['data'], DataTypes\Template::class);
+        return $this->parseResponseItems($body, DataTypes\Template::class);
     }
 
     public function templateGet($templateId)
@@ -473,12 +471,12 @@ class GatherContentClient implements GatherContentClientInterface
         $this->validateResponse();
         $body = $this->parseResponse();
 
-        return empty($body['data']) ? null : new DataTypes\Template($body['data']);
+        return empty($body['data']) ? null : $this->parseResponseDataItem($body['data'], DataTypes\Template::class);
     }
 
     protected function getUri($path)
     {
-        return $this->getBaseUri() . "/$path";
+        return $this->getBaseUri()."/$path";
     }
 
     public function foldersGet($projectId)
@@ -488,7 +486,7 @@ class GatherContentClient implements GatherContentClientInterface
         $this->validateResponse();
         $body = $this->parseResponse();
 
-        return $this->parseResponseDataItems($body['data'], DataTypes\Folder::class);
+        return $this->parseResponseItems($body, DataTypes\Folder::class);
     }
 
     protected function getRequestAuth()
@@ -501,9 +499,15 @@ class GatherContentClient implements GatherContentClientInterface
 
     protected function getRequestHeaders(array $base = [])
     {
+        $accept = 'application/vnd.gathercontent.v2+json';
+        if ($this->useLegacy) {
+            $accept = 'application/vnd.gathercontent.v0.5+json';
+        }
+
         return $base + [
-            'Accept' => 'application/vnd.gathercontent.v0.5+json',
+            'Accept' => $accept,
             'User-Agent' => $this->getVersionString(),
+            'Content-Type' => 'application/json',
         ];
     }
 
@@ -563,6 +567,7 @@ class GatherContentClient implements GatherContentClientInterface
 
     /**
      * @return $this
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     protected function sendGet($path, array $options = [])
     {
@@ -571,6 +576,7 @@ class GatherContentClient implements GatherContentClientInterface
 
     /**
      * @return $this
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     protected function sendPost($path, array $options = [])
     {
@@ -579,6 +585,7 @@ class GatherContentClient implements GatherContentClientInterface
 
     /**
      * @return $this
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     protected function sendRequest($method, $path, array $options = [])
     {
@@ -597,10 +604,30 @@ class GatherContentClient implements GatherContentClientInterface
 
     protected function parseResponse()
     {
+        if ($this->getUseLegacy()) {
+            return $this->parseLegacyResponse();
+        }
+
+        $body = \GuzzleHttp\json_decode($this->response->getBody(), true);
+        if (!empty($body['error'])) {
+            throw new GatherContentClientException(
+                'API Error: "'.$body['error'].'", Code: '.$body['code'],
+                GatherContentClientException::API_ERROR
+            );
+        }
+
+        return $body;
+    }
+
+    /**
+     * @deprecated Will be removed when v2 API fully developed.
+     */
+    protected function parseLegacyResponse()
+    {
         $body = \GuzzleHttp\json_decode($this->response->getBody(), true);
         if (!empty($body['data']['message'])) {
             throw new GatherContentClientException(
-                'API Error: "' . $body['data']['message'] . '"',
+                'API Error: "'.$body['data']['message'].'"',
                 GatherContentClientException::API_ERROR
             );
         }
@@ -611,12 +638,17 @@ class GatherContentClient implements GatherContentClientInterface
     /**
      * @return \Cheppers\GatherContent\DataTypes\Base[]
      */
-    protected function parseResponseDataItems(array $data, $class)
+    protected function parseResponseItems(array $data, $class)
     {
-        $items = [];
-        foreach ($data as $itemData) {
+        $items = ['data' => []];
+
+        foreach ($data['data'] as $itemData) {
             $item = $this->parseResponseDataItem($itemData, $class);
-            $items[$item->id] = $item;
+            $items['data'][$item->id] = $item;
+        }
+
+        if (!empty($data['pagination'])) {
+            $items['pagination'] = $this->parsePagination($data['pagination']);
         }
 
         return $items;
@@ -624,7 +656,12 @@ class GatherContentClient implements GatherContentClientInterface
 
     protected function parseResponseDataItem(array $data, $class)
     {
-        return $item = new $class($data);
+        return new $class($data);
+    }
+
+    protected function parsePagination(array $data)
+    {
+        return new Pagination($data);
     }
 
     protected function validateResponse()
@@ -637,5 +674,24 @@ class GatherContentClient implements GatherContentClientInterface
                 GatherContentClientException::UNEXPECTED_CONTENT_TYPE
             );
         }
+    }
+
+    protected function validatePostResponse($code)
+    {
+        if ($this->response->getStatusCode() !== $code) {
+            $responseContentType = $this->response->getHeader('Content-Type');
+            $responseContentType = end($responseContentType);
+
+            if ($responseContentType === 'application/json') {
+                $this->parseResponse();
+            }
+
+            throw new GatherContentClientException(
+                'Unexpected answer',
+                GatherContentClientException::UNEXPECTED_ANSWER
+            );
+        }
+
+        $this->validateResponse();
     }
 }

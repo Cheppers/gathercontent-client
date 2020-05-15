@@ -2,6 +2,7 @@
 
 namespace Cheppers\GatherContent;
 
+use Cheppers\GatherContent\DataTypes\Item;
 use GuzzleHttp\ClientInterface;
 use Psr\Http\Message\ResponseInterface;
 
@@ -41,6 +42,13 @@ interface GatherContentClientInterface
      * @return $this
      */
     public function setBaseUri($value);
+
+    public function getUseLegacy();
+
+    /**
+     * @return $this
+     */
+    public function setUseLegacy($value);
 
     /**
      * @return string[]
@@ -83,36 +91,36 @@ interface GatherContentClientInterface
     public function projectTypes();
 
     /**
-     * @see https://docs.gathercontent.com/reference#get-me
+     * @see https://docs.gathercontent.com/v0.5/reference#get-me
      */
     public function meGet();
 
     /**
-     * @see https://docs.gathercontent.com/reference#get-accounts
+     * @see https://docs.gathercontent.com/v0.5/reference#get-accounts
      *
      * @return \Cheppers\GatherContent\DataTypes\Account[]
      */
     public function accountsGet();
 
     /**
-     * @see https://docs.gathercontent.com/reference#get-accounts
+     * @see https://docs.gathercontent.com/v0.5/reference#get-accounts
      */
     public function accountGet($accountId);
 
     /**
-     * @see https://docs.gathercontent.com/reference#get-projects
+     * @see https://docs.gathercontent.com/v0.5/reference#get-projects
      *
      * @return \Cheppers\GatherContent\DataTypes\Project[]
      */
     public function projectsGet($accountId);
 
     /**
-     * @see https://docs.gathercontent.com/reference#get-projects
+     * @see https://docs.gathercontent.com/v0.5/reference#get-projects
      */
     public function projectGet($projectId);
 
     /**
-     * @see https://docs.gathercontent.com/reference#post-projects
+     * @see https://docs.gathercontent.com/v0.5/reference#post-projects
      *
      * @return int
      *   Id of the newly created project.
@@ -120,57 +128,90 @@ interface GatherContentClientInterface
     public function projectsPost($accountId, $projectName, $projectType);
 
     /**
-     * @see https://docs.gathercontent.com/reference#get-project-statuses
+     * @see https://docs.gathercontent.com/v0.5/reference#get-project-statuses
      *
      * @return \Cheppers\GatherContent\DataTypes\Status[]
      */
     public function projectStatusesGet($projectId);
 
     /**
-     * @see https://docs.gathercontent.com/reference#get-project-statuses-by-id
+     * @see https://docs.gathercontent.com/v0.5/reference#get-project-statuses-by-id
      */
     public function projectStatusGet($projectId, $statusId);
 
     /**
-     * @see https://docs.gathercontent.com/reference#get-items
+     * @see https://docs.gathercontent.com/reference#listitems
      *
      * @return \Cheppers\GatherContent\DataTypes\Item[]
      */
     public function itemsGet($projectId);
 
     /**
-     * @see https://docs.gathercontent.com/reference#get-items-by-id
+     * @see https://docs.gathercontent.com/reference#getitem
+     *
+     * @return \Cheppers\GatherContent\DataTypes\Item
      */
     public function itemGet($itemId);
 
     /**
-     * @see https://docs.gathercontent.com/reference#post-items
+     * @see https://docs.gathercontent.com/reference#createitem
+     *
+     * @return \Cheppers\GatherContent\DataTypes\Item
      */
-    public function itemsPost(
+    public function itemPost(
         $projectId,
-        $name,
-        $parentId = 0,
-        $templateId = 0,
-        array $config = []
+        Item $item
     );
 
     /**
-     * @see https://docs.gathercontent.com/reference#post-item-save
+     * @see https://docs.gathercontent.com/reference#updateitemcontent
      */
-    public function itemSavePost($itemId, array $config);
+    public function itemUpdatePost(
+        $itemId,
+        array $content = []
+    );
 
     /**
-     * @return \Cheppers\GatherContent\DataTypes\File[]
+     * @see https://docs.gathercontent.com/reference#renameitem
+     *
+     * @return \Cheppers\GatherContent\DataTypes\Item
      */
-    public function itemFilesGet($itemId);
+    public function itemRenamePost($itemId, $name);
 
     /**
-     * @see https://docs.gathercontent.com/reference#post-item-apply_template
+     * @see https://docs.gathercontent.com/reference#moveitem
+     *
+     * @return \Cheppers\GatherContent\DataTypes\Item
+     */
+    public function itemMovePost(
+        $itemId,
+        $position = null,
+        $folderUuid = ''
+    );
+
+    /**
+     * @see https://docs.gathercontent.com/reference#applytemplate
+     *
+     * @return \Cheppers\GatherContent\DataTypes\Item
      */
     public function itemApplyTemplatePost($itemId, $templateId);
 
     /**
-     * @see https://docs.gathercontent.com/reference#post-item-choose_status
+     * @see https://docs.gathercontent.com/reference#disconnecttemplate
+     *
+     * @return \Cheppers\GatherContent\DataTypes\Item
+     */
+    public function itemDisconnectTemplatePost($itemId);
+
+    /**
+     * @see https://docs.gathercontent.com/reference#duplicateitem
+     *
+     * @return \Cheppers\GatherContent\DataTypes\Item
+     */
+    public function itemDuplicatePost($itemId);
+
+    /**
+     * @see https://docs.gathercontent.com/v0.5/reference#post-item-choose_status
      */
     public function itemChooseStatusPost($itemId, $statusId);
 
