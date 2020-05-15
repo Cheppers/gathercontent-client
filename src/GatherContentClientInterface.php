@@ -216,16 +216,36 @@ interface GatherContentClientInterface
     public function itemChooseStatusPost($itemId, $statusId);
 
     /**
-     * @see https://docs.gathercontent.com/reference#get-templates
+     * @see https://docs.gathercontent.com/reference#listtemplates
      *
      * @return \Cheppers\GatherContent\DataTypes\Template[]
      */
     public function templatesGet($projectId);
 
     /**
-     * @see https://docs.gathercontent.com/reference#get-template-by-id
+     * @see https://docs.gathercontent.com/reference#gettemplate
      */
     public function templateGet($templateId);
+
+    /**
+     * @see https://docs.gathercontent.com/reference#createtemplate
+     */
+    public function templatePost($projectId, $name, $structure);
+
+    /**
+     * @see https://docs.gathercontent.com/reference#renametemplate
+     */
+    public function templateRenamePost($templateId, $name);
+
+    /**
+     * @see https://docs.gathercontent.com/reference#duplicatetemplate
+     */
+    public function templateDuplicatePost($templateId, $projectId = null);
+
+    /**
+     * @see https://docs.gathercontent.com/reference#deletetemplate
+     */
+    public function templateDelete($templateId);
 
     /**
      * @see https://docs.gathercontent.com/reference#get-folders
