@@ -84,6 +84,7 @@ echo "Last name = {$me->lastName}" . PHP_EOL;
 The listing endpoints are returning pagination data in this new version, you can access it like this:
 
 ```php
+<?php
 $email = 'YOUR_GATHERCONTENT_EMAIL';
 $apiKey = 'YOUR_GATHERCONTENT_API_KEY';
 $client = new \GuzzleHttp\Client();
