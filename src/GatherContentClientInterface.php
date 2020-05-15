@@ -148,11 +148,15 @@ interface GatherContentClientInterface
 
     /**
      * @see https://docs.gathercontent.com/reference#getitem
+     *
+     * @return \Cheppers\GatherContent\DataTypes\Item
      */
     public function itemGet($itemId);
 
     /**
      * @see https://docs.gathercontent.com/reference#createitem
+     *
+     * @return \Cheppers\GatherContent\DataTypes\Item
      */
     public function itemPost(
         $projectId,
@@ -169,11 +173,15 @@ interface GatherContentClientInterface
 
     /**
      * @see https://docs.gathercontent.com/reference#renameitem
+     *
+     * @return \Cheppers\GatherContent\DataTypes\Item
      */
     public function itemRenamePost($itemId, $name);
 
     /**
      * @see https://docs.gathercontent.com/reference#moveitem
+     *
+     * @return \Cheppers\GatherContent\DataTypes\Item
      */
     public function itemMovePost(
         $itemId,
@@ -183,16 +191,22 @@ interface GatherContentClientInterface
 
     /**
      * @see https://docs.gathercontent.com/reference#applytemplate
+     *
+     * @return \Cheppers\GatherContent\DataTypes\Item
      */
     public function itemApplyTemplatePost($itemId, $templateId);
 
     /**
      * @see https://docs.gathercontent.com/reference#disconnecttemplate
+     *
+     * @return \Cheppers\GatherContent\DataTypes\Item
      */
     public function itemDisconnectTemplatePost($itemId);
 
     /**
      * @see https://docs.gathercontent.com/reference#duplicateitem
+     *
+     * @return \Cheppers\GatherContent\DataTypes\Item
      */
     public function itemDuplicatePost($itemId);
 

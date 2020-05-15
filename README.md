@@ -31,7 +31,7 @@ Compatible with `application/vnd.gathercontent.v2+json`
 
 - [GET:  /projects/:project_id/items](https://docs.gathercontent.com/reference#listitems) `$gc->itemsGet()`
 - [GET:  /items/:item_id](https://docs.gathercontent.com/reference#getitem) `$gc->itemGet()`
-- [POST: /projects/:project_id/items](https://docs.gathercontent.com/reference#createitem) `$gc->itemsPost()`
+- [POST: /projects/:project_id/items](https://docs.gathercontent.com/reference#createitem) `$gc->itemPost()`
 - [POST: /items/:item_id/content](https://docs.gathercontent.com/reference#updateitemcontent) `$gc->itemUpdatePost()`
 - [POST: /items/:item_id/rename](https://docs.gathercontent.com/reference#renameitem) `$gc->itemRenamePost()`
 - [POST: /items/:item_id/move](https://docs.gathercontent.com/reference#moveitem) `$gc->itemMovePost()`
@@ -102,7 +102,10 @@ catch (\Exception $e) {
     
     exit(1);
 }
-echo "First content's name = {$items['data'][0]->name}" . PHP_EOL;
+
+$firstItem = reset($items['data']);
+
+echo "First content's name = {$firstItem->name}" . PHP_EOL;
 echo "Pagination total = {$items['pagination']->total}" . PHP_EOL;
 echo "Pagination current page = {$items['pagination']->currentPage}" . PHP_EOL;
 ```

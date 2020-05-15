@@ -258,7 +258,7 @@ class GatherContentClient implements GatherContentClientInterface
             ],
         ]);
 
-        $this->validatePostResponse();
+        $this->validatePostResponse(202);
 
         $locations = $this->response->getHeader('Location');
         $locationPath = parse_url(reset($locations), PHP_URL_PATH);
@@ -332,11 +332,12 @@ class GatherContentClient implements GatherContentClientInterface
      */
     public function itemPost($projectId, Item $item)
     {
+        $item->setSkipEmptyProperties(true);
         $this->sendPost("projects/$projectId/items", [
             'body' => \GuzzleHttp\json_encode($item),
         ]);
 
-        $this->validatePostResponse();
+        $this->validatePostResponse(201);
         $body = $this->parseResponse();
 
         return empty($body['data']) ? null : $this->parseResponseDataItem($body['data'], DataTypes\Item::class);
@@ -351,7 +352,7 @@ class GatherContentClient implements GatherContentClientInterface
             'body' => \GuzzleHttp\json_encode(['content' => $content]),
         ]);
 
-        $this->validatePostResponse();
+        $this->validatePostResponse(202);
     }
 
     /**
@@ -363,7 +364,7 @@ class GatherContentClient implements GatherContentClientInterface
             'body' => \GuzzleHttp\json_encode(['name' => $name]),
         ]);
 
-        $this->validatePostResponse();
+        $this->validatePostResponse(200);
         $body = $this->parseResponse();
 
         return empty($body['data']) ? null : $this->parseResponseDataItem($body['data'], DataTypes\Item::class);
@@ -374,16 +375,24 @@ class GatherContentClient implements GatherContentClientInterface
      */
     public function itemMovePost($itemId, $position = null, $folderUuid = '')
     {
+        $request = [];
+
+        if ($position !== null) {
+            $request['position'] = $position;
+        }
+
+        if (!empty($folderUuid)) {
+            $request['folder_uuid'] = $folderUuid;
+        }
+
         $this->sendPost("items/$itemId/move", [
-            'body' => \GuzzleHttp\json_encode([
-                'position' => $position,
-                'folder_uuid' => $folderUuid
-            ]),
+            'body' => \GuzzleHttp\json_encode($request),
         ]);
 
-        $this->validatePostResponse();
+        $this->validatePostResponse(200);
         $body = $this->parseResponse();
 
+        // TODO: change later, because now the data is not returned even though the documentation says so.
         return empty($body['data']) ? null : $this->parseResponseDataItem($body['data'], DataTypes\Item::class);
     }
 
@@ -398,7 +407,7 @@ class GatherContentClient implements GatherContentClientInterface
             ]),
         ]);
 
-        $this->validatePostResponse();
+        $this->validatePostResponse(200);
         $body = $this->parseResponse();
 
         return empty($body['data']) ? null : $this->parseResponseDataItem($body['data'], DataTypes\Item::class);
@@ -411,7 +420,7 @@ class GatherContentClient implements GatherContentClientInterface
     {
         $this->sendPost("items/$itemId/disconnect_template");
 
-        $this->validatePostResponse();
+        $this->validatePostResponse(200);
         $body = $this->parseResponse();
 
         return empty($body['data']) ? null : $this->parseResponseDataItem($body['data'], DataTypes\Item::class);
@@ -424,7 +433,7 @@ class GatherContentClient implements GatherContentClientInterface
     {
         $this->sendPost("items/$itemId/duplicate");
 
-        $this->validatePostResponse();
+        $this->validatePostResponse(200);
         $body = $this->parseResponse();
 
         return empty($body['data']) ? null : $this->parseResponseDataItem($body['data'], DataTypes\Item::class);
@@ -442,7 +451,7 @@ class GatherContentClient implements GatherContentClientInterface
             ],
         ]);
 
-        $this->validatePostResponse();
+        $this->validatePostResponse(202);
     }
 
     public function templatesGet($projectId)
@@ -496,9 +505,10 @@ class GatherContentClient implements GatherContentClientInterface
         }
 
         return $base + [
-                'Accept' => $accept,
-                'User-Agent' => $this->getVersionString(),
-            ];
+            'Accept' => $accept,
+            'User-Agent' => $this->getVersionString(),
+            'Content-Type' => 'application/json',
+        ];
     }
 
     /**
@@ -666,9 +676,9 @@ class GatherContentClient implements GatherContentClientInterface
         }
     }
 
-    protected function validatePostResponse()
+    protected function validatePostResponse($code)
     {
-        if ($this->response->getStatusCode() !== 202) {
+        if ($this->response->getStatusCode() !== $code) {
             $responseContentType = $this->response->getHeader('Content-Type');
             $responseContentType = end($responseContentType);
 
@@ -681,5 +691,7 @@ class GatherContentClient implements GatherContentClientInterface
                 GatherContentClientException::UNEXPECTED_ANSWER
             );
         }
+
+        $this->validateResponse();
     }
 }

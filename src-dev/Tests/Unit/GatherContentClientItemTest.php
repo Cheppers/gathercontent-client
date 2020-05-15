@@ -389,15 +389,18 @@ class GatherContentClientItemTest extends GcBaseTestCase
         return [
             'empty' => [
                 $itemEmpty,
+                $itemEmpty,
                 131313,
                 $itemEmpty->id,
             ],
             'custom' => [
                 $itemCustom,
+                $itemCustom,
                 131313,
                 $itemCustom->id,
             ],
             'multiple-elements' => [
+                $itemMultipleElements,
                 $itemMultipleElements,
                 131313,
                 $itemMultipleElements->id,
@@ -408,15 +411,15 @@ class GatherContentClientItemTest extends GcBaseTestCase
     /**
      * @dataProvider casesItemPost
      */
-    public function testItemPost(Item $item, $projectId, $resultItemId)
+    public function testItemPost(Item $expected, Item $item, $projectId, $resultItemId)
     {
         $tester = $this->getBasicHttpClientTester([
             new Response(
-                202,
+                201,
                 [
                     'Content-Type' => 'application/json',
                 ],
-                \GuzzleHttp\json_encode(['data' => $item])
+                \GuzzleHttp\json_encode(['data' => $expected])
             ),
         ]);
         $client = $tester['client'];
@@ -426,12 +429,14 @@ class GatherContentClientItemTest extends GcBaseTestCase
             ->setOptions($this->gcClientOptions)
             ->itemPost($projectId, $item);
 
+        $actual->setSkipEmptyProperties(true);
+
         static::assertEquals($resultItemId, $actual->id);
 
         static::assertTrue($actual instanceof Item, 'Data type of the return is Item');
         static::assertEquals(
-            json_encode($item, JSON_PRETTY_PRINT),
-            json_encode($actual, JSON_PRETTY_PRINT)
+            \GuzzleHttp\json_encode($expected, JSON_PRETTY_PRINT),
+            \GuzzleHttp\json_encode($actual, JSON_PRETTY_PRINT)
         );
 
         /** @var Request $request */
@@ -449,16 +454,28 @@ class GatherContentClientItemTest extends GcBaseTestCase
         $requestBody = $request->getBody();
         $sentQueryVariables = \GuzzleHttp\json_decode($requestBody, true);
 
-        static::assertArrayHasKey('folder_uuid', $sentQueryVariables);
-        static::assertEquals($sentQueryVariables['folder_uuid'], $item->folderUuid);
+        if (!empty($item->folderUuid)) {
+            static::assertArrayHasKey('folder_uuid', $sentQueryVariables);
+            static::assertEquals($sentQueryVariables['folder_uuid'], $expected->folderUuid);
+        } else {
+            static::assertArrayNotHasKey('folder_uuid', $sentQueryVariables);
+        }
 
-        static::assertArrayHasKey('template_id', $sentQueryVariables);
-        static::assertEquals($sentQueryVariables['template_id'], $item->templateId);
+        if (!empty($item->templateId)) {
+            static::assertArrayHasKey('template_id', $sentQueryVariables);
+            static::assertEquals($sentQueryVariables['template_id'], $expected->templateId);
+        } else {
+            static::assertArrayNotHasKey('template_id', $sentQueryVariables);
+        }
 
-        static::assertArrayHasKey('content', $sentQueryVariables);
-        // We need to do this because the 'value' parameter on text types will be converted to simple string instead of array.
-        $preparedContent = \GuzzleHttp\json_decode(\GuzzleHttp\json_encode($item->content), true);
-        static::assertEquals($sentQueryVariables['content'], $preparedContent);
+        if (!empty($item->content)) {
+            static::assertArrayHasKey('content', $sentQueryVariables);
+            // We need to do this because the 'value' parameter on text types will be converted to simple string instead of array.
+            $preparedContent = \GuzzleHttp\json_decode(\GuzzleHttp\json_encode($expected->content), true);
+            static::assertEquals($sentQueryVariables['content'], $preparedContent);
+        } else {
+            static::assertArrayNotHasKey('content', $sentQueryVariables);
+        }
     }
 
     public function testItemsPostNoPath()
@@ -466,7 +483,7 @@ class GatherContentClientItemTest extends GcBaseTestCase
         $item = new Item();
         $tester = $this->getBasicHttpClientTester([
             new Response(
-                202,
+                201,
                 [
                     'Content-Type' => 'application/json',
                     'Location' => $this->gcClientOptions['baseUri'],
@@ -660,7 +677,7 @@ class GatherContentClientItemTest extends GcBaseTestCase
     {
         $tester = $this->getBasicHttpClientTester([
             new Response(
-                202,
+                200,
                 [
                     'Content-Type' => 'application/json',
                 ],
@@ -702,7 +719,20 @@ class GatherContentClientItemTest extends GcBaseTestCase
 
     public function casesItemRenamePostFail()
     {
-        $cases = static::basicFailCasesPost(['id' => '']);
+        $cases['wrong_type'] = [
+            [
+                'class' => GatherContentClientException::class,
+                'code' => GatherContentClientException::UNEXPECTED_CONTENT_TYPE,
+                'msg' => 'Unexpected Content-Type',
+            ],
+            [
+                'code' => 200,
+                'headers' => ['Content-Type' => 'image/jpeg'],
+                'body' => [],
+            ],
+            1,
+            ''
+        ];
         $cases['missing_item'] = [
             [
                 'class' => GatherContentClientException::class,
@@ -787,7 +817,7 @@ class GatherContentClientItemTest extends GcBaseTestCase
     {
         $tester = $this->getBasicHttpClientTester([
             new Response(
-                202,
+                200,
                 [
                     'Content-Type' => 'application/json',
                 ],
@@ -831,7 +861,21 @@ class GatherContentClientItemTest extends GcBaseTestCase
 
     public function casesItemMovePostFail()
     {
-        $cases = static::basicFailCasesPost(['id' => 0, 'type' => '']);
+        $cases['wrong_type'] = [
+            [
+                'class' => GatherContentClientException::class,
+                'code' => GatherContentClientException::UNEXPECTED_CONTENT_TYPE,
+                'msg' => 'Unexpected Content-Type',
+            ],
+            [
+                'code' => 200,
+                'headers' => ['Content-Type' => 'image/jpeg'],
+                'body' => [],
+            ],
+            1,
+            0,
+            ''
+        ];
         $cases['missing_item'] = [
             [
                 'class' => GatherContentClientException::class,
@@ -917,7 +961,7 @@ class GatherContentClientItemTest extends GcBaseTestCase
     {
         $tester = $this->getBasicHttpClientTester([
             new Response(
-                202,
+                200,
                 ['Content-Type' => 'application/json'],
                 \GuzzleHttp\json_encode(['data' => $item])
             ),
@@ -960,7 +1004,20 @@ class GatherContentClientItemTest extends GcBaseTestCase
 
     public function casesItemApplyTemplatePostFail()
     {
-        $cases = static::basicFailCasesPost(['id' => 0]);
+        $cases['wrong_type'] = [
+            [
+                'class' => GatherContentClientException::class,
+                'code' => GatherContentClientException::UNEXPECTED_CONTENT_TYPE,
+                'msg' => 'Unexpected Content-Type',
+            ],
+            [
+                'code' => 200,
+                'headers' => ['Content-Type' => 'image/jpeg'],
+                'body' => [],
+            ],
+            1,
+            0
+        ];
         $cases['missing_item'] = [
             [
                 'class' => GatherContentClientException::class,
@@ -1043,7 +1100,7 @@ class GatherContentClientItemTest extends GcBaseTestCase
     {
         $tester = $this->getBasicHttpClientTester([
             new Response(
-                202,
+                200,
                 ['Content-Type' => 'application/json'],
                 \GuzzleHttp\json_encode(['data' => $item])
             ),
@@ -1079,7 +1136,19 @@ class GatherContentClientItemTest extends GcBaseTestCase
 
     public function casesItemDisconnectTemplatePostFail()
     {
-        $cases = static::basicFailCasesPost();
+        $cases['wrong_type'] = [
+            [
+                'class' => GatherContentClientException::class,
+                'code' => GatherContentClientException::UNEXPECTED_CONTENT_TYPE,
+                'msg' => 'Unexpected Content-Type',
+            ],
+            [
+                'code' => 200,
+                'headers' => ['Content-Type' => 'image/jpeg'],
+                'body' => [],
+            ],
+            1
+        ];
         $cases['missing_item'] = [
             [
                 'class' => GatherContentClientException::class,
@@ -1160,7 +1229,7 @@ class GatherContentClientItemTest extends GcBaseTestCase
     {
         $tester = $this->getBasicHttpClientTester([
             new Response(
-                202,
+                200,
                 ['Content-Type' => 'application/json'],
                 \GuzzleHttp\json_encode(['data' => $item])
             ),
@@ -1196,7 +1265,19 @@ class GatherContentClientItemTest extends GcBaseTestCase
 
     public function casesItemDuplicatePostFail()
     {
-        $cases = static::basicFailCasesPost();
+        $cases['wrong_type'] = [
+            [
+                'class' => GatherContentClientException::class,
+                'code' => GatherContentClientException::UNEXPECTED_CONTENT_TYPE,
+                'msg' => 'Unexpected Content-Type',
+            ],
+            [
+                'code' => 200,
+                'headers' => ['Content-Type' => 'image/jpeg'],
+                'body' => [],
+            ],
+            1
+        ];
         $cases['missing_item'] = [
             [
                 'class' => GatherContentClientException::class,
