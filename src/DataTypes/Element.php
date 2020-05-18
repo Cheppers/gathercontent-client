@@ -14,8 +14,8 @@ class Element extends ElementBase
      */
     public static $type2Class = [
         'text' => ElementText::class,
-        'files' => ElementFiles::class,
-        'section' => ElementSection::class,
+        'attachment' => ElementFiles::class,
+        'guidelines' => ElementSection::class,
         'choice_checkbox' => ElementCheckbox::class,
         'choice_radio' => ElementRadio::class,
     ];
@@ -52,7 +52,7 @@ class Element extends ElementBase
             $this->propertyMapping,
             [
                 'name' => 'id',
-                'type' => 'type',
+                'field_type' => 'type',
                 'label' => 'label',
                 'required' => 'required',
                 'microcopy' => 'microCopy',

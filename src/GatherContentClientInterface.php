@@ -3,8 +3,8 @@
 namespace Cheppers\GatherContent;
 
 use Cheppers\GatherContent\DataTypes\Item;
+use Cheppers\GatherContent\DataTypes\Structure;
 use GuzzleHttp\ClientInterface;
-use Psr\Http\Message\ResponseInterface;
 
 interface GatherContentClientInterface
 {
@@ -230,7 +230,7 @@ interface GatherContentClientInterface
     /**
      * @see https://docs.gathercontent.com/reference#createtemplate
      */
-    public function templatePost($projectId, $name, $structure);
+    public function templatePost($projectId, $name, Structure $structure);
 
     /**
      * @see https://docs.gathercontent.com/reference#renametemplate
@@ -246,6 +246,21 @@ interface GatherContentClientInterface
      * @see https://docs.gathercontent.com/reference#deletetemplate
      */
     public function templateDelete($templateId);
+
+    /**
+     * @see https://docs.gathercontent.com/reference#getstructure
+     */
+    public function structureGet($structureUuid);
+
+    /**
+     * @see https://docs.gathercontent.com/reference#alterstructure
+     */
+    public function structureAlterPut($structureUuid, Structure $structure, $priorityItemId = null);
+
+    /**
+     * @see https://docs.gathercontent.com/reference#savestructureastemplate
+     */
+    public function structureSaveAsTemplatePost($structureUuid, $name);
 
     /**
      * @see https://docs.gathercontent.com/reference#get-folders

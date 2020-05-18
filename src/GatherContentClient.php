@@ -4,6 +4,7 @@ namespace Cheppers\GatherContent;
 
 use Cheppers\GatherContent\DataTypes\Item;
 use Cheppers\GatherContent\DataTypes\Pagination;
+use Cheppers\GatherContent\DataTypes\Structure;
 use GuzzleHttp\ClientInterface;
 
 class GatherContentClient implements GatherContentClientInterface
@@ -482,16 +483,18 @@ class GatherContentClient implements GatherContentClientInterface
         $this->validateResponse();
         $body = $this->parseResponse();
 
-        return empty($body['data']) ? null : $this->parseResponseDataItem($body['data'], DataTypes\Template::class);
+        $response['data'] = empty($body['data']) ? null : $this->parseResponseDataItem($body['data'], DataTypes\Template::class);
+        $response['related'] = empty($body['related']) ? null : $this->parseResponseDataItem($body['related'], DataTypes\Related::class);
+
+        return $response;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function templatePost($projectId, $name, $structure)
+    public function templatePost($projectId, $name, Structure $structure)
     {
-        // TODO: fully implement with test, when Structure is ready.
-        // $structure->setSkipEmptyProperties(true);
+        $structure->setSkipEmptyProperties(true);
         $this->sendPost("projects/$projectId/templates", [
             'body' => \GuzzleHttp\json_encode([
                 'name' => $name,
@@ -549,6 +552,61 @@ class GatherContentClient implements GatherContentClientInterface
         $this->sendDelete("templates/$templateId");
         // TODO: implement validation, when the response is fixed on GC.
         // $this->validatePostResponse(204);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function structureGet($structureUuid)
+    {
+        $this->sendGet("structures/$structureUuid");
+
+        $this->validateResponse();
+        $body = $this->parseResponse();
+
+        $response['data'] = empty($body['data']) ? null : $this->parseResponseDataItem($body['data'], DataTypes\Structure::class);
+
+        return $response;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function structureAlterPut($structureUuid, Structure $structure, $priorityItemId = null)
+    {
+        $request = [
+            'structure' => $structure,
+        ];
+
+        if ($priorityItemId !== null) {
+            $request['priority_item_id'] = $priorityItemId;
+        }
+
+        $this->sendPut("structures/$structureUuid", $request);
+
+        $this->validatePutResponse(200);
+        $body = $this->parseResponse();
+
+        $response['data'] = empty($body['data']) ? null : $this->parseResponseDataItem($body['data'], DataTypes\Structure::class);
+
+        return $response;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function structureSaveAsTemplatePost($structureUuid, $name)
+    {
+        $this->sendPost("structures/$structureUuid/save_as_template", [
+            'name' => $name,
+        ]);
+
+        $this->validatePutResponse(201);
+        $body = $this->parseResponse();
+
+        $response['data'] = empty($body['data']) ? null : $this->parseResponseDataItem($body['data'], DataTypes\Template::class);
+
+        return $response;
     }
 
     /**
@@ -656,6 +714,15 @@ class GatherContentClient implements GatherContentClientInterface
     protected function sendPost($path, array $options = [])
     {
         return $this->sendRequest('POST', $path, $options);
+    }
+
+    /**
+     * @return $this
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    protected function sendPut($path, array $options = [])
+    {
+        return $this->sendRequest('PUT', $path, $options);
     }
 
     /**
@@ -777,5 +844,10 @@ class GatherContentClient implements GatherContentClientInterface
         }
 
         $this->validateResponse();
+    }
+
+    protected function validatePutResponse($code)
+    {
+        return $this->validatePostResponse($code);
     }
 }

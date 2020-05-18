@@ -2,6 +2,8 @@
 
 namespace Cheppers\GatherContent\Tests\Unit;
 
+use Cheppers\GatherContent\DataTypes\Related;
+use Cheppers\GatherContent\DataTypes\Structure;
 use Cheppers\GatherContent\DataTypes\Template;
 use Cheppers\GatherContent\GatherContentClient;
 use Cheppers\GatherContent\GatherContentClientException;
@@ -129,16 +131,27 @@ class GatherContentClientTemplateTest extends GcBaseTestCase
     public function casesTemplateGet()
     {
         $data = static::getUniqueResponseTemplate();
+        $structure = static::getUniqueResponseRelated([
+            ['text', 'files', 'choice_radio', 'choice_checkbox'],
+            ['text', 'choice_checkbox'],
+        ]);
+
+        foreach (array_keys($structure['structure']['groups']) as $groupId) {
+            $structure['structure']['groups'][$groupId]['fields'] = static::reKeyArray(
+                $structure['structure']['groups'][$groupId]['fields'],
+                'name'
+            );
+        }
 
         return [
             'empty' => [
-                [],
-                ['data' => []],
+                ['data' => [], 'related' => []],
+                ['data' => [], 'related' => []],
                 42,
             ],
             'basic' => [
-                $data,
-                ['data' => $data],
+                ['data' => $data, 'related' => $structure],
+                ['data' => $data, 'related' => $structure],
                 42,
             ],
         ];
@@ -165,14 +178,25 @@ class GatherContentClientTemplateTest extends GcBaseTestCase
             ->setOptions($this->gcClientOptions)
             ->templateGet($templateId);
 
-        if ($expected) {
-            static::assertTrue($actual instanceof Template, 'Data type of the return is Template');
+        if (!empty($expected['data'])) {
+            static::assertTrue($actual['data'] instanceof Template, 'Data type of the return is Template');
             static::assertEquals(
-                \GuzzleHttp\json_encode($expected, JSON_PRETTY_PRINT),
-                \GuzzleHttp\json_encode($actual, JSON_PRETTY_PRINT)
+                \GuzzleHttp\json_encode($expected['data'], JSON_PRETTY_PRINT),
+                \GuzzleHttp\json_encode($actual['data'], JSON_PRETTY_PRINT)
             );
         } else {
-            static::assertNull($actual);
+            static::assertNull($actual['data']);
+        }
+
+        if (!empty($expected['related'])) {
+            static::assertTrue($actual['related'] instanceof Related, 'Data type of the return is Related');
+            static::assertTrue($actual['related']->structure instanceof Structure, 'Data type of the return is Structure');
+            static::assertEquals(
+                \GuzzleHttp\json_encode($expected['related'], JSON_PRETTY_PRINT),
+                \GuzzleHttp\json_encode($actual['related'], JSON_PRETTY_PRINT)
+            );
+        } else {
+            static::assertNull($actual['related']);
         }
 
         /** @var Request $request */
@@ -238,25 +262,30 @@ class GatherContentClientTemplateTest extends GcBaseTestCase
         $gc->templateGet($templateId);
     }
 
-    // TODO: Update templatePost test when Structure is ready!
-
-    public function casesItemPost()
+    public function casesTemplatePost()
     {
         $templateArray = static::getUniqueResponseTemplate();
         $template = new Template($templateArray);
+
+        $structureArray = static::getUniqueResponseStructure([
+            ['text', 'files', 'choice_radio', 'choice_checkbox']
+        ]);
+        $structure = new Structure($structureArray);
+
+        $emptyStructure = new Structure();
 
         return [
             'basic' => [
                 $template,
                 $template->name,
-                [],
+                $structure,
                 131313,
                 $template->id,
             ],
             'empty' => [
                 $template,
                 $template->name,
-                [],
+                $emptyStructure,
                 131313,
                 $template->id,
             ],
@@ -264,9 +293,9 @@ class GatherContentClientTemplateTest extends GcBaseTestCase
     }
 
     /**
-     * @dataProvider casesItemPost
+     * @dataProvider casesTemplatePost
      */
-    public function testItemPost(Template $expected, $name, $structure, $projectId, $resultItemId)
+    public function testTemplatePost(Template $expected, $name, $structure, $projectId, $resultItemId)
     {
         $tester = $this->getBasicHttpClientTester([
             new Response(
@@ -288,7 +317,7 @@ class GatherContentClientTemplateTest extends GcBaseTestCase
 
         static::assertEquals($resultItemId, $actual->id);
 
-        static::assertTrue($actual instanceof Template, 'Data type of the return is Item');
+        static::assertTrue($actual instanceof Template, 'Data type of the return is Template');
         static::assertEquals(
             \GuzzleHttp\json_encode($expected, JSON_PRETTY_PRINT),
             \GuzzleHttp\json_encode($actual, JSON_PRETTY_PRINT)
@@ -348,7 +377,7 @@ class GatherContentClientTemplateTest extends GcBaseTestCase
             ->setOptions($this->gcClientOptions)
             ->templateRenamePost($templateId, $name);
 
-        static::assertTrue($actual instanceof Template, 'Data type of the return is Item');
+        static::assertTrue($actual instanceof Template, 'Data type of the return is Template');
         static::assertEquals(
             \GuzzleHttp\json_encode($template, JSON_PRETTY_PRINT),
             \GuzzleHttp\json_encode($actual, JSON_PRETTY_PRINT)
@@ -490,7 +519,7 @@ class GatherContentClientTemplateTest extends GcBaseTestCase
         $actual = $client->setOptions($this->gcClientOptions)
             ->templateDuplicatePost($templateId, $projectId);
 
-        static::assertTrue($actual instanceof Template, 'Data type of the return is Item');
+        static::assertTrue($actual instanceof Template, 'Data type of the return is Template');
         static::assertEquals(
             \GuzzleHttp\json_encode($template, JSON_PRETTY_PRINT),
             \GuzzleHttp\json_encode($actual, JSON_PRETTY_PRINT)

@@ -2,13 +2,8 @@
 
 namespace Cheppers\GatherContent\DataTypes;
 
-class Usage extends Base
+class Related extends Base
 {
-    /**
-     * @var int
-     */
-    public $itemCount = 0;
-
     /**
      * {@inheritdoc}
      */
@@ -23,7 +18,10 @@ class Usage extends Base
         $this->propertyMapping = array_replace(
             $this->propertyMapping,
             [
-                'item_count' => 'itemCount',
+                'structure' => [
+                    'type' => 'subConfig',
+                    'class' => Structure::class,
+                ],
             ]
         );
 
