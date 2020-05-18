@@ -484,7 +484,7 @@ class GatherContentClient implements GatherContentClientInterface
         $body = $this->parseResponse();
 
         $response['data'] = empty($body['data']) ? null : $this->parseResponseDataItem($body['data'], DataTypes\Template::class);
-        $response['related'] = empty($body['related']) ? null : $this->parseResponseDataItem($body['related'], DataTypes\Structure::class);
+        $response['related'] = empty($body['related']) ? null : $this->parseResponseDataItem($body['related'], DataTypes\Related::class);
 
         return $response;
     }

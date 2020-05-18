@@ -6,8 +6,8 @@ class Group extends Base
 {
     protected static $type2Class = [
         'text' => ElementText::class,
-        'files' => Element::class,
-        'section' => ElementSection::class,
+        'attachment' => Element::class,
+        'guidelines' => ElementSection::class,
         'choice_checkbox' => ElementCheckbox::class,
         'choice_radio' => ElementRadio::class,
     ];
@@ -40,7 +40,7 @@ class Group extends Base
                     'closure' => function (array $data) {
                         $elements = [];
                         foreach ($data as $elementData) {
-                            $class = static::$type2Class[$elementData['type']];
+                            $class = static::$type2Class[$elementData['field_type']];
                             /** @var \Cheppers\GatherContent\DataTypes\Base $element */
                             $element = new $class($elementData);
                             $elements[$element->id] = $element;

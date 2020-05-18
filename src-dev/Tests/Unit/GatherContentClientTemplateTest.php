@@ -2,6 +2,7 @@
 
 namespace Cheppers\GatherContent\Tests\Unit;
 
+use Cheppers\GatherContent\DataTypes\Related;
 use Cheppers\GatherContent\DataTypes\Structure;
 use Cheppers\GatherContent\DataTypes\Template;
 use Cheppers\GatherContent\GatherContentClient;
@@ -130,14 +131,14 @@ class GatherContentClientTemplateTest extends GcBaseTestCase
     public function casesTemplateGet()
     {
         $data = static::getUniqueResponseTemplate();
-        $structure = static::getUniqueResponseStructure([
+        $structure = static::getUniqueResponseRelated([
             ['text', 'files', 'choice_radio', 'choice_checkbox'],
             ['text', 'choice_checkbox'],
         ]);
 
-        foreach (array_keys($structure['groups']) as $groupId) {
-            $structure['groups'][$groupId]['fields'] = static::reKeyArray(
-                $structure['groups'][$groupId]['fields'],
+        foreach (array_keys($structure['structure']['groups']) as $groupId) {
+            $structure['structure']['groups'][$groupId]['fields'] = static::reKeyArray(
+                $structure['structure']['groups'][$groupId]['fields'],
                 'name'
             );
         }
@@ -188,7 +189,8 @@ class GatherContentClientTemplateTest extends GcBaseTestCase
         }
 
         if (!empty($expected['related'])) {
-            static::assertTrue($actual['related'] instanceof Structure, 'Data type of the return is Structure');
+            static::assertTrue($actual['related'] instanceof Related, 'Data type of the return is Related');
+            static::assertTrue($actual['related']->structure instanceof Structure, 'Data type of the return is Structure');
             static::assertEquals(
                 \GuzzleHttp\json_encode($expected['related'], JSON_PRETTY_PRINT),
                 \GuzzleHttp\json_encode($actual['related'], JSON_PRETTY_PRINT)

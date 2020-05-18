@@ -260,7 +260,7 @@ class GcBaseTestCase extends TestCase
     {
         return [
             'name' => static::getUniqueString('el'),
-            'type' => 'files',
+            'field_type' => 'attachment',
             'label' => static::getUniqueString('label'),
             'required' => false,
             'microcopy' => '',
@@ -271,7 +271,7 @@ class GcBaseTestCase extends TestCase
     {
         return [
             'name' => static::getUniqueString('el'),
-            'type' => 'text',
+            'field_type' => 'text',
             'label' => static::getUniqueString('label'),
             'required' => false,
             'microcopy' => '',
@@ -282,30 +282,11 @@ class GcBaseTestCase extends TestCase
         ];
     }
 
-    public static function getUniqueResponseElementFiles()
-    {
-        return [
-            'name' => static::getUniqueString('el'),
-            'type' => 'files',
-            'label' => static::getUniqueString('label'),
-            'required' => false,
-            'microcopy' => '',
-            'user_id' => static::getUniqueInt(),
-            'item_id' => static::getUniqueInt(),
-            'field' => static::getUniqueString('el'),
-            'url' => static::getUniqueString('https://'),
-            'filename' => static::getUniqueString('myFileName'),
-            'size' => static::getUniqueInt(),
-            'created_at' => static::getUniqueDate(),
-            'updated_at' => static::getUniqueDate(),
-        ];
-    }
-
     public static function getUniqueResponseElementTemplateSection()
     {
         return [
             'name' => static::getUniqueString('el'),
-            'type' => 'section',
+            'field_type' => 'guidelines',
             'title' => static::getUniqueString('title'),
             'subtitle' => static::getUniqueString('subtitle'),
         ];
@@ -315,7 +296,7 @@ class GcBaseTestCase extends TestCase
     {
         return [
             'name' => static::getUniqueString('el'),
-            'type' => 'choice_radio',
+            'field_type' => 'choice_radio',
             'label' => static::getUniqueString('label'),
             'required' => false,
             'microcopy' => '',
@@ -328,7 +309,7 @@ class GcBaseTestCase extends TestCase
     {
         return [
             'name' => static::getUniqueString('el'),
-            'type' => 'choice_checkbox',
+            'field_type' => 'choice_checkbox',
             'label' => static::getUniqueString('label'),
             'required' => false,
             'microcopy' => '',
@@ -405,6 +386,11 @@ class GcBaseTestCase extends TestCase
             'updated_at' => static::getUniqueResponseDate(),
             'updated_by' => static::getUniqueInt(),
         ];
+    }
+
+    public static function getUniqueResponseRelated(array $groups = [])
+    {
+        return ['structure' => static::getUniqueResponseStructure($groups)];
     }
 
     public static function getUniqueResponseStructure(array $groups = [])

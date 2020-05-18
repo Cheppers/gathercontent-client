@@ -144,10 +144,10 @@ catch (\Exception $e) {
     exit(1);
 }
 
-echo "First content's name = {$template['data']->name}" . PHP_EOL;
-echo "Structure UUID = {$template['related']->id}" . PHP_EOL;
+echo "First content's name = {$template['data']->name}".PHP_EOL;
+echo "Structure UUID = {$template['related']->structure->id}".PHP_EOL;
 
-$group = reset($template['related']->groups);
+$group = reset($template['related']->structure->groups);
 
-echo "Structure's first Group's name = {$group->name}" . PHP_EOL;
+echo "Structure's first Group's name = {$group->name}".PHP_EOL;
 ```
