@@ -491,7 +491,7 @@ class GatherContentClient implements GatherContentClientInterface
     public function templatePost($projectId, $name, $structure)
     {
         // TODO: fully implement with test, when Structure is ready.
-        $structure->setSkipEmptyProperties(true);
+        // $structure->setSkipEmptyProperties(true);
         $this->sendPost("projects/$projectId/templates", [
             'body' => \GuzzleHttp\json_encode([
                 'name' => $name,

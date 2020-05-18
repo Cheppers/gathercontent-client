@@ -238,7 +238,80 @@ class GatherContentClientTemplateTest extends GcBaseTestCase
         $gc->templateGet($templateId);
     }
 
-    // TODO: Implement templatePost test when Structure is ready!
+    // TODO: Update templatePost test when Structure is ready!
+
+    public function casesItemPost()
+    {
+        $templateArray = static::getUniqueResponseTemplate();
+        $template = new Template($templateArray);
+
+        return [
+            'basic' => [
+                $template,
+                $template->name,
+                [],
+                131313,
+                $template->id,
+            ],
+            'empty' => [
+                $template,
+                $template->name,
+                [],
+                131313,
+                $template->id,
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider casesItemPost
+     */
+    public function testItemPost(Template $expected, $name, $structure, $projectId, $resultItemId)
+    {
+        $tester = $this->getBasicHttpClientTester([
+            new Response(
+                201,
+                [
+                    'Content-Type' => 'application/json',
+                ],
+                \GuzzleHttp\json_encode(['data' => $expected])
+            ),
+        ]);
+        $client = $tester['client'];
+        $container = &$tester['container'];
+
+        $actual = (new GatherContentClient($client))
+            ->setOptions($this->gcClientOptions)
+            ->templatePost($projectId, $name, $structure);
+
+        $actual->setSkipEmptyProperties(true);
+
+        static::assertEquals($resultItemId, $actual->id);
+
+        static::assertTrue($actual instanceof Template, 'Data type of the return is Item');
+        static::assertEquals(
+            \GuzzleHttp\json_encode($expected, JSON_PRETTY_PRINT),
+            \GuzzleHttp\json_encode($actual, JSON_PRETTY_PRINT)
+        );
+
+        /** @var Request $request */
+        $request = $container[0]['request'];
+
+        static::assertEquals(1, count($container));
+        static::assertEquals('POST', $request->getMethod());
+        static::assertEquals(['application/vnd.gathercontent.v2+json'], $request->getHeader('Accept'));
+        static::assertEquals(['api.example.com'], $request->getHeader('Host'));
+        static::assertEquals(
+            "{$this->gcClientOptions['baseUri']}/projects/$projectId/templates",
+            (string) $request->getUri()
+        );
+
+        $requestBody = $request->getBody();
+        $sentQueryVariables = \GuzzleHttp\json_decode($requestBody, true);
+
+        static::assertArrayHasKey('name', $sentQueryVariables);
+        static::assertEquals($sentQueryVariables['name'], $expected->name);
+    }
 
     public function casesTemplateRenamePost()
     {
