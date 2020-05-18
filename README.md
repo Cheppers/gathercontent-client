@@ -120,6 +120,8 @@ echo "Pagination total = {$items['pagination']->total}" . PHP_EOL;
 echo "Pagination current page = {$items['pagination']->currentPage}" . PHP_EOL;
 ```
 
+For additional parameters please visit the documentation: [/projects/:project_id/items](https://docs.gathercontent.com/reference#listitems).
+
 The get template endpoint is returning structure object data in this new version, you can access it like this:
 
 ```php
@@ -149,5 +151,3 @@ $group = reset($template['related']->groups);
 
 echo "Structure's first Group's name = {$group->name}" . PHP_EOL;
 ```
-
-For additional parameters please visit the documentation: [/projects/:project_id/items](https://docs.gathercontent.com/reference#listitems).
