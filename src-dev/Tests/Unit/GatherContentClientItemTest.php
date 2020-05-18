@@ -170,8 +170,8 @@ class GatherContentClientItemTest extends GcBaseTestCase
         if ($expected) {
             static::assertTrue($actual instanceof Item, 'Data type of the return is Item');
             static::assertEquals(
-                json_encode($expected, JSON_PRETTY_PRINT),
-                json_encode($actual, JSON_PRETTY_PRINT)
+                \GuzzleHttp\json_encode($expected, JSON_PRETTY_PRINT),
+                \GuzzleHttp\json_encode($actual, JSON_PRETTY_PRINT)
             );
         } else {
             static::assertNull($actual);
@@ -693,8 +693,8 @@ class GatherContentClientItemTest extends GcBaseTestCase
 
         static::assertTrue($actual instanceof Item, 'Data type of the return is Item');
         static::assertEquals(
-            json_encode($item, JSON_PRETTY_PRINT),
-            json_encode($actual, JSON_PRETTY_PRINT)
+            \GuzzleHttp\json_encode($item, JSON_PRETTY_PRINT),
+            \GuzzleHttp\json_encode($actual, JSON_PRETTY_PRINT)
         );
 
         /** @var Request $request */
@@ -833,8 +833,8 @@ class GatherContentClientItemTest extends GcBaseTestCase
 
         static::assertTrue($actual instanceof Item, 'Data type of the return is Item');
         static::assertEquals(
-            json_encode($item, JSON_PRETTY_PRINT),
-            json_encode($actual, JSON_PRETTY_PRINT)
+            \GuzzleHttp\json_encode($item, JSON_PRETTY_PRINT),
+            \GuzzleHttp\json_encode($actual, JSON_PRETTY_PRINT)
         );
 
         /** @var Request $request */
@@ -975,8 +975,8 @@ class GatherContentClientItemTest extends GcBaseTestCase
 
         static::assertTrue($actual instanceof Item, 'Data type of the return is Item');
         static::assertEquals(
-            json_encode($item, JSON_PRETTY_PRINT),
-            json_encode($actual, JSON_PRETTY_PRINT)
+            \GuzzleHttp\json_encode($item, JSON_PRETTY_PRINT),
+            \GuzzleHttp\json_encode($actual, JSON_PRETTY_PRINT)
         );
 
         /** @var Request $request */
@@ -1114,8 +1114,8 @@ class GatherContentClientItemTest extends GcBaseTestCase
 
         static::assertTrue($actual instanceof Item, 'Data type of the return is Item');
         static::assertEquals(
-            json_encode($item, JSON_PRETTY_PRINT),
-            json_encode($actual, JSON_PRETTY_PRINT)
+            \GuzzleHttp\json_encode($item, JSON_PRETTY_PRINT),
+            \GuzzleHttp\json_encode($actual, JSON_PRETTY_PRINT)
         );
 
         /** @var Request $request */
@@ -1243,8 +1243,8 @@ class GatherContentClientItemTest extends GcBaseTestCase
 
         static::assertTrue($actual instanceof Item, 'Data type of the return is Item');
         static::assertEquals(
-            json_encode($item, JSON_PRETTY_PRINT),
-            json_encode($actual, JSON_PRETTY_PRINT)
+            \GuzzleHttp\json_encode($item, JSON_PRETTY_PRINT),
+            \GuzzleHttp\json_encode($actual, JSON_PRETTY_PRINT)
         );
 
         /** @var Request $request */

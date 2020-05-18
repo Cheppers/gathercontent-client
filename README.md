@@ -43,6 +43,10 @@ Compatible with `application/vnd.gathercontent.v2+json`
 
 - [GET:  /projects/:project_id/templates](https://docs.gathercontent.com/reference#listtemplates) `$gc->templatesGet()`
 - [GET:  /templates/:template_id](https://docs.gathercontent.com/reference#gettemplate) `$gc->templateGet()`
+- [POST:  /projects/:project_id/templates](https://docs.gathercontent.com/reference#createtemplate) `$gc->templatePost()`
+- [DELETE:  /templates/:template_id/delete](https://docs.gathercontent.com/reference#deletetemplate) `$gc->templateDelete()`
+- [POST:  /templates/:template_id/rename](https://docs.gathercontent.com/reference#renametemplate) `$gc->templateRenamePost()`
+- [POST:  /templates/:template_id/duplicate](https://docs.gathercontent.com/reference#duplicatetemplate) `$gc->templateDuplicatePost()`
 
 #### Folders
 

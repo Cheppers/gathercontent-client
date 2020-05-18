@@ -92,6 +92,11 @@ class GatherContentClient implements GatherContentClientInterface
         return $this;
     }
 
+    protected function getUri($path)
+    {
+        return $this->getBaseUri()."/$path";
+    }
+
     /**
      * @var bool
      */
@@ -454,9 +459,12 @@ class GatherContentClient implements GatherContentClientInterface
         $this->validatePostResponse(202);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function templatesGet($projectId)
     {
-        $this->sendGet('templates', ['query' => ['project_id' => $projectId]]);
+        $this->sendGet("projects/$projectId/templates");
 
         $this->validateResponse();
         $body = $this->parseResponse();
@@ -464,6 +472,9 @@ class GatherContentClient implements GatherContentClientInterface
         return $this->parseResponseItems($body, DataTypes\Template::class);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function templateGet($templateId)
     {
         $this->sendGet("templates/$templateId");
@@ -474,11 +485,75 @@ class GatherContentClient implements GatherContentClientInterface
         return empty($body['data']) ? null : $this->parseResponseDataItem($body['data'], DataTypes\Template::class);
     }
 
-    protected function getUri($path)
+    /**
+     * {@inheritdoc}
+     */
+    public function templatePost($projectId, $name, $structure)
     {
-        return $this->getBaseUri()."/$path";
+        // TODO: fully implement with test, when Structure is ready.
+        // $structure->setSkipEmptyProperties(true);
+        $this->sendPost("projects/$projectId/templates", [
+            'body' => \GuzzleHttp\json_encode([
+                'name' => $name,
+                'structure' => $structure,
+            ]),
+        ]);
+
+        $this->validatePostResponse(201);
+        $body = $this->parseResponse();
+
+        return empty($body['data']) ? null : $this->parseResponseDataItem($body['data'], DataTypes\Template::class);
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function templateRenamePost($templateId, $name)
+    {
+        $this->sendPost("templates/$templateId/rename", [
+            'body' => \GuzzleHttp\json_encode(['name' => $name]),
+        ]);
+
+        $this->validatePostResponse(200);
+        $body = $this->parseResponse();
+
+        return empty($body['data']) ? null : $this->parseResponseDataItem($body['data'], DataTypes\Template::class);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function templateDuplicatePost($templateId, $projectId = null)
+    {
+        $request = [];
+
+        if ($projectId !== null) {
+            $request['project_id'] = $projectId;
+        }
+
+        $this->sendPost("templates/$templateId/duplicate", [
+            'body' => \GuzzleHttp\json_encode($request),
+        ]);
+
+        $this->validatePostResponse(201);
+        $body = $this->parseResponse();
+
+        return empty($body['data']) ? null : $this->parseResponseDataItem($body['data'], DataTypes\Template::class);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function templateDelete($templateId)
+    {
+        $this->sendDelete("templates/$templateId");
+        // TODO: implement validation, when the response is fixed on GC.
+        // $this->validatePostResponse(204);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function foldersGet($projectId)
     {
         $this->sendGet('folders', ['query' => ['project_id' => $projectId]]);
@@ -581,6 +656,15 @@ class GatherContentClient implements GatherContentClientInterface
     protected function sendPost($path, array $options = [])
     {
         return $this->sendRequest('POST', $path, $options);
+    }
+
+    /**
+     * @return $this
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    protected function sendDelete($path, array $options = [])
+    {
+        return $this->sendRequest('DELETE', $path, $options);
     }
 
     /**

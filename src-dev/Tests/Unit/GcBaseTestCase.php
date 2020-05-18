@@ -395,29 +395,17 @@ class GcBaseTestCase extends TestCase
         return $item;
     }
 
-    public static function getUniqueResponseTemplate(array $tabs)
+    public static function getUniqueResponseTemplate()
     {
-        $template = [
+        return [
             'id' => static::getUniqueInt(),
-            'project_id' => static::getUniqueInt(),
-            'created_by' => static::getUniqueInt(),
-            'updated_by' => static::getUniqueInt(),
             'name' => static::getUniqueString('name'),
-            'description' => static::getUniqueString('description'),
-            'config' => [],
-            'used_at' => null,
-            'created_at' => static::getUniqueResponseDate(),
+            'number_of_items_using' => static::getUniqueInt(),
+            'structure_uuid' => static::getUniqueString('structure_uuid'),
+            'project_id' => static::getUniqueInt(),
             'updated_at' => static::getUniqueResponseDate(),
-            'usage' => [
-                'item_count' => static::getUniqueInt(),
-            ],
+            'updated_by' => static::getUniqueInt(),
         ];
-
-        foreach ($tabs as $elements) {
-            $template['config'][] = static::getUniqueResponseTemplateTab($elements);
-        }
-
-        return $template;
     }
 
     protected static function getUniqueResponseFolder()
