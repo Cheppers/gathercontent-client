@@ -535,7 +535,7 @@ class GatherContentClient implements GatherContentClientInterface
             'body' => \GuzzleHttp\json_encode($request),
         ]);
 
-        $this->validatePostResponse(200);
+        $this->validatePostResponse(201);
         $body = $this->parseResponse();
 
         return empty($body['data']) ? null : $this->parseResponseDataItem($body['data'], DataTypes\Template::class);
@@ -547,7 +547,8 @@ class GatherContentClient implements GatherContentClientInterface
     public function templateDelete($templateId)
     {
         $this->sendDelete("templates/$templateId");
-        $this->validatePostResponse(204);
+        // TODO: implement validation, when the response is fixed on GC.
+        // $this->validatePostResponse(204);
     }
 
     /**
