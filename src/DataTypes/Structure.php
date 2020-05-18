@@ -2,12 +2,12 @@
 
 namespace Cheppers\GatherContent\DataTypes;
 
-class Usage extends Base
+class Structure extends Base
 {
     /**
-     * @var int
+     * @var \Cheppers\GatherContent\DataTypes\Group[]
      */
-    public $itemCount = 0;
+    public $groups = [];
 
     /**
      * {@inheritdoc}
@@ -23,7 +23,11 @@ class Usage extends Base
         $this->propertyMapping = array_replace(
             $this->propertyMapping,
             [
-                'item_count' => 'itemCount',
+                'uuid' => 'id',
+                'groups' => [
+                    'type' => 'subConfigs',
+                    'class' => Group::class,
+                ],
             ]
         );
 

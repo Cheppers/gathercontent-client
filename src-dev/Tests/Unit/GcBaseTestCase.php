@@ -173,40 +173,39 @@ class GcBaseTestCase extends TestCase
         return $elements;
     }
 
-    public static function getUniqueResponseTemplateTab(array $elements)
+    public static function getUniqueResponseGroup(array $elementTypes)
     {
-        $tab = [
-            'name' => static::getUniqueString('tab'),
-            'label' => static::getUniqueString('label'),
-            'hidden' => false,
-            'elements' => [],
+        $group = [
+            'uuid' => static::getUniqueString('uuid'),
+            'name' => static::getUniqueString('name'),
+            'fields' => [],
         ];
 
-        foreach ($elements as $elementType) {
+        foreach ($elementTypes as $elementType) {
             switch ($elementType) {
                 case 'text':
-                    $tab['elements'][] = static::getUniqueResponseElementTemplateText();
+                    $group['fields'][static::getUniqueString('uuid')] = static::getUniqueResponseElementTemplateText();
                     break;
 
                 case 'files':
-                    $tab['elements'][] = static::getUniqueResponseElementTemplateFiles();
+                    $group['fields'][static::getUniqueString('uuid')] = static::getUniqueResponseElementTemplateFiles();
                     break;
 
                 case 'section':
-                    $tab['elements'][] = static::getUniqueResponseElementTemplateSection();
+                    $group['fields'][static::getUniqueString('uuid')] = static::getUniqueResponseElementTemplateSection();
                     break;
 
                 case 'choice_radio':
-                    $tab['elements'][] = static::getUniqueResponseElementTemplateChoiceRadio();
+                    $group['fields'][static::getUniqueString('uuid')] = static::getUniqueResponseElementTemplateChoiceRadio();
                     break;
 
                 case 'choice_checkbox':
-                    $tab['elements'][] = static::getUniqueResponseElementTemplateChoiceCheckbox();
+                    $group['fields'][static::getUniqueString('uuid')] = static::getUniqueResponseElementTemplateChoiceCheckbox();
                     break;
             }
         }
 
-        return $tab;
+        return $group;
     }
 
     public static function getUniqueResponseElementText()
@@ -406,6 +405,20 @@ class GcBaseTestCase extends TestCase
             'updated_at' => static::getUniqueResponseDate(),
             'updated_by' => static::getUniqueInt(),
         ];
+    }
+
+    public static function getUniqueResponseStructure(array $groups = [])
+    {
+        $structure = [
+            'uuid' => static::getUniqueString('uuid'),
+            'groups' => [],
+        ];
+
+        foreach ($groups as $elementTypes) {
+            $structure['groups'][] = static::getUniqueResponseGroup($elementTypes);
+        }
+
+        return $structure;
     }
 
     protected static function getUniqueResponseFolder()

@@ -2,15 +2,15 @@
 
 namespace Cheppers\GatherContent\Tests\Unit\DataTypes;
 
-use Cheppers\GatherContent\DataTypes\Usage;
+use Cheppers\GatherContent\DataTypes\Structure;
 
 /**
  * @group GatherContentClient
  */
-class UsageTest extends BaseTest
+class StructureTest extends BaseTest
 {
     /**
      * {@inheritdoc}
      */
-    protected $className = Usage::class;
+    protected $className = Structure::class;
 }

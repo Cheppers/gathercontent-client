@@ -114,4 +114,34 @@ echo "Pagination total = {$items['pagination']->total}" . PHP_EOL;
 echo "Pagination current page = {$items['pagination']->currentPage}" . PHP_EOL;
 ```
 
+The get template endpoint is returning structure object data in this new version, you can access it like this:
+
+```php
+<?php
+$email = 'YOUR_GATHERCONTENT_EMAIL';
+$apiKey = 'YOUR_GATHERCONTENT_API_KEY';
+$client = new \GuzzleHttp\Client();
+$gc = new \Cheppers\GatherContent\GatherContentClient($client);
+$gc
+  ->setEmail($email)
+  ->setApiKey($apiKey);
+
+try {
+    $templateId = 12345;
+    $template = $gc->templateGet($templateId);
+}
+catch (\Exception $e) {
+    echo 'ERROR: ' . $e->getMessage() . PHP_EOL;
+    
+    exit(1);
+}
+
+echo "First content's name = {$template['data']->name}" . PHP_EOL;
+echo "Structure UUID = {$template['related']->id}" . PHP_EOL;
+
+$group = reset($template['related']->groups);
+
+echo "Structure's first Group's name = {$group->name}" . PHP_EOL;
+```
+
 For additional parameters please visit the documentation: [/projects/:project_id/items](https://docs.gathercontent.com/reference#listitems).

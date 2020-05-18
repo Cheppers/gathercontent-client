@@ -2,35 +2,30 @@
 
 namespace Cheppers\GatherContent\DataTypes;
 
-class Tab extends Base
+class Group extends Base
 {
+    protected static $type2Class = [
+        'text' => ElementText::class,
+        'files' => Element::class,
+        'section' => ElementSection::class,
+        'choice_checkbox' => ElementCheckbox::class,
+        'choice_radio' => ElementRadio::class,
+    ];
+
     /**
      * @var string
      */
-    public $label = '';
-
-    /**
-     * @var bool
-     */
-    public $hidden = false;
+    public $name = '';
 
     /**
      * @var \Cheppers\GatherContent\DataTypes\Element[]
      */
-    public $elements = [];
+    public $fields = [];
 
     /**
      * {@inheritdoc}
      */
     protected $unusedProperties = ['id'];
-
-    public function jsonSerialize()
-    {
-        $values = parent::jsonSerialize();
-        $values['elements'] = array_values($values['elements']);
-
-        return $values;
-    }
 
     protected function initPropertyMapping()
     {
@@ -38,16 +33,15 @@ class Tab extends Base
         $this->propertyMapping = array_replace(
             $this->propertyMapping,
             [
-                'name' => 'id',
-                'label' => 'label',
-                'hidden' => 'hidden',
-                'elements' => [
+                'uuid' => 'id',
+                'name' => 'name',
+                'fields' => [
                     'type' => 'closure',
                     'closure' => function (array $data) {
                         $elements = [];
                         foreach ($data as $elementData) {
-                            $class = Element::$type2Class[$elementData['type']];
-                            /** @var \Cheppers\GatherContent\DataTypes\Element $element */
+                            $class = static::$type2Class[$elementData['type']];
+                            /** @var \Cheppers\GatherContent\DataTypes\Base $element */
                             $element = new $class($elementData);
                             $elements[$element->id] = $element;
                         }

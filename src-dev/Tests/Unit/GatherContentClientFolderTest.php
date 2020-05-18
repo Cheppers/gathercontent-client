@@ -2,8 +2,6 @@
 
 namespace Cheppers\GatherContent\Tests\Unit;
 
-use Cheppers\GatherContent\DataTypes\Project;
-use Cheppers\GatherContent\DataTypes\Status;
 use Cheppers\GatherContent\GatherContentClient;
 use Cheppers\GatherContent\GatherContentClientException;
 use GuzzleHttp\Psr7\Request;
