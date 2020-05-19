@@ -550,8 +550,6 @@ class GatherContentClient implements GatherContentClientInterface
     public function templateDelete($templateId)
     {
         $this->sendDelete("templates/$templateId");
-        // TODO: implement validation, when the response is fixed on GC.
-        // $this->validatePostResponse(204);
     }
 
     /**
@@ -564,9 +562,7 @@ class GatherContentClient implements GatherContentClientInterface
         $this->validateResponse();
         $body = $this->parseResponse();
 
-        $response['data'] = empty($body['data']) ? null : $this->parseResponseDataItem($body['data'], DataTypes\Structure::class);
-
-        return $response;
+        return empty($body['data']) ? null : $this->parseResponseDataItem($body['data'], DataTypes\Structure::class);
     }
 
     /**
@@ -574,6 +570,7 @@ class GatherContentClient implements GatherContentClientInterface
      */
     public function structureAlterPut($structureUuid, Structure $structure, $priorityItemId = null)
     {
+        $structure->setSkipEmptyProperties(true);
         $request = [
             'structure' => $structure,
         ];
@@ -582,14 +579,14 @@ class GatherContentClient implements GatherContentClientInterface
             $request['priority_item_id'] = $priorityItemId;
         }
 
-        $this->sendPut("structures/$structureUuid", $request);
+        $this->sendPut("structures/$structureUuid", [
+            'body' => \GuzzleHttp\json_encode($request),
+        ]);
 
         $this->validatePutResponse(200);
         $body = $this->parseResponse();
 
-        $response['data'] = empty($body['data']) ? null : $this->parseResponseDataItem($body['data'], DataTypes\Structure::class);
-
-        return $response;
+        return empty($body['data']) ? null : $this->parseResponseDataItem($body['data'], DataTypes\Structure::class);
     }
 
     /**
@@ -598,15 +595,15 @@ class GatherContentClient implements GatherContentClientInterface
     public function structureSaveAsTemplatePost($structureUuid, $name)
     {
         $this->sendPost("structures/$structureUuid/save_as_template", [
-            'name' => $name,
+            'body' => \GuzzleHttp\json_encode([
+                'name' => $name,
+            ]),
         ]);
 
         $this->validatePutResponse(201);
         $body = $this->parseResponse();
 
-        $response['data'] = empty($body['data']) ? null : $this->parseResponseDataItem($body['data'], DataTypes\Template::class);
-
-        return $response;
+        return empty($body['data']) ? null : $this->parseResponseDataItem($body['data'], DataTypes\Template::class);
     }
 
     /**

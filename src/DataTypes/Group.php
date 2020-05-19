@@ -43,7 +43,7 @@ class Group extends Base
                             $class = static::$type2Class[$elementData['field_type']];
                             /** @var \Cheppers\GatherContent\DataTypes\Base $element */
                             $element = new $class($elementData);
-                            $elements[$element->id] = $element;
+                            $elements[] = $element;
                         }
 
                         return $elements;

@@ -2,8 +2,23 @@
 
 namespace Cheppers\GatherContent\DataTypes;
 
-class ElementChoice extends Element
+class ElementTextMeta extends Base
 {
+    /**
+     * @var bool
+     */
+    public $isPlain = false;
+
+    /**
+     * @var array
+     */
+    public $validation = [];
+
+    /**
+     * {@inheritdoc}
+     */
+    protected $unusedProperties = ['id'];
+
     /**
      * {@inheritdoc}
      */
@@ -13,11 +28,8 @@ class ElementChoice extends Element
         $this->propertyMapping = array_replace(
             $this->propertyMapping,
             [
-                'metadata' => [
-                    'type' => 'subConfig',
-                    'class' => ElementChoiceMeta::class,
-                    'destination' => 'metaData',
-                ],
+                'is_plain' => 'isPlain',
+                'validation' => 'validation',
             ]
         );
 

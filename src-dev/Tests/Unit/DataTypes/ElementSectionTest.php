@@ -21,28 +21,20 @@ class ElementSectionTest extends BaseTest
     {
         $cases = parent::casesConstructor();
         $cases['basic'][0] = [
-            'id' => 'a',
-            'type' => 'section',
-            'title' => 'b',
-            'subtitle' => 'c',
+            'id' => 'uuid-123',
+            'type' => 'guidelines',
+            'label' => 'label string',
+            'instructions' => 'instruction string',
+            'metaData' => [],
         ];
         $cases['basic'][1] = [
-            'name' => 'a',
-            'type' => 'section',
-            'title' => 'b',
-            'subtitle' => 'c',
+            'uuid' => 'uuid-123',
+            'field_type' => 'guidelines',
+            'label' => 'label string',
+            'instructions' => 'instruction string',
+            'metaData' => [],
         ];
 
         return $cases;
-    }
-
-    public function testGetSetValue()
-    {
-        /** @var \Cheppers\GatherContent\DataTypes\ElementSection $element */
-        $element = new $this->className([]);
-
-        static::assertEquals(null, $element->getValue());
-        $element->setValue('a');
-        static::assertEquals(null, $element->getValue());
     }
 }

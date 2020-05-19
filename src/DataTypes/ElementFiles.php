@@ -7,5 +7,5 @@ class ElementFiles extends Element
     /**
      * {@inheritdoc}
      */
-    public $type = 'files';
+    public $type = 'attachment';
 }
