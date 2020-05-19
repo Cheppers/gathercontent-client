@@ -18,13 +18,6 @@ class GatherContentClientStructureTest extends GcBaseTestCase
         ]);
         $structureNoFields = static::getUniqueResponseStructure();
 
-        foreach (array_keys($structure['groups']) as $groupId) {
-            $structure['groups'][$groupId]['fields'] = static::reKeyArray(
-                $structure['groups'][$groupId]['fields'],
-                'uuid'
-            );
-        }
-
         return [
             'empty' => [
                 [],

@@ -94,6 +94,18 @@ class Base implements JsonSerializable, \Serializable
                 }
             }
 
+            if ($value instanceof Base) {
+                $value->setSkipEmptyProperties($this->getSkipEmptyProperties());
+            }
+
+            if (is_array($value)) {
+                foreach ($value as $object) {
+                    if ($object instanceof Base) {
+                        $object->setSkipEmptyProperties($this->getSkipEmptyProperties());
+                    }
+                }
+            }
+
             if (
                 $this->getSkipEmptyProperties()
                 && empty($value)

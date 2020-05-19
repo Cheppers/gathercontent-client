@@ -136,13 +136,6 @@ class GatherContentClientTemplateTest extends GcBaseTestCase
             ['text', 'choice_checkbox'],
         ]);
 
-        foreach (array_keys($structure['structure']['groups']) as $groupId) {
-            $structure['structure']['groups'][$groupId]['fields'] = static::reKeyArray(
-                $structure['structure']['groups'][$groupId]['fields'],
-                'uuid'
-            );
-        }
-
         return [
             'empty' => [
                 ['data' => [], 'related' => []],
@@ -728,81 +721,5 @@ class GatherContentClientTemplateTest extends GcBaseTestCase
 
         $requestBody = $request->getBody();
         static::assertEmpty($requestBody->getContents());
-    }
-
-    public function casesTemplateDeleteFail()
-    {
-        $cases['wrong_type'] = [
-            [
-                'class' => GatherContentClientException::class,
-                'code' => GatherContentClientException::UNEXPECTED_CONTENT_TYPE,
-                'msg' => 'Unexpected Content-Type',
-            ],
-            [
-                'code' => 204,
-                'headers' => ['Content-Type' => 'image/jpeg'],
-                'body' => [],
-            ],
-            1
-        ];
-        $cases['missing_item'] = [
-            [
-                'class' => GatherContentClientException::class,
-                'code' => GatherContentClientException::API_ERROR,
-                'msg' => 'API Error: "Item Not Found", Code: 404',
-            ],
-            [
-                'code' => 200,
-                'headers' => ['Content-Type' => 'application/json'],
-                'body' => [
-                    'error' => 'Item Not Found',
-                    'code' => 404
-                ],
-            ],
-            0
-        ];
-        $cases['empty'] = [
-            [
-                'class' => \Exception::class,
-                'code' => 400,
-                'msg' => '{"error":"Missing template_id","code":400}',
-            ],
-            [
-                'code' => 400,
-                'headers' => ['Content-Type' => 'application/json'],
-                'body' => [
-                    'error' => 'Missing template_id',
-                    'code' => 400
-                ],
-            ],
-            42
-        ];
-
-        return $cases;
-    }
-
-    // TODO: reactivate test when the response got fixed on GC.
-    /**
-     * @dataProvider casesTemplateDeleteFail
-     */
-    public function _testTemplateDeleteFail(array $expected, array $response, $templateId)
-    {
-        $tester = $this->getBasicHttpClientTester([
-            new Response(
-                $response['code'],
-                $response['headers'],
-                \GuzzleHttp\json_encode($response['body'])
-            ),
-        ]);
-        $client = $tester['client'];
-
-        $gc = (new GatherContentClient($client))
-            ->setOptions($this->gcClientOptions);
-
-        static::expectException($expected['class']);
-        static::expectExceptionCode($expected['code']);
-        static::expectExceptionMessage($expected['msg']);
-
-        $gc->templateDelete($templateId);
     }
 }

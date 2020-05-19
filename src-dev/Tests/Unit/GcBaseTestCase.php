@@ -184,23 +184,23 @@ class GcBaseTestCase extends TestCase
         foreach ($elementTypes as $elementType) {
             switch ($elementType) {
                 case 'text':
-                    $group['fields'][static::getUniqueString('uuid')] = static::getUniqueResponseElementTemplateText();
+                    $group['fields'][] = static::getUniqueResponseElementTemplateText();
                     break;
 
                 case 'files':
-                    $group['fields'][static::getUniqueString('uuid')] = static::getUniqueResponseElementTemplateFiles();
+                    $group['fields'][] = static::getUniqueResponseElementTemplateFiles();
                     break;
 
                 case 'section':
-                    $group['fields'][static::getUniqueString('uuid')] = static::getUniqueResponseElementTemplateSection();
+                    $group['fields'][] = static::getUniqueResponseElementTemplateSection();
                     break;
 
                 case 'choice_radio':
-                    $group['fields'][static::getUniqueString('uuid')] = static::getUniqueResponseElementTemplateChoiceRadio();
+                    $group['fields'][] = static::getUniqueResponseElementTemplateChoiceRadio();
                     break;
 
                 case 'choice_checkbox':
-                    $group['fields'][static::getUniqueString('uuid')] = static::getUniqueResponseElementTemplateChoiceCheckbox();
+                    $group['fields'][] = static::getUniqueResponseElementTemplateChoiceCheckbox();
                     break;
             }
         }

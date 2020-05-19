@@ -550,8 +550,6 @@ class GatherContentClient implements GatherContentClientInterface
     public function templateDelete($templateId)
     {
         $this->sendDelete("templates/$templateId");
-        // TODO: implement validation, when the response is fixed on GC.
-        // $this->validatePostResponse(204);
     }
 
     /**
