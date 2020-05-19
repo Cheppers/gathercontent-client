@@ -56,7 +56,12 @@ Compatible with `application/vnd.gathercontent.v2+json`
 
 #### Folders
 
-- [GET:  /folders](https://docs.gathercontent.com/reference#get-folders) `$gc->foldersGet()`
+- [GET:    /folders](https://docs.gathercontent.com/reference#listfolders) `$gc->foldersGet()`
+- [POST:   /folders](https://docs.gathercontent.com/reference#createfolder) `$gc->folderPost()`
+- [POST:   /folders](https://docs.gathercontent.com/reference#renamefolder) `$gc->folderRenamePost()`
+- [POST:   /folders](https://docs.gathercontent.com/reference#movefolder) `$gc->folderMovePost()`
+- [DELETE: /folders](https://docs.gathercontent.com/reference#trashordeletefolder) `$gc->folderDelete()`
+- [POST:   /folders](https://docs.gathercontent.com/reference#restorefolder) `$gc->folderRestorePost()`
 
 
 ## Basic usage

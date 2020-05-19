@@ -19,10 +19,9 @@ class GatherContentClientTemplateTest extends GcBaseTestCase
             static::getUniqueResponseTemplate()
         ];
 
-        $templates = static::reKeyArray($data, 'id');
-
-        foreach ($templates as &$template) {
-            $template = new Template($template);
+        $templates = [];
+        foreach ($data as $template) {
+            $templates[] = new Template($template);
         }
 
         return [

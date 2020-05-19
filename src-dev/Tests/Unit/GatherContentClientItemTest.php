@@ -23,10 +23,9 @@ class GatherContentClientItemTest extends GcBaseTestCase
             static::getUniqueResponseItem(),
         ];
 
-        $items = static::reKeyArray($data, 'id');
-
-        foreach ($items as &$item) {
-            $item = new Item($item);
+        $items = [];
+        foreach ($data as $item) {
+            $items[] = new Item($item);
         }
 
         return [

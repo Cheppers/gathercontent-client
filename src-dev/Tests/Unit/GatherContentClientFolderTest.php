@@ -2,6 +2,7 @@
 
 namespace Cheppers\GatherContent\Tests\Unit;
 
+use Cheppers\GatherContent\DataTypes\Folder;
 use Cheppers\GatherContent\GatherContentClient;
 use Cheppers\GatherContent\GatherContentClientException;
 use GuzzleHttp\Psr7\Request;
@@ -17,18 +18,23 @@ class GatherContentClientFolderTest extends GcBaseTestCase
             static::getUniqueResponseFolder(),
         ];
 
-        $expected = static::reKeyArray($data, 'id');
+        $folders = [];
+        foreach ($data as $folder) {
+            $folders[] = new Folder($folder);
+        }
 
         return [
             'empty' => [
                 [],
                 ['data' => []],
                 42,
+                1,
             ],
             'basic' => [
-                $expected,
+                $folders,
                 ['data' => $data],
                 42,
+                0,
             ],
         ];
     }
@@ -36,7 +42,7 @@ class GatherContentClientFolderTest extends GcBaseTestCase
     /**
      * @dataProvider casesFoldersGet
      */
-    public function testFoldersGet(array $expected, array $responseBody, int $projectId)
+    public function testFoldersGet(array $expected, array $responseBody, int $projectId, $includeTrashed)
     {
         $tester = $this->getBasicHttpClientTester(
             [
@@ -52,7 +58,7 @@ class GatherContentClientFolderTest extends GcBaseTestCase
 
         $folders = (new GatherContentClient($client))
             ->setOptions($this->gcClientOptions)
-            ->foldersGet($projectId);
+            ->foldersGet($projectId, $includeTrashed);
 
         static::assertEquals(
             json_encode($expected, JSON_PRETTY_PRINT),
@@ -67,7 +73,7 @@ class GatherContentClientFolderTest extends GcBaseTestCase
         static::assertEquals(['application/vnd.gathercontent.v2+json'], $request->getHeader('Accept'));
         static::assertEquals(['api.example.com'], $request->getHeader('Host'));
         static::assertEquals(
-            "{$this->gcClientOptions['baseUri']}/folders?project_id=$projectId",
+            "{$this->gcClientOptions['baseUri']}/projects/$projectId/folders?include_trashed=$includeTrashed",
             (string) $request->getUri()
         );
     }

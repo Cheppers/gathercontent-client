@@ -2,6 +2,7 @@
 
 namespace Cheppers\GatherContent;
 
+use Cheppers\GatherContent\DataTypes\Folder;
 use Cheppers\GatherContent\DataTypes\Item;
 use Cheppers\GatherContent\DataTypes\Pagination;
 use Cheppers\GatherContent\DataTypes\Structure;
@@ -609,14 +610,92 @@ class GatherContentClient implements GatherContentClientInterface
     /**
      * {@inheritdoc}
      */
-    public function foldersGet($projectId)
+    public function foldersGet($projectId, $includeTrashed = false)
     {
-        $this->sendGet('folders', ['query' => ['project_id' => $projectId]]);
+        $this->sendGet("projects/$projectId/folders", ['query' => ['include_trashed' => $includeTrashed]]);
 
         $this->validateResponse();
         $body = $this->parseResponse();
 
         return $this->parseResponseItems($body, DataTypes\Folder::class);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function folderPost($parentFolderUuid, Folder $folder)
+    {
+        $folder->setSkipEmptyProperties(true);
+        $this->sendPost("folders/$parentFolderUuid/folders", [
+            'body' => \GuzzleHttp\json_encode($folder),
+        ]);
+
+        $this->validatePostResponse(201);
+        $body = $this->parseResponse();
+
+        return empty($body['data']) ? null : $this->parseResponseDataItem($body['data'], DataTypes\Folder::class);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function folderRenamePost($folderUuid, $name)
+    {
+        $this->sendPost("folders/$folderUuid/rename", [
+            'body' => \GuzzleHttp\json_encode(['name' => $name]),
+        ]);
+
+        $this->validatePostResponse(200);
+        $body = $this->parseResponse();
+
+        return empty($body['data']) ? null : $this->parseResponseDataItem($body['data'], DataTypes\Folder::class);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function folderMovePost($folderUuid, $parentFolderUuid, $position = null)
+    {
+        $request = [
+            'parent_uuid' => $parentFolderUuid,
+        ];
+
+        if ($position !== null) {
+            $request['position'] = $position;
+        }
+
+        $this->sendPost("folders/$folderUuid/move", [
+            'body' => \GuzzleHttp\json_encode($request),
+        ]);
+
+        $this->validatePostResponse(200);
+        $body = $this->parseResponse();
+
+        return empty($body['data']) ? null : $this->parseResponseDataItem($body['data'], DataTypes\Folder::class);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function folderDelete($folderUuid)
+    {
+        $this->sendDelete("folders/$folderUuid");
+        $body = $this->parseResponse();
+
+        return empty($body['data']) ? null : $this->parseResponseDataItem($body['data'], DataTypes\Folder::class);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function folderRestorePost($folderUuid)
+    {
+        $this->sendPost("folders/$folderUuid/rename");
+
+        $this->validatePostResponse(200);
+        $body = $this->parseResponse();
+
+        return empty($body['data']) ? null : $this->parseResponseDataItem($body['data'], DataTypes\Folder::class);
     }
 
     protected function getRequestAuth()
@@ -792,7 +871,7 @@ class GatherContentClient implements GatherContentClientInterface
 
         foreach ($data['data'] as $itemData) {
             $item = $this->parseResponseDataItem($itemData, $class);
-            $items['data'][$item->id] = $item;
+            $items['data'][] = $item;
         }
 
         if (!empty($data['pagination'])) {

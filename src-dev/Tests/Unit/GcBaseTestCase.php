@@ -410,7 +410,7 @@ class GcBaseTestCase extends TestCase
     protected static function getUniqueResponseFolder()
     {
         return [
-            'id' => static::getUniqueInt(),
+            'uuid' => static::getUniqueInt(),
             'name' => static::getUniqueString('name'),
             'position' => static::getUniqueString('position'),
             'parent_uuid' => static::getUniqueInt(),
