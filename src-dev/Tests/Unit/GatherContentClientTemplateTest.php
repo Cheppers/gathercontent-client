@@ -139,7 +139,7 @@ class GatherContentClientTemplateTest extends GcBaseTestCase
         foreach (array_keys($structure['structure']['groups']) as $groupId) {
             $structure['structure']['groups'][$groupId]['fields'] = static::reKeyArray(
                 $structure['structure']['groups'][$groupId]['fields'],
-                'name'
+                'uuid'
             );
         }
 
@@ -340,6 +340,68 @@ class GatherContentClientTemplateTest extends GcBaseTestCase
 
         static::assertArrayHasKey('name', $sentQueryVariables);
         static::assertEquals($sentQueryVariables['name'], $expected->name);
+    }
+
+    public function casesTemplatePostFail()
+    {
+        $cases['wrong_type'] = [
+            [
+                'class' => GatherContentClientException::class,
+                'code' => GatherContentClientException::UNEXPECTED_CONTENT_TYPE,
+                'msg' => 'Unexpected Content-Type',
+            ],
+            [
+                'code' => 201,
+                'headers' => ['Content-Type' => 'image/jpeg'],
+                'body' => [],
+            ],
+            1,
+            ''
+        ];
+        $cases['not_found'] = [
+            [
+                'class' => GatherContentClientException::class,
+                'code' => GatherContentClientException::API_ERROR,
+                'msg' => 'API Error: "Template Not Found", Code: 404',
+            ],
+            [
+                'code' => 200,
+                'headers' => ['Content-Type' => 'application/json'],
+                'body' => [
+                    'error' => 'Template Not Found',
+                    'code' => 404
+                ],
+            ],
+            42
+        ];
+
+        return $cases;
+    }
+
+    /**
+     * @dataProvider casesTemplatePostFail
+     */
+    public function testTemplatePostFail(array $expected, array $response, $projectId)
+    {
+        $tester = $this->getBasicHttpClientTester(
+            [
+                new Response(
+                    $response['code'],
+                    $response['headers'],
+                    \GuzzleHttp\json_encode($response['body'])
+                ),
+            ]
+        );
+        $client = $tester['client'];
+
+        $gc = (new GatherContentClient($client))
+            ->setOptions($this->gcClientOptions);
+
+        static::expectException($expected['class']);
+        static::expectExceptionCode($expected['code']);
+        static::expectExceptionMessage($expected['msg']);
+
+        $gc->templatePost($projectId, 'name', new Structure());
     }
 
     public function casesTemplateRenamePost()
