@@ -18,7 +18,9 @@ class ItemTest extends BaseTest
     {
         $itemArray = static::getUniqueResponseItem([
             'text', 'files', 'choice_radio', 'choice_checkbox'
-        ]);
+        ], static::getUniqueResponseStructure([
+            ['text', 'files', 'choice_radio', 'choice_checkbox'],
+        ]));
 
         $item1 = new $this->className($itemArray);
 

@@ -477,13 +477,13 @@ class GatherContentClientTemplateTest extends GcBaseTestCase
             [
                 'class' => GatherContentClientException::class,
                 'code' => GatherContentClientException::API_ERROR,
-                'msg' => 'API Error: "Item Not Found", Code: 404',
+                'msg' => 'API Error: "Template Not Found", Code: 404',
             ],
             [
                 'code' => 200,
                 'headers' => ['Content-Type' => 'application/json'],
                 'body' => [
-                    'error' => 'Item Not Found',
+                    'error' => 'Template Not Found',
                     'code' => 404
                 ],
             ],
@@ -621,13 +621,13 @@ class GatherContentClientTemplateTest extends GcBaseTestCase
             [
                 'class' => GatherContentClientException::class,
                 'code' => GatherContentClientException::API_ERROR,
-                'msg' => 'API Error: "Item Not Found", Code: 404',
+                'msg' => 'API Error: "Template Not Found", Code: 404',
             ],
             [
                 'code' => 200,
                 'headers' => ['Content-Type' => 'application/json'],
                 'body' => [
-                    'error' => 'Item Not Found',
+                    'error' => 'Template Not Found',
                     'code' => 404
                 ],
             ],

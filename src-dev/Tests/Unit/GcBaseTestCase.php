@@ -346,13 +346,14 @@ class GcBaseTestCase extends TestCase
         return $userIds;
     }
 
-    public static function getUniqueResponseItem(array $elementTypes = [])
+    public static function getUniqueResponseItem(array $elementTypes = [], array $structure = null)
     {
         $item = [
             'id' => static::getUniqueInt(),
             'project_id' => static::getUniqueInt(),
             'folder_uuid' => static::getUniqueString('folder_uuid'),
             'template_id' => static::getUniqueInt(),
+            'structure' => $structure,
             'structure_uuid' => static::getUniqueString('structure_uuid'),
             'position' => static::getUniqueString('position'),
             'name' => static::getUniqueString('name'),

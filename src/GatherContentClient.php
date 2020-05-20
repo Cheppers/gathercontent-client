@@ -690,7 +690,7 @@ class GatherContentClient implements GatherContentClientInterface
      */
     public function folderRestorePost($folderUuid)
     {
-        $this->sendPost("folders/$folderUuid/rename");
+        $this->sendPost("folders/$folderUuid/restore");
 
         $this->validatePostResponse(200);
         $body = $this->parseResponse();

@@ -25,6 +25,11 @@ class Item extends Base
     public $structureUuid = '';
 
     /**
+     * @var \Cheppers\GatherContent\DataTypes\Structure
+     */
+    public $structure = null;
+
+    /**
      * @var string
      */
     public $position = '';
@@ -98,6 +103,10 @@ class Item extends Base
                 'project_id' => 'projectId',
                 'folder_uuid' => 'folderUuid',
                 'template_id' => 'templateId',
+                'structure' => [
+                    'type' => 'subConfig',
+                    'class' => Structure::class,
+                ],
                 'structure_uuid' => 'structureUuid',
                 'position' => 'position',
                 'name' => 'name',
@@ -133,6 +142,12 @@ class Item extends Base
         return $this;
     }
 
+    /**
+     * Return sub element type.
+     *
+     * @param  array  $elementData
+     * @return array|ElementBase[]
+     */
     protected function getSubElements(array $elementData) {
         $elements = [];
 
