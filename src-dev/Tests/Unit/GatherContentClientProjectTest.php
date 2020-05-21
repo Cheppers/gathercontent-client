@@ -83,21 +83,21 @@ class GatherContentClientProjectTest extends GcBaseTestCase
         $cases = static::basicFailCasesGet();
 
         $cases['not_found'] = [
-          [
-            'class' => GatherContentClientException::class,
-            'code' => GatherContentClientException::API_ERROR,
-            'msg' => 'API Error: "Account not found"',
-          ],
-          [
-            'code' => 200,
-            'headers' => ['Content-Type' => 'application/json'],
-            'body' => [
-              'data' => [
-                'message' => 'Account not found'
-              ]
+            [
+                'class' => GatherContentClientException::class,
+                'code' => GatherContentClientException::API_ERROR,
+                'msg' => 'API Error: "Account not found"',
             ],
-          ],
-          42
+            [
+                'code' => 200,
+                'headers' => ['Content-Type' => 'application/json'],
+                'body' => [
+                    'data' => [
+                        'message' => 'Account not found'
+                    ]
+                ],
+            ],
+            42
         ];
 
         return $cases;
@@ -135,18 +135,23 @@ class GatherContentClientProjectTest extends GcBaseTestCase
         $expected['meta'] = [];
 
         return [
-          'basic' => [
-            $expected,
-            ['data' => $data],
-            42,
-          ],
+            'basic' => [
+                $expected,
+                ['data' => $data],
+                42,
+            ],
+            'empty' => [
+                null,
+                ['data' => []],
+                42,
+            ],
         ];
     }
 
     /**
      * @dataProvider casesProjectGet
      */
-    public function testProjectGet(array $expected, array $responseBody, $projectId)
+    public function testProjectGet($expected, array $responseBody, $projectId)
     {
         $tester = $this->getBasicHttpClientTester([
           new Response(
@@ -162,11 +167,15 @@ class GatherContentClientProjectTest extends GcBaseTestCase
           ->setOptions($this->gcClientOptions)
           ->projectGet($projectId);
 
-        static::assertTrue($actual instanceof Project, 'Data type of the return is Project');
-        static::assertEquals(
-            json_encode($expected, JSON_PRETTY_PRINT),
-            json_encode($actual, JSON_PRETTY_PRINT)
-        );
+        if (!$expected) {
+            static::assertNull($actual);
+        } else {
+            static::assertTrue($actual instanceof Project, 'Data type of the return is Project');
+            static::assertEquals(
+                json_encode($expected, JSON_PRETTY_PRINT),
+                json_encode($actual, JSON_PRETTY_PRINT)
+            );
+        }
 
         /** @var Request $request */
         $request = $container[0]['request'];
@@ -186,21 +195,21 @@ class GatherContentClientProjectTest extends GcBaseTestCase
         $cases = static::basicFailCasesGet();
 
         $cases['not_found'] = [
-          [
-            'class' => GatherContentClientException::class,
-            'code' => GatherContentClientException::API_ERROR,
-            'msg' => 'API Error: "Project Not Found"',
-          ],
-          [
-            'code' => 200,
-            'headers' => ['Content-Type' => 'application/json'],
-            'body' => [
-              'data' => [
-                'message' => 'Project Not Found'
-              ]
+            [
+                'class' => GatherContentClientException::class,
+                'code' => GatherContentClientException::API_ERROR,
+                'msg' => 'API Error: "Project Not Found"',
             ],
-          ],
-          42
+            [
+                'code' => 200,
+                'headers' => ['Content-Type' => 'application/json'],
+                'body' => [
+                    'data' => [
+                        'message' => 'Project Not Found'
+                    ]
+                ],
+            ],
+            42
         ];
 
         return $cases;
