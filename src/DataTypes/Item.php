@@ -15,6 +15,11 @@ class Item extends Base
     public $folderUuid = '';
 
     /**
+     * @var string
+     */
+    public $folderUuid = '';
+
+    /**
      * @var int
      */
     public $templateId = 0;

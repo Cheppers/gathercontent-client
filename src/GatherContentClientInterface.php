@@ -82,6 +82,36 @@ interface GatherContentClientInterface
     public function getVersionString();
 
     /**
+     * @return string[]
+     */
+    public function getIntegrationVersion();
+
+    /**
+     * @return $this
+     */
+    public function setFrameworkVersion($value);
+
+    /**
+     * @return string[]
+     */
+    public function getFrameworkVersion();
+
+    /**
+     * @return $this
+     */
+    public function setFrameworkName($value);
+
+    /**
+     * @return string[]
+     */
+    public function getFrameworkName();
+
+    /**
+     * @return string[]
+     */
+    public function getVersionString();
+
+    /**
      * GatherContentClientInterface constructor.
      */
     public function __construct(ClientInterface $client);
