@@ -2,12 +2,17 @@
 
 namespace Cheppers\GatherContent\DataTypes;
 
-class ElementText extends Element
+class Structure extends Base
 {
+    /**
+     * @var \Cheppers\GatherContent\DataTypes\Group[]
+     */
+    public $groups = [];
+
     /**
      * {@inheritdoc}
      */
-    public $type = 'text';
+    protected $unusedProperties = ['id'];
 
     /**
      * {@inheritdoc}
@@ -18,10 +23,10 @@ class ElementText extends Element
         $this->propertyMapping = array_replace(
             $this->propertyMapping,
             [
-                'metadata' => [
-                    'type' => 'subConfig',
-                    'class' => ElementTextMeta::class,
-                    'destination' => 'metaData',
+                'uuid' => 'id',
+                'groups' => [
+                    'type' => 'subConfigs',
+                    'class' => Group::class,
                 ],
             ]
         );

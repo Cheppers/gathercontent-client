@@ -2,22 +2,12 @@
 
 namespace Cheppers\GatherContent\DataTypes;
 
-class Date extends Base
+class ElementChoiceMeta extends Base
 {
     /**
-     * @var string
+     * @var array
      */
-    public $date = '';
-
-    /**
-     * @var int
-     */
-    public $timezoneType = 0;
-
-    /**
-     * @var string
-     */
-    public $timezone = '';
+    public $choiceFields = [];
 
     /**
      * {@inheritdoc}
@@ -33,9 +23,7 @@ class Date extends Base
         $this->propertyMapping = array_replace(
             $this->propertyMapping,
             [
-                'date' => 'date',
-                'timezone_type' => 'timezoneType',
-                'timezone' => 'timezone',
+                'choice_fields' => 'choiceFields',
             ]
         );
 

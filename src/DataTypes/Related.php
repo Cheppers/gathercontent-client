@@ -2,8 +2,18 @@
 
 namespace Cheppers\GatherContent\DataTypes;
 
-class ElementChoice extends Element
+class Related extends Base
 {
+    /**
+     * @var \Cheppers\GatherContent\DataTypes\Structure
+     */
+    public $structure = null;
+
+    /**
+     * {@inheritdoc}
+     */
+    protected $unusedProperties = ['id'];
+
     /**
      * {@inheritdoc}
      */
@@ -13,10 +23,9 @@ class ElementChoice extends Element
         $this->propertyMapping = array_replace(
             $this->propertyMapping,
             [
-                'metadata' => [
+                'structure' => [
                     'type' => 'subConfig',
-                    'class' => ElementChoiceMeta::class,
-                    'destination' => 'metaData',
+                    'class' => Structure::class,
                 ],
             ]
         );

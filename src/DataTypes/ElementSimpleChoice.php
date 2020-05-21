@@ -2,17 +2,12 @@
 
 namespace Cheppers\GatherContent\DataTypes;
 
-class Usage extends Base
+class ElementSimpleChoice extends ElementBase
 {
     /**
-     * @var int
+     * @var string
      */
-    public $itemCount = 0;
-
-    /**
-     * {@inheritdoc}
-     */
-    protected $unusedProperties = ['id'];
+    public $label = '';
 
     /**
      * {@inheritdoc}
@@ -23,7 +18,7 @@ class Usage extends Base
         $this->propertyMapping = array_replace(
             $this->propertyMapping,
             [
-                'item_count' => 'itemCount',
+                'label' => 'label',
             ]
         );
 

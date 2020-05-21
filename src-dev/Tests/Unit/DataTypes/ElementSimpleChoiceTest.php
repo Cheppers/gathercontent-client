@@ -2,17 +2,17 @@
 
 namespace Cheppers\GatherContent\Tests\Unit\DataTypes;
 
-use Cheppers\GatherContent\DataTypes\ElementFiles;
+use Cheppers\GatherContent\DataTypes\ElementSimpleChoice;
 
 /**
  * @group GatherContentClient
  */
-class ElementFilesTest extends BaseTest
+class ElementSimpleChoiceTest extends BaseTest
 {
     /**
      * {@inheritdoc}
      */
-    protected $className = ElementFiles::class;
+    protected $className = ElementSimpleChoice::class;
 
     /**
      * {@inheritdoc}
@@ -21,10 +21,10 @@ class ElementFilesTest extends BaseTest
     {
         $cases = parent::casesConstructor();
         $cases['basic'][0] = [
-            'type' => 'attachment'
+            'label' => 'test label',
         ];
         $cases['basic'][1] = [
-            'field_type' => 'attachment'
+            'label' => 'test label',
         ];
 
         return $cases;

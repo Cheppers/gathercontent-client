@@ -2,15 +2,15 @@
 
 namespace Cheppers\GatherContent\Tests\Unit\DataTypes;
 
-use Cheppers\GatherContent\DataTypes\Tab;
+use Cheppers\GatherContent\DataTypes\Structure;
 
 /**
  * @group GatherContentClient
  */
-class TabTest extends BaseTest
+class StructureTest extends BaseTest
 {
     /**
      * {@inheritdoc}
      */
-    protected $className = Tab::class;
+    protected $className = Structure::class;
 }
