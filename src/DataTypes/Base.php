@@ -52,7 +52,8 @@ class Base implements JsonSerializable, \Serializable
      * @param $value
      * @return $this
      */
-    public function setSkipEmptyProperties($value) {
+    public function setSkipEmptyProperties($value)
+    {
         $this->skipEmptyProperties = $value;
         return $this;
     }
@@ -60,7 +61,8 @@ class Base implements JsonSerializable, \Serializable
     /**
      * @return bool
      */
-    public function getSkipEmptyProperties() {
+    public function getSkipEmptyProperties()
+    {
         return $this->skipEmptyProperties;
     }
 
@@ -106,8 +108,7 @@ class Base implements JsonSerializable, \Serializable
                 }
             }
 
-            if (
-                $this->getSkipEmptyProperties()
+            if ($this->getSkipEmptyProperties()
                 && empty($value)
             ) {
                 continue;

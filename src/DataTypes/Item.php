@@ -148,7 +148,8 @@ class Item extends Base
      * @param  array  $elementData
      * @return array|ElementBase[]
      */
-    protected function getSubElements(array $elementData) {
+    protected function getSubElements(array $elementData)
+    {
         $elements = [];
 
         foreach ($elementData as $element) {
