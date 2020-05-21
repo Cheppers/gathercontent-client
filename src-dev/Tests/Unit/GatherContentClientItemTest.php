@@ -23,10 +23,9 @@ class GatherContentClientItemTest extends GcBaseTestCase
             static::getUniqueResponseItem(),
         ];
 
-        $items = static::reKeyArray($data, 'id');
-
-        foreach ($items as &$item) {
-            $item = new Item($item);
+        $items = [];
+        foreach ($data as $item) {
+            $items[] = new Item($item);
         }
 
         return [
@@ -130,9 +129,11 @@ class GatherContentClientItemTest extends GcBaseTestCase
 
     public function casesItemGet()
     {
-        $item = static::getUniqueResponseItem([
+        $itemArray = static::getUniqueResponseItem([
             'text', 'choice_checkbox'
         ]);
+
+        $item = new Item($itemArray);
 
         return [
             'empty' => [
@@ -143,7 +144,7 @@ class GatherContentClientItemTest extends GcBaseTestCase
             'basic' => [
                 $item,
                 ['data' => $item],
-                $item['id']
+                $item ->id
             ],
         ];
     }
@@ -151,7 +152,7 @@ class GatherContentClientItemTest extends GcBaseTestCase
     /**
      * @dataProvider casesItemGet
      */
-    public function testItemGet(array $expected, array $responseBody, $itemId)
+    public function testItemGet($expected, array $responseBody, $itemId)
     {
         $tester = $this->getBasicHttpClientTester([
             new Response(
@@ -376,7 +377,9 @@ class GatherContentClientItemTest extends GcBaseTestCase
 
         $itemArray = static::getUniqueResponseItem([
             'text'
-        ]);
+        ], static::getUniqueResponseStructure([
+            ['text'],
+        ]));
         $itemCustom = new Item($itemArray);
         $itemCustom->folderUuid = '500';
         $itemCustom->templateId = null;
@@ -937,7 +940,7 @@ class GatherContentClientItemTest extends GcBaseTestCase
         static::expectExceptionCode($expected['code']);
         static::expectExceptionMessage($expected['msg']);
 
-        $gc->itemRenamePost($itemId, $position, $folderUuid);
+        $gc->itemMovePost($itemId, $position, $folderUuid);
     }
 
     public function casesItemApplyTemplatePost()

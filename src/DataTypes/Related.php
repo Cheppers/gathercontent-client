@@ -5,6 +5,11 @@ namespace Cheppers\GatherContent\DataTypes;
 class Related extends Base
 {
     /**
+     * @var \Cheppers\GatherContent\DataTypes\Structure
+     */
+    public $structure = null;
+
+    /**
      * {@inheritdoc}
      */
     protected $unusedProperties = ['id'];

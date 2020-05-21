@@ -19,10 +19,9 @@ class GatherContentClientTemplateTest extends GcBaseTestCase
             static::getUniqueResponseTemplate()
         ];
 
-        $templates = static::reKeyArray($data, 'id');
-
-        foreach ($templates as &$template) {
-            $template = new Template($template);
+        $templates = [];
+        foreach ($data as $template) {
+            $templates[] = new Template($template);
         }
 
         return [
@@ -478,13 +477,13 @@ class GatherContentClientTemplateTest extends GcBaseTestCase
             [
                 'class' => GatherContentClientException::class,
                 'code' => GatherContentClientException::API_ERROR,
-                'msg' => 'API Error: "Item Not Found", Code: 404',
+                'msg' => 'API Error: "Template Not Found", Code: 404',
             ],
             [
                 'code' => 200,
                 'headers' => ['Content-Type' => 'application/json'],
                 'body' => [
-                    'error' => 'Item Not Found',
+                    'error' => 'Template Not Found',
                     'code' => 404
                 ],
             ],
@@ -622,13 +621,13 @@ class GatherContentClientTemplateTest extends GcBaseTestCase
             [
                 'class' => GatherContentClientException::class,
                 'code' => GatherContentClientException::API_ERROR,
-                'msg' => 'API Error: "Item Not Found", Code: 404',
+                'msg' => 'API Error: "Template Not Found", Code: 404',
             ],
             [
                 'code' => 200,
                 'headers' => ['Content-Type' => 'application/json'],
                 'body' => [
-                    'error' => 'Item Not Found',
+                    'error' => 'Template Not Found',
                     'code' => 404
                 ],
             ],

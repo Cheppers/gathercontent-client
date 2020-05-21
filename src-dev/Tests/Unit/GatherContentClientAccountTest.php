@@ -18,14 +18,9 @@ class GatherContentClientAccountTest extends GcBaseTestCase
             static::getUniqueResponseAccount(),
         ];
 
-        $expected = [];
-        foreach ($data as $account) {
-            $expected[$account['id']] = $account;
-        }
-
         return [
             'basic' => [
-                $expected,
+                $data,
                 ['data' => $data],
             ],
         ];

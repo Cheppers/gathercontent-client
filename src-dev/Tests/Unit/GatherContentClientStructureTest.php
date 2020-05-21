@@ -89,13 +89,13 @@ class GatherContentClientStructureTest extends GcBaseTestCase
             [
                 'class' => GatherContentClientException::class,
                 'code' => GatherContentClientException::API_ERROR,
-                'msg' => 'API Error: "Template Not Found", Code: 404',
+                'msg' => 'API Error: "Structure Not Found", Code: 404',
             ],
             [
                 'code' => 200,
                 'headers' => ['Content-Type' => 'application/json'],
                 'body' => [
-                    'error' => 'Template Not Found',
+                    'error' => 'Structure Not Found',
                     'code' => 404
                 ],
             ],
@@ -216,6 +216,84 @@ class GatherContentClientStructureTest extends GcBaseTestCase
         }
     }
 
+    public function casesStructureAlterPutFail()
+    {
+        $cases['wrong_type'] = [
+            [
+                'class' => GatherContentClientException::class,
+                'code' => GatherContentClientException::UNEXPECTED_CONTENT_TYPE,
+                'msg' => 'Unexpected Content-Type',
+            ],
+            [
+                'code' => 200,
+                'headers' => ['Content-Type' => 'image/jpeg'],
+                'body' => [],
+            ],
+            1,
+            1
+        ];
+        $cases['missing_item'] = [
+            [
+                'class' => GatherContentClientException::class,
+                'code' => GatherContentClientException::API_ERROR,
+                'msg' => 'API Error: "Structure Not Found", Code: 404',
+            ],
+            [
+                'code' => 200,
+                'headers' => ['Content-Type' => 'application/json'],
+                'body' => [
+                    'error' => 'Structure Not Found',
+                    'code' => 404
+                ],
+            ],
+            1,
+            1
+        ];
+        $cases['empty'] = [
+            [
+                'class' => \Exception::class,
+                'code' => 400,
+                'msg' => '{"error":"Missing structure_uuid","code":400}',
+            ],
+            [
+                'code' => 400,
+                'headers' => ['Content-Type' => 'application/json'],
+                'body' => [
+                    'error' => 'Missing structure_uuid',
+                    'code' => 400
+                ],
+            ],
+            1,
+            1
+        ];
+
+        return $cases;
+    }
+
+    /**
+     * @dataProvider casesStructureAlterPutFail
+     */
+    public function testStructureAlterPutFail(array $expected, array $response, $structureUuid, $priorityItemId)
+    {
+        $tester = $this->getBasicHttpClientTester([
+            new Response(
+                $response['code'],
+                $response['headers'],
+                \GuzzleHttp\json_encode($response['body'])
+            ),
+        ]);
+        $client = $tester['client'];
+
+        $gc = (new GatherContentClient($client))
+            ->setOptions($this->gcClientOptions);
+
+        static::expectException($expected['class']);
+        static::expectExceptionCode($expected['code']);
+        static::expectExceptionMessage($expected['msg']);
+
+        $gc->structureAlterPut($structureUuid, new Structure(), $priorityItemId);
+    }
+
     public function casesStructureSaveAsTemplatePost()
     {
         $templateArray = static::getUniqueResponseTemplate();
@@ -296,13 +374,13 @@ class GatherContentClientStructureTest extends GcBaseTestCase
             [
                 'class' => GatherContentClientException::class,
                 'code' => GatherContentClientException::API_ERROR,
-                'msg' => 'API Error: "Item Not Found", Code: 404',
+                'msg' => 'API Error: "Structure Not Found", Code: 404',
             ],
             [
                 'code' => 200,
                 'headers' => ['Content-Type' => 'application/json'],
                 'body' => [
-                    'error' => 'Item Not Found',
+                    'error' => 'Structure Not Found',
                     'code' => 404
                 ],
             ],
@@ -313,13 +391,13 @@ class GatherContentClientStructureTest extends GcBaseTestCase
             [
                 'class' => \Exception::class,
                 'code' => 400,
-                'msg' => '{"error":"Missing template_id","code":400}',
+                'msg' => '{"error":"Missing structure_uuid","code":400}',
             ],
             [
                 'code' => 400,
                 'headers' => ['Content-Type' => 'application/json'],
                 'body' => [
-                    'error' => 'Missing template_id',
+                    'error' => 'Missing structure_uuid',
                     'code' => 400
                 ],
             ],

@@ -21,8 +21,8 @@ class GatherContentClientProjectTest extends GcBaseTestCase
 
         $expected = [];
         foreach ($data as $project) {
-            $expected[$project['id']] = $project;
-            $expected[$project['id']]['meta'] = [];
+            $project = $project + ['meta' => []];
+            $expected[] = $project;
         }
 
         return [
@@ -233,44 +233,42 @@ class GatherContentClientProjectTest extends GcBaseTestCase
     public function casesProjectStatusesGet()
     {
         $data = [
-          static::getUniqueResponseStatus(),
-          static::getUniqueResponseStatus(),
-          static::getUniqueResponseStatus(),
+            static::getUniqueResponseStatus(),
+            static::getUniqueResponseStatus(),
+            static::getUniqueResponseStatus(),
         ];
 
-        $expected = static::reKeyArray($data, 'id');
-
         return [
-          'empty' => [
-            [],
-            ['data' => []],
-            42,
-          ],
-          'basic' => [
-            $expected,
-            ['data' => $data],
-            42,
-          ],
+            'empty' => [
+                [],
+                ['data' => []],
+                42,
+            ],
+            'basic' => [
+                $data,
+                ['data' => $data],
+                42,
+            ],
         ];
     }
 
     public function casesProjectsPost()
     {
         return [
-          'basic' => [
-            [
-              'code' => 202,
-              'id' => 42,
+            'basic' => [
+                [
+                    'code' => 202,
+                    'id' => 42,
+                ],
+                [
+                    'code' => 202,
+                    'body' => [],
+                    'id' => 42,
+                ],
+                42,
+                'Project name',
+                'Project type'
             ],
-            [
-              'code' => 202,
-              'body' => [],
-              'id' => 42,
-            ],
-            42,
-            'Project name',
-            'Project type'
-          ],
         ];
     }
 
