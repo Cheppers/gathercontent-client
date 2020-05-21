@@ -680,9 +680,14 @@ class GatherContentClient implements GatherContentClientInterface
     public function folderDelete($folderUuid)
     {
         $this->sendDelete("folders/$folderUuid");
-        $body = $this->parseResponse();
 
-        return empty($body['data']) ? null : $this->parseResponseDataItem($body['data'], DataTypes\Folder::class);
+        if ($this->response->getStatusCode() === 200) {
+            $body = $this->parseResponse();
+
+            return empty($body['data']) ? null : $this->parseResponseDataItem($body['data'], DataTypes\Folder::class);
+        }
+
+        return null;
     }
 
     /**
