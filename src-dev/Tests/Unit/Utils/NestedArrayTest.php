@@ -7,7 +7,8 @@ use PHPUnit\Framework\TestCase;
 
 class NestedArrayTest extends TestCase
 {
-    public function casesTestGetValue() {
+    public function casesTestGetValue()
+    {
         return [
             'first_level' => [
                 '10',
@@ -33,7 +34,8 @@ class NestedArrayTest extends TestCase
     /**
      * @dataProvider casesTestGetValue
      */
-    public function testGetValue($expected, $array, $parents, $keyExists) {
+    public function testGetValue($expected, $array, $parents, $keyExists)
+    {
         $returnedKeyExists = false;
         $returnedValue = NestedArray::getValue($array, $parents, $returnedKeyExists);
 

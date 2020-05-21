@@ -97,7 +97,8 @@ class BaseTest extends GcBaseTestCase
     /**
      * @dataProvider casesSerialize
      */
-    public function testSerialize($expected, array $data) {
+    public function testSerialize($expected, array $data)
+    {
         $base = new Base($data);
         static::assertEquals($expected, $base->serialize());
     }
@@ -117,7 +118,8 @@ class BaseTest extends GcBaseTestCase
     /**
      * @dataProvider casesUnserialize
      */
-    public function testUnserialize(array $expected, $data) {
+    public function testUnserialize(array $expected, $data)
+    {
         $baseExpected = new Base($expected);
 
         $base = new Base();

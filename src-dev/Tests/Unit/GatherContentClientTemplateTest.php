@@ -182,7 +182,10 @@ class GatherContentClientTemplateTest extends GcBaseTestCase
 
         if (!empty($expected['related'])) {
             static::assertTrue($actual['related'] instanceof Related, 'Data type of the return is Related');
-            static::assertTrue($actual['related']->structure instanceof Structure, 'Data type of the return is Structure');
+            static::assertTrue(
+                $actual['related']->structure instanceof Structure,
+                'Data type of the return is Structure'
+            );
             static::assertEquals(
                 \GuzzleHttp\json_encode($expected['related'], JSON_PRETTY_PRINT),
                 \GuzzleHttp\json_encode($actual['related'], JSON_PRETTY_PRINT)

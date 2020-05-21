@@ -220,7 +220,8 @@ class GatherContentClientTest extends GcBaseTestCase
     /**
      * @dataProvider casesParsePagination
      */
-    public function testParsePagination($expected, $responseBody) {
+    public function testParsePagination($expected, $responseBody)
+    {
         $tester = $this->getBasicHttpClientTester([
             new Response(
                 200,

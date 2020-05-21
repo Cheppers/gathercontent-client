@@ -473,7 +473,8 @@ class GatherContentClientItemTest extends GcBaseTestCase
 
         if (!empty($item->content)) {
             static::assertArrayHasKey('content', $sentQueryVariables);
-            // We need to do this because the 'value' parameter on text types will be converted to simple string instead of array.
+            // We need to do this because the 'value' parameter on text types
+            // will be converted to simple string instead of array.
             $preparedContent = \GuzzleHttp\json_decode(\GuzzleHttp\json_encode($expected->content), true);
             static::assertEquals($sentQueryVariables['content'], $preparedContent);
         } else {
@@ -589,7 +590,8 @@ class GatherContentClientItemTest extends GcBaseTestCase
         $sentQueryVariables = \GuzzleHttp\json_decode($requestBody, true);
 
         static::assertArrayHasKey('content', $sentQueryVariables);
-        // We need to do this because the 'value' parameter on text types will be converted to simple string instead of array.
+        // We need to do this because the 'value' parameter on text types
+        // will be converted to simple string instead of array.
         $preparedContent = \GuzzleHttp\json_decode(\GuzzleHttp\json_encode($content), true);
         static::assertEquals($sentQueryVariables['content'], $preparedContent);
     }
