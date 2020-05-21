@@ -559,9 +559,15 @@ class GatherContentClientFolderTest extends GcBaseTestCase
         $folder = new Folder($folderArray);
 
         return [
-            'basic' => [
+            'trash' => [
                 $folder,
                 13,
+                200,
+            ],
+            'delete' => [
+                $folder,
+                13,
+                204,
             ],
         ];
     }
@@ -569,11 +575,11 @@ class GatherContentClientFolderTest extends GcBaseTestCase
     /**
      * @dataProvider casesFolderDelete
      */
-    public function testFolderDelete(Folder $folder, $folderUuid)
+    public function testFolderDelete(Folder $folder, $folderUuid, $returnStatus)
     {
         $tester = $this->getBasicHttpClientTester([
             new Response(
-                200,
+                $returnStatus,
                 [
                     'Content-Type' => 'application/json',
                 ],
@@ -587,11 +593,15 @@ class GatherContentClientFolderTest extends GcBaseTestCase
             ->setOptions($this->gcClientOptions)
             ->folderDelete($folderUuid);
 
-        static::assertTrue($actual instanceof Folder, 'Data type of the return is Folder');
-        static::assertEquals(
-            \GuzzleHttp\json_encode($folder, JSON_PRETTY_PRINT),
-            \GuzzleHttp\json_encode($actual, JSON_PRETTY_PRINT)
-        );
+        if ($returnStatus === 200) {
+            static::assertTrue($actual instanceof Folder, 'Data type of the return is Folder');
+            static::assertEquals(
+                \GuzzleHttp\json_encode($folder, JSON_PRETTY_PRINT),
+                \GuzzleHttp\json_encode($actual, JSON_PRETTY_PRINT)
+            );
+        } else {
+            static::assertNull($actual);
+        }
 
         /** @var Request $request */
         $request = $container[0]['request'];
