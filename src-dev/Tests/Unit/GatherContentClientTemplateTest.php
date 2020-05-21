@@ -699,7 +699,7 @@ class GatherContentClientTemplateTest extends GcBaseTestCase
                 204,
                 [
                     'Content-Type' => 'application/json',
-                ],
+                ]
             ),
         ]);
         $client = $tester['client'];
