@@ -876,7 +876,7 @@ class GatherContentClient implements GatherContentClientInterface
     }
 
     /**
-     * @return \Cheppers\GatherContent\DataTypes\Base[]
+     * @return array
      */
     protected function parseResponseItems(array $data, $class)
     {

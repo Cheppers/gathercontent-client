@@ -99,7 +99,7 @@ interface GatherContentClientInterface
     /**
      * @see https://docs.gathercontent.com/v0.5/reference#get-accounts
      *
-     * @return \Cheppers\GatherContent\DataTypes\Account[]
+     * @return array
      */
     public function accountsGet();
 
@@ -111,7 +111,7 @@ interface GatherContentClientInterface
     /**
      * @see https://docs.gathercontent.com/v0.5/reference#get-projects
      *
-     * @return \Cheppers\GatherContent\DataTypes\Project[]
+     * @return array
      */
     public function projectsGet($accountId);
 
@@ -131,7 +131,7 @@ interface GatherContentClientInterface
     /**
      * @see https://docs.gathercontent.com/v0.5/reference#get-project-statuses
      *
-     * @return \Cheppers\GatherContent\DataTypes\Status[]
+     * @return array
      */
     public function projectStatusesGet($projectId);
 
@@ -143,7 +143,7 @@ interface GatherContentClientInterface
     /**
      * @see https://docs.gathercontent.com/reference#listitems
      *
-     * @return \Cheppers\GatherContent\DataTypes\Item[]
+     * @return array
      */
     public function itemsGet($projectId);
 
@@ -219,7 +219,7 @@ interface GatherContentClientInterface
     /**
      * @see https://docs.gathercontent.com/reference#listtemplates
      *
-     * @return \Cheppers\GatherContent\DataTypes\Template[]
+     * @return array
      */
     public function templatesGet($projectId);
 
@@ -280,7 +280,7 @@ interface GatherContentClientInterface
     /**
      * @see https://docs.gathercontent.com/reference#listfolders
      *
-     * @return \Cheppers\GatherContent\DataTypes\Folder[]
+     * @return array
      */
     public function foldersGet($projectId, $includeTrashed = false);
 
