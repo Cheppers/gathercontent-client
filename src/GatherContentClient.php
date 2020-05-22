@@ -317,6 +317,7 @@ class GatherContentClient implements GatherContentClientInterface
      */
     public function itemsGet($projectId, $query = [])
     {
+        $this->setUseLegacy(false);
         $this->sendGet("projects/$projectId/items", ['query' => $query]);
 
         $this->validateResponse();
@@ -330,6 +331,7 @@ class GatherContentClient implements GatherContentClientInterface
      */
     public function itemGet($itemId)
     {
+        $this->setUseLegacy(false);
         $this->sendGet("items/$itemId");
 
         $this->validateResponse();
@@ -343,6 +345,7 @@ class GatherContentClient implements GatherContentClientInterface
      */
     public function itemPost($projectId, Item $item)
     {
+        $this->setUseLegacy(false);
         $item->setSkipEmptyProperties(true);
         $this->sendPost("projects/$projectId/items", [
             'body' => \GuzzleHttp\json_encode($item),
@@ -359,6 +362,7 @@ class GatherContentClient implements GatherContentClientInterface
      */
     public function itemUpdatePost($itemId, array $content = [])
     {
+        $this->setUseLegacy(false);
         $this->sendPost("items/$itemId/content", [
             'body' => \GuzzleHttp\json_encode(['content' => $content]),
         ]);
@@ -371,6 +375,7 @@ class GatherContentClient implements GatherContentClientInterface
      */
     public function itemRenamePost($itemId, $name)
     {
+        $this->setUseLegacy(false);
         $this->sendPost("items/$itemId/rename", [
             'body' => \GuzzleHttp\json_encode(['name' => $name]),
         ]);
@@ -386,6 +391,7 @@ class GatherContentClient implements GatherContentClientInterface
      */
     public function itemMovePost($itemId, $position = null, $folderUuid = '')
     {
+        $this->setUseLegacy(false);
         $request = [];
 
         if ($position !== null) {
@@ -412,6 +418,7 @@ class GatherContentClient implements GatherContentClientInterface
      */
     public function itemApplyTemplatePost($itemId, $templateId)
     {
+        $this->setUseLegacy(false);
         $this->sendPost("items/$itemId/apply_template", [
             'body' => \GuzzleHttp\json_encode([
                 'template_id' => $templateId
@@ -429,6 +436,7 @@ class GatherContentClient implements GatherContentClientInterface
      */
     public function itemDisconnectTemplatePost($itemId)
     {
+        $this->setUseLegacy(false);
         $this->sendPost("items/$itemId/disconnect_template");
 
         $this->validatePostResponse(200);
@@ -442,6 +450,7 @@ class GatherContentClient implements GatherContentClientInterface
      */
     public function itemDuplicatePost($itemId)
     {
+        $this->setUseLegacy(false);
         $this->sendPost("items/$itemId/duplicate");
 
         $this->validatePostResponse(200);
@@ -470,6 +479,7 @@ class GatherContentClient implements GatherContentClientInterface
      */
     public function templatesGet($projectId)
     {
+        $this->setUseLegacy(false);
         $this->sendGet("projects/$projectId/templates");
 
         $this->validateResponse();
@@ -483,6 +493,7 @@ class GatherContentClient implements GatherContentClientInterface
      */
     public function templateGet($templateId)
     {
+        $this->setUseLegacy(false);
         $this->sendGet("templates/$templateId");
 
         $this->validateResponse();
@@ -503,6 +514,7 @@ class GatherContentClient implements GatherContentClientInterface
      */
     public function templatePost($projectId, $name, Structure $structure)
     {
+        $this->setUseLegacy(false);
         $structure->setSkipEmptyProperties(true);
         $this->sendPost("projects/$projectId/templates", [
             'body' => \GuzzleHttp\json_encode([
@@ -522,6 +534,7 @@ class GatherContentClient implements GatherContentClientInterface
      */
     public function templateRenamePost($templateId, $name)
     {
+        $this->setUseLegacy(false);
         $this->sendPost("templates/$templateId/rename", [
             'body' => \GuzzleHttp\json_encode(['name' => $name]),
         ]);
@@ -537,6 +550,7 @@ class GatherContentClient implements GatherContentClientInterface
      */
     public function templateDuplicatePost($templateId, $projectId = null)
     {
+        $this->setUseLegacy(false);
         $request = [];
 
         if ($projectId !== null) {
@@ -558,6 +572,7 @@ class GatherContentClient implements GatherContentClientInterface
      */
     public function templateDelete($templateId)
     {
+        $this->setUseLegacy(false);
         $this->sendDelete("templates/$templateId");
     }
 
@@ -566,6 +581,7 @@ class GatherContentClient implements GatherContentClientInterface
      */
     public function structureGet($structureUuid)
     {
+        $this->setUseLegacy(false);
         $this->sendGet("structures/$structureUuid");
 
         $this->validateResponse();
@@ -579,6 +595,7 @@ class GatherContentClient implements GatherContentClientInterface
      */
     public function structureAlterPut($structureUuid, Structure $structure, $priorityItemId = null)
     {
+        $this->setUseLegacy(false);
         $structure->setSkipEmptyProperties(true);
         $request = [
             'structure' => $structure,
@@ -603,6 +620,7 @@ class GatherContentClient implements GatherContentClientInterface
      */
     public function structureSaveAsTemplatePost($structureUuid, $name)
     {
+        $this->setUseLegacy(false);
         $this->sendPost("structures/$structureUuid/save_as_template", [
             'body' => \GuzzleHttp\json_encode([
                 'name' => $name,
@@ -620,6 +638,7 @@ class GatherContentClient implements GatherContentClientInterface
      */
     public function foldersGet($projectId, $includeTrashed = false)
     {
+        $this->setUseLegacy(false);
         $this->sendGet("projects/$projectId/folders", ['query' => ['include_trashed' => $includeTrashed]]);
 
         $this->validateResponse();
@@ -633,6 +652,7 @@ class GatherContentClient implements GatherContentClientInterface
      */
     public function folderPost($parentFolderUuid, Folder $folder)
     {
+        $this->setUseLegacy(false);
         $folder->setSkipEmptyProperties(true);
         $this->sendPost("folders/$parentFolderUuid/folders", [
             'body' => \GuzzleHttp\json_encode($folder),
@@ -649,6 +669,7 @@ class GatherContentClient implements GatherContentClientInterface
      */
     public function folderRenamePost($folderUuid, $name)
     {
+        $this->setUseLegacy(false);
         $this->sendPost("folders/$folderUuid/rename", [
             'body' => \GuzzleHttp\json_encode(['name' => $name]),
         ]);
@@ -664,6 +685,7 @@ class GatherContentClient implements GatherContentClientInterface
      */
     public function folderMovePost($folderUuid, $parentFolderUuid, $position = null)
     {
+        $this->setUseLegacy(false);
         $request = [
             'parent_uuid' => $parentFolderUuid,
         ];
@@ -687,6 +709,7 @@ class GatherContentClient implements GatherContentClientInterface
      */
     public function folderDelete($folderUuid)
     {
+        $this->setUseLegacy(false);
         $this->sendDelete("folders/$folderUuid");
 
         if ($this->response->getStatusCode() === 200) {
@@ -703,6 +726,7 @@ class GatherContentClient implements GatherContentClientInterface
      */
     public function folderRestorePost($folderUuid)
     {
+        $this->setUseLegacy(false);
         $this->sendPost("folders/$folderUuid/restore");
 
         $this->validatePostResponse(200);
