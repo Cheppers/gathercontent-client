@@ -466,12 +466,10 @@ class GatherContentClient implements GatherContentClientInterface
     {
         $this->setUseLegacy(true);
         $this->sendPost("items/$itemId/choose_status", [
-            'form_params' => [
+            'body' => \GuzzleHttp\json_encode([
                 'status_id' => $statusId,
-            ],
+            ]),
         ]);
-
-        $this->validatePostResponse(202);
     }
 
     /**

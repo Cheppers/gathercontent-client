@@ -290,11 +290,9 @@ class GatherContentClientItemTest extends GcBaseTestCase
         );
 
         $requestBody = $request->getBody();
-        $queryString = $requestBody->getContents();
-        $sentQueryVariables = [];
-        parse_str($queryString, $sentQueryVariables);
+        $sentQueryVariables = \GuzzleHttp\json_decode($requestBody, true);
 
-        if ($statusId) {
+        if (!empty($statusId)) {
             static::assertArrayHasKey('status_id', $sentQueryVariables);
             static::assertEquals($sentQueryVariables['status_id'], $statusId);
         } else {
@@ -304,25 +302,6 @@ class GatherContentClientItemTest extends GcBaseTestCase
 
     public function casesItemChooseStatusPostFail()
     {
-        $cases = static::basicFailCasesPost(['id' => 0]);
-        $cases['missing_item'] = [
-            [
-                'class' => GatherContentClientException::class,
-                'code' => GatherContentClientException::API_ERROR,
-                'msg' => 'API Error: "Item Not Found"',
-            ],
-            [
-                'code' => 200,
-                'headers' => ['Content-Type' => 'application/json'],
-                'body' => [
-                    'data' => [
-                        'message' => 'Item Not Found'
-                    ]
-                ],
-            ],
-            0,
-            423
-        ];
         $cases['empty'] = [
             [
                 'class' => \Exception::class,
