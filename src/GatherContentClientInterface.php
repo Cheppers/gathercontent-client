@@ -145,7 +145,7 @@ interface GatherContentClientInterface
      *
      * @return array
      */
-    public function itemsGet($projectId);
+    public function itemsGet($projectId, $query = []);
 
     /**
      * @see https://docs.gathercontent.com/reference#getitem

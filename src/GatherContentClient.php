@@ -366,8 +366,6 @@ class GatherContentClient implements GatherContentClientInterface
         $this->sendPost("items/$itemId/content", [
             'body' => \GuzzleHttp\json_encode(['content' => $content]),
         ]);
-
-        $this->validatePostResponse(202);
     }
 
     /**
