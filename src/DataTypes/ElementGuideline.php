@@ -2,7 +2,7 @@
 
 namespace Cheppers\GatherContent\DataTypes;
 
-class ElementSection extends Element
+class ElementGuideline extends Element
 {
     /**
      * {@inheritdoc}

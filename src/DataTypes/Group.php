@@ -7,7 +7,7 @@ class Group extends Base
     protected static $type2Class = [
         'text' => ElementText::class,
         'attachment' => Element::class,
-        'guidelines' => ElementSection::class,
+        'guidelines' => ElementGuideline::class,
         'choice_checkbox' => ElementCheckbox::class,
         'choice_radio' => ElementRadio::class,
     ];

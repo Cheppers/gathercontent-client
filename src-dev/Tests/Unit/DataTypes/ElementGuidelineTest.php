@@ -2,17 +2,17 @@
 
 namespace Cheppers\GatherContent\Tests\Unit\DataTypes;
 
-use Cheppers\GatherContent\DataTypes\ElementSection;
+use Cheppers\GatherContent\DataTypes\ElementGuideline;
 
 /**
  * @group GatherContentClient
  */
-class ElementSectionTest extends BaseTest
+class ElementGuidelineTest extends BaseTest
 {
     /**
      * {@inheritdoc}
      */
-    protected $className = ElementSection::class;
+    protected $className = ElementGuideline::class;
 
     /**
      * {@inheritdoc}
