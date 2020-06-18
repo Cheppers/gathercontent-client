@@ -169,7 +169,8 @@ interface GatherContentClientInterface
      */
     public function itemUpdatePost(
         $itemId,
-        array $content = []
+        array $content = [],
+        array $assets = []
     );
 
     /**

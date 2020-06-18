@@ -149,10 +149,79 @@ catch (\Exception $e) {
     exit(1);
 }
 
-echo "First content's name = {$template['data']->name}".PHP_EOL;
+echo "Template's name = {$template['data']->name}".PHP_EOL;
 echo "Structure UUID = {$template['related']->structure->id}".PHP_EOL;
 
 $group = reset($template['related']->structure->groups);
 
 echo "Structure's first Group's name = {$group->name}".PHP_EOL;
+```
+
+To create an item with assets, you can do the following:
+
+```php
+<?php
+$email = 'YOUR_GATHERCONTENT_EMAIL';
+$apiKey = 'YOUR_GATHERCONTENT_API_KEY';
+$client = new \GuzzleHttp\Client();
+$gc = new \Cheppers\GatherContent\GatherContentClient($client);
+$gc
+  ->setEmail($email)
+  ->setApiKey($apiKey);
+
+try {
+    $projectId = 12345;
+    $templateId = 12345;
+    $item = $gc->itemPost($projectId, new Item([
+       'name' => 'Item name',
+       'template_id' => $templateId,
+       'content' => [
+           'field-uuid' => 'Body content',
+       ],
+       'assets' => [
+           'file-field-uuid' => [
+               '/path-to-your-file/test.jpg',
+               '/path-to-your-file/test.txt',
+           ],
+       ],
+   ]));
+}
+catch (\Exception $e) {
+    echo 'ERROR: ' . $e->getMessage() . PHP_EOL;
+    
+    exit(1);
+}
+
+echo "Content's name = {$item->name}".PHP_EOL;
+echo "Item ID = {$item->id}".PHP_EOL;
+```
+
+To update an item with assets, you can do the following:
+
+```php
+<?php
+$email = 'YOUR_GATHERCONTENT_EMAIL';
+$apiKey = 'YOUR_GATHERCONTENT_API_KEY';
+$client = new \GuzzleHttp\Client();
+$gc = new \Cheppers\GatherContent\GatherContentClient($client);
+$gc
+  ->setEmail($email)
+  ->setApiKey($apiKey);
+
+try {
+    $itemId = 12345;
+    $item = $gc->itemUpdatePost($itemId, [
+        'field-uuid' => 'Body change',
+    ], [
+        'file-field-uuid' => [
+            '/path-to-your-file/test.jpg',
+            '/path-to-your-file/test.txt',
+        ],
+    ]);
+}
+catch (\Exception $e) {
+    echo 'ERROR: ' . $e->getMessage() . PHP_EOL;
+    
+    exit(1);
+}
 ```

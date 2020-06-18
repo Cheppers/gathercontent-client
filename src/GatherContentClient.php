@@ -347,9 +347,22 @@ class GatherContentClient implements GatherContentClientInterface
     {
         $this->setUseLegacy(false);
         $item->setSkipEmptyProperties(true);
-        $this->sendPost("projects/$projectId/items", [
-            'body' => \GuzzleHttp\json_encode($item),
-        ]);
+        $request = [
+            'json' => $item,
+        ];
+
+        if (!empty($item->assets)) {
+            $item->content = \GuzzleHttp\json_encode($item->content);
+
+            // Convert data to array so we can format it to multipart type.
+            $itemArray = \GuzzleHttp\json_decode(\GuzzleHttp\json_encode($item), true);
+
+            $request = [
+                'multipart' => $this->formatRequestMultipart($itemArray),
+            ];
+        }
+
+        $this->sendPost("projects/$projectId/items", $request);
 
         $this->validatePostResponse(201);
         $body = $this->parseResponse();
@@ -360,12 +373,23 @@ class GatherContentClient implements GatherContentClientInterface
     /**
      * {@inheritdoc}
      */
-    public function itemUpdatePost($itemId, array $content = [])
+    public function itemUpdatePost($itemId, array $content = [], array $assets = [])
     {
         $this->setUseLegacy(false);
-        $this->sendPost("items/$itemId/content", [
-            'body' => \GuzzleHttp\json_encode(['content' => $content]),
-        ]);
+        $request = [
+            'json' => ['content' => $content],
+        ];
+
+        if (!empty($assets)) {
+            $request = [
+                'multipart' => $this->formatRequestMultipart([
+                    'content' => \GuzzleHttp\json_encode($content),
+                    'assets' => $assets,
+                ]),
+            ];
+        }
+
+        $this->sendPost("items/$itemId/content", $request);
     }
 
     /**
@@ -375,7 +399,7 @@ class GatherContentClient implements GatherContentClientInterface
     {
         $this->setUseLegacy(false);
         $this->sendPost("items/$itemId/rename", [
-            'body' => \GuzzleHttp\json_encode(['name' => $name]),
+            'json' => ['name' => $name],
         ]);
 
         $this->validatePostResponse(200);
@@ -401,7 +425,7 @@ class GatherContentClient implements GatherContentClientInterface
         }
 
         $this->sendPost("items/$itemId/move", [
-            'body' => \GuzzleHttp\json_encode($request),
+            'json' => $request,
         ]);
 
         $this->validatePostResponse(200);
@@ -418,9 +442,9 @@ class GatherContentClient implements GatherContentClientInterface
     {
         $this->setUseLegacy(false);
         $this->sendPost("items/$itemId/apply_template", [
-            'body' => \GuzzleHttp\json_encode([
+            'json' => [
                 'template_id' => $templateId
-            ]),
+            ],
         ]);
 
         $this->validatePostResponse(200);
@@ -464,9 +488,9 @@ class GatherContentClient implements GatherContentClientInterface
     {
         $this->setUseLegacy(true);
         $this->sendPost("items/$itemId/choose_status", [
-            'body' => \GuzzleHttp\json_encode([
+            'json' => [
                 'status_id' => $statusId,
-            ]),
+            ],
         ]);
     }
 
@@ -513,10 +537,10 @@ class GatherContentClient implements GatherContentClientInterface
         $this->setUseLegacy(false);
         $structure->setSkipEmptyProperties(true);
         $this->sendPost("projects/$projectId/templates", [
-            'body' => \GuzzleHttp\json_encode([
+            'json' => [
                 'name' => $name,
                 'structure' => $structure,
-            ]),
+            ],
         ]);
 
         $this->validatePostResponse(201);
@@ -532,7 +556,7 @@ class GatherContentClient implements GatherContentClientInterface
     {
         $this->setUseLegacy(false);
         $this->sendPost("templates/$templateId/rename", [
-            'body' => \GuzzleHttp\json_encode(['name' => $name]),
+            'json' => ['name' => $name],
         ]);
 
         $this->validatePostResponse(200);
@@ -554,7 +578,7 @@ class GatherContentClient implements GatherContentClientInterface
         }
 
         $this->sendPost("templates/$templateId/duplicate", [
-            'body' => \GuzzleHttp\json_encode($request),
+            'json' => $request,
         ]);
 
         $this->validatePostResponse(201);
@@ -602,7 +626,7 @@ class GatherContentClient implements GatherContentClientInterface
         }
 
         $this->sendPut("structures/$structureUuid", [
-            'body' => \GuzzleHttp\json_encode($request),
+            'json' => $request,
         ]);
 
         $this->validatePutResponse(200);
@@ -618,9 +642,9 @@ class GatherContentClient implements GatherContentClientInterface
     {
         $this->setUseLegacy(false);
         $this->sendPost("structures/$structureUuid/save_as_template", [
-            'body' => \GuzzleHttp\json_encode([
+            'json' => [
                 'name' => $name,
-            ]),
+            ],
         ]);
 
         $this->validatePutResponse(201);
@@ -651,7 +675,7 @@ class GatherContentClient implements GatherContentClientInterface
         $this->setUseLegacy(false);
         $folder->setSkipEmptyProperties(true);
         $this->sendPost("folders/$parentFolderUuid/folders", [
-            'body' => \GuzzleHttp\json_encode($folder),
+            'json' => $folder,
         ]);
 
         $this->validatePostResponse(201);
@@ -667,7 +691,7 @@ class GatherContentClient implements GatherContentClientInterface
     {
         $this->setUseLegacy(false);
         $this->sendPost("folders/$folderUuid/rename", [
-            'body' => \GuzzleHttp\json_encode(['name' => $name]),
+            'json' => ['name' => $name],
         ]);
 
         $this->validatePostResponse(200);
@@ -691,7 +715,7 @@ class GatherContentClient implements GatherContentClientInterface
         }
 
         $this->sendPost("folders/$folderUuid/move", [
-            'body' => \GuzzleHttp\json_encode($request),
+            'json' => $request,
         ]);
 
         $this->validatePostResponse(200);
@@ -749,7 +773,6 @@ class GatherContentClient implements GatherContentClientInterface
         return $base + [
             'Accept' => $accept,
             'User-Agent' => $this->getVersionString(),
-            'Content-Type' => 'application/json',
         ];
     }
 
@@ -958,5 +981,54 @@ class GatherContentClient implements GatherContentClientInterface
     protected function validatePutResponse($code)
     {
         return $this->validatePostResponse($code);
+    }
+
+    protected function formatRequestMultipart(array $data, string $parentKey = '')
+    {
+        $formatted = [];
+
+        foreach ($data as $key => $value) {
+            $formattedKey = $key;
+            if (!empty($parentKey)) {
+                $formattedKey = $parentKey.'['.$key.']';
+            }
+
+            if (is_array($value)) {
+                $formatted = array_merge($formatted, $this->formatRequestMultipart($value, $formattedKey));
+                continue;
+            }
+
+            $headers = [];
+            $filename = '';
+
+            // Check if the value is a string and a json and set the type.
+            $jsonValue = json_decode($value);
+            if (is_string($value)
+                && $jsonValue !== null
+                && (is_array($jsonValue) || $jsonValue instanceof \stdClass)
+            ) {
+                $headers = [
+                    'Content-Type' => 'application/json',
+                ];
+            }
+
+            // Check if the value is a file path and load the file data and mime.
+            if (is_file($value)) {
+                $headers = [
+                    'Content-Type' => mime_content_type($value),
+                ];
+                $filename = basename($value);
+                $value = fopen($value, 'r');
+            }
+
+            $formatted[] = [
+                'name' => $formattedKey,
+                'contents' => $value,
+                'headers' => $headers,
+                'filename' => $filename,
+            ];
+        }
+
+        return $formatted;
     }
 }

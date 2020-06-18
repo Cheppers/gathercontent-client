@@ -94,6 +94,11 @@ class Item extends Base
      */
     public $approvalCount = null;
 
+    /**
+     * @var array
+     */
+    public $assets = [];
+
     protected function initPropertyMapping()
     {
         parent::initPropertyMapping();
@@ -136,6 +141,7 @@ class Item extends Base
                         return $elements;
                     },
                 ],
+                'assets' => 'assets',
             ]
         );
 

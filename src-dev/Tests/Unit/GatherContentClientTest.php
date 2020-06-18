@@ -193,7 +193,6 @@ class GatherContentClientTest extends GcBaseTestCase
         $gc->meGet();
     }
 
-
     public function casesParsePagination()
     {
         $pagination = new Pagination([

@@ -5,6 +5,7 @@ namespace Cheppers\GatherContent\Tests\Unit;
 use Cheppers\GatherContent\DataTypes\Item;
 use Cheppers\GatherContent\GatherContentClient;
 use Cheppers\GatherContent\GatherContentClientException;
+use GuzzleHttp\Psr7\MultipartStream;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 
@@ -368,6 +369,15 @@ class GatherContentClientItemTest extends GcBaseTestCase
         ]);
         $itemMultipleElements = new Item($itemArray);
 
+        $itemArray = static::getUniqueResponseItem([
+            'text', 'files', 'choice_radio', 'choice_checkbox'
+        ]);
+        $itemAssets = new Item($itemArray);
+        $sentItem = new Item($itemArray);
+        $sentItem->assets = [
+            'field-uuid' => [__DIR__.'/files/test.txt'],
+        ];
+
         return [
             'empty' => [
                 $itemEmpty,
@@ -386,6 +396,12 @@ class GatherContentClientItemTest extends GcBaseTestCase
                 $itemMultipleElements,
                 131313,
                 $itemMultipleElements->id,
+            ],
+            'with-assets' => [
+                $itemAssets,
+                $sentItem,
+                131313,
+                $itemAssets->id,
             ],
         ];
     }
@@ -412,6 +428,7 @@ class GatherContentClientItemTest extends GcBaseTestCase
             ->itemPost($projectId, $item);
 
         $actual->setSkipEmptyProperties(true);
+        $expected->setSkipEmptyProperties(true);
 
         static::assertEquals($resultItemId, $actual->id);
 
@@ -434,8 +451,12 @@ class GatherContentClientItemTest extends GcBaseTestCase
         );
 
         $requestBody = $request->getBody();
-        $sentQueryVariables = \GuzzleHttp\json_decode($requestBody, true);
+        if (!empty($item->assets)) {
+            static::assertInstanceOf(MultipartStream::class, $requestBody);
+            return;
+        }
 
+        $sentQueryVariables = \GuzzleHttp\json_decode($requestBody, true);
         if (!empty($item->folderUuid)) {
             static::assertArrayHasKey('folder_uuid', $sentQueryVariables);
             static::assertEquals($sentQueryVariables['folder_uuid'], $expected->folderUuid);
@@ -514,21 +535,31 @@ class GatherContentClientItemTest extends GcBaseTestCase
         ]);
         $itemMultipleElements = new Item($itemArray);
 
+        $itemArray = static::getUniqueResponseItem([
+            'text', 'files', 'choice_radio', 'choice_checkbox'
+        ]);
+        $itemAssets = new Item($itemArray);
+
         return [
             'empty' => [
-                $itemEmpty,
                 13,
                 $itemEmpty->content,
+                [],
             ],
             'custom' => [
-                $itemCustom,
                 13,
                 $itemCustom->content,
+                [],
             ],
             'multiple-elements' => [
-                $itemMultipleElements,
                 13,
                 $itemMultipleElements->content,
+                [],
+            ],
+            'with-assets' => [
+                13,
+                $itemAssets->content,
+                ['field-uuid' => [__DIR__.'/files/test.txt']],
             ],
         ];
     }
@@ -536,7 +567,7 @@ class GatherContentClientItemTest extends GcBaseTestCase
     /**
      * @dataProvider casesItemUpdatePost
      */
-    public function testItemUpdatePost(Item $item, $itemId, array $content)
+    public function testItemUpdatePost($itemId, array $content, array $assets)
     {
         $tester = $this->getBasicHttpClientTester([
             new Response(
@@ -551,7 +582,7 @@ class GatherContentClientItemTest extends GcBaseTestCase
 
         (new GatherContentClient($client))
             ->setOptions($this->gcClientOptions)
-            ->itemUpdatePost($itemId, $content);
+            ->itemUpdatePost($itemId, $content, $assets);
 
         /** @var Request $request */
         $request = $container[0]['request'];
@@ -566,8 +597,12 @@ class GatherContentClientItemTest extends GcBaseTestCase
         );
 
         $requestBody = $request->getBody();
-        $sentQueryVariables = \GuzzleHttp\json_decode($requestBody, true);
+        if (!empty($assets)) {
+            static::assertInstanceOf(MultipartStream::class, $requestBody);
+            return;
+        }
 
+        $sentQueryVariables = \GuzzleHttp\json_decode($requestBody, true);
         static::assertArrayHasKey('content', $sentQueryVariables);
         // We need to do this because the 'value' parameter on text types
         // will be converted to simple string instead of array.
