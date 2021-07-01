@@ -42,6 +42,11 @@ class ElementSimpleFile extends ElementBase
     public $size = null;
 
     /**
+     * @var string
+     */
+    public $altText = '';
+
+    /**
      * {@inheritdoc}
      */
     protected function initPropertyMapping()
@@ -56,6 +61,7 @@ class ElementSimpleFile extends ElementBase
                 'url' => 'url',
                 'optimised_image_url' => 'optimisedImageUrl',
                 'size' => 'size',
+                'alt_text' => 'altText',
             ]
         );
 
