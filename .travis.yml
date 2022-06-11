@@ -21,6 +21,7 @@ before_script:
     - echo 'error_reporting = E_ALL & ~E_DEPRECATED' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
 
 script:
+    - 'bin/robo lint'
     - 'bin/phpunit'
 
 after_success:

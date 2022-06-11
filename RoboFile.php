@@ -1,11 +1,11 @@
 <?php
 
-use Cheppers\AssetJar\AssetJar;
-use Cheppers\LintReport\Reporter\BaseReporter;
-use Cheppers\LintReport\Reporter\CheckstyleReporter;
-use Cheppers\LintReport\Reporter\VerboseReporter;
-use Cheppers\Robo\Git\GitTaskLoader;
-use Cheppers\Robo\Phpcs\PhpcsTaskLoader;
+use Sweetchuck\AssetJar\AssetJar;
+use Sweetchuck\LintReport\Reporter\BaseReporter;
+use Sweetchuck\LintReport\Reporter\CheckstyleReporter;
+use Sweetchuck\LintReport\Reporter\VerboseReporter;
+use Sweetchuck\Robo\Git\GitTaskLoader;
+use Sweetchuck\Robo\Phpcs\PhpcsTaskLoader;
 use League\Container\ContainerInterface;
 use Robo\Collection\CollectionBuilder;
 use Robo\Tasks;
@@ -120,18 +120,18 @@ class RoboFile extends Tasks
     /**
      * Git "pre-commit" hook callback.
      */
-    public function githookPreCommit(): CollectionBuilder
-    {
-        $this->context = 'git-hook';
+    // public function githookPreCommit(): CollectionBuilder
+    // {
+    //     $this->context = 'git-hook';
 
-        return $this
-            ->collectionBuilder()
-            ->addTaskList([
-                'lint.composer.lock' => $this->taskComposerValidate(),
-                'lint.phpcs' => $this->getTaskPhpcsLint(),
-                'phpunit.unit' => $this->getTaskPhpUnit(),
-            ]);
-    }
+    //     return $this
+    //         ->collectionBuilder()
+    //         ->addTaskList([
+    //             'lint.composer.lock' => $this->taskComposerValidate(),
+    //             'lint.phpcs' => $this->getTaskPhpcsLint(),
+    //             'phpunit.unit' => $this->getTaskPhpUnit(),
+    //         ]);
+    // }
 
     /**
      * @return \Cheppers\Robo\Phpcs\Task\PhpcsLintFiles|\Robo\Collection\CollectionBuilder

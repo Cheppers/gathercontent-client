@@ -184,27 +184,28 @@ class GcBaseTestCase extends TestCase
         foreach ($elementTypes as $elementType) {
             if (is_array($elementType) && $elementType[0] === 'component') {
                 $group['fields'][] = static::getUniqueResponseElementTemplateComponent($elementType[1]);
-            }
-            else switch ($elementType) {
-                case 'text':
-                    $group['fields'][] = static::getUniqueResponseElementTemplateText();
-                    break;
+            } else {
+                switch ($elementType) {
+                    case 'text':
+                        $group['fields'][] = static::getUniqueResponseElementTemplateText();
+                        break;
 
-                case 'files':
-                    $group['fields'][] = static::getUniqueResponseElementTemplateFiles();
-                    break;
+                    case 'files':
+                        $group['fields'][] = static::getUniqueResponseElementTemplateFiles();
+                        break;
 
-                case 'guideline':
-                    $group['fields'][] = static::getUniqueResponseElementTemplateGuideline();
-                    break;
+                    case 'guideline':
+                        $group['fields'][] = static::getUniqueResponseElementTemplateGuideline();
+                        break;
 
-                case 'choice_radio':
-                    $group['fields'][] = static::getUniqueResponseElementTemplateChoiceRadio();
-                    break;
+                    case 'choice_radio':
+                        $group['fields'][] = static::getUniqueResponseElementTemplateChoiceRadio();
+                        break;
 
-                case 'choice_checkbox':
-                    $group['fields'][] = static::getUniqueResponseElementTemplateChoiceCheckbox();
-                    break;
+                    case 'choice_checkbox':
+                        $group['fields'][] = static::getUniqueResponseElementTemplateChoiceCheckbox();
+                        break;
+                }
             }
         }
 
