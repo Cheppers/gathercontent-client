@@ -734,7 +734,7 @@ class GatherContentClientTemplateTest extends GcBaseTestCase
 
         return [
             'component' => [
-                $structure,
+                ['data' => $data, 'related' => $structure],
                 ['data' => $data, 'related' => $structure],
                 42,
             ],

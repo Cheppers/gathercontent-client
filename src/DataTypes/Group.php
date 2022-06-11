@@ -10,6 +10,7 @@ class Group extends Base
         'guidelines' => ElementGuideline::class,
         'choice_checkbox' => ElementCheckbox::class,
         'choice_radio' => ElementRadio::class,
+        'component' => ElementComponent::class,
     ];
 
     /**
