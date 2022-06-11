@@ -1,10 +1,10 @@
 
 os: 'linux'
-dist: 'trusty'
+dist: 'focal'
 sudo: false
 language: 'php'
 php:
-    - '7.1'
+    - '7.4'
 
 cache:
     directories:
