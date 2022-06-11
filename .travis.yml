@@ -17,6 +17,9 @@ before_install:
 install:
     - 'composer install --no-progress'
 
+before_script:
+    - echo 'error_reporting = E_ALL & ~E_DEPRECATED' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
+
 script:
     - 'bin/phpunit'
 
