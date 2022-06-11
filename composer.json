@@ -8,18 +8,27 @@
     "config": {
         "bin-dir": "bin",
         "sort-packages": true,
-        "optimize-autoloader": true
+        "optimize-autoloader": true,
+        "allow-plugins": {
+            "sweetchuck/git-hooks": true
+        }
     },
     "require": {
         "guzzlehttp/guzzle": "^6.3"
     },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/Sweetchuck/git-hooks"
+        }
+    ],
     "require-dev": {
-        "cheppers/git-hooks": "^0.0.9",
-        "cheppers/lint-report": "^0.0.5",
-        "cheppers/robo-git": "^0.0.5",
-        "cheppers/robo-phpcs": "^0.0.13",
-        "consolidation/robo": "^1.1",
-        "phpunit/phpunit": "^6.2",
+        "sweetchuck/git-hooks": "2.x",
+        "sweetchuck/lint-report": "^0.1.0",
+        "sweetchuck/robo-git": "^0.3.0",
+        "sweetchuck/robo-phpcs": "^0.2.0",
+        "consolidation/robo": "^2.0",
+        "phpunit/phpunit": "^9",
         "webmozart/path-util": "^2.3"
     },
     "autoload": {

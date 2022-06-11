@@ -724,4 +724,78 @@ class GatherContentClientTemplateTest extends GcBaseTestCase
         $requestBody = $request->getBody();
         static::assertEmpty($requestBody->getContents());
     }
+
+    public function casesTemplateGetComponent()
+    {
+        $data = static::getUniqueResponseTemplate();
+        $structure = static::getUniqueResponseRelated([
+            ['text', 'file', ['component', ['text', 'file']]],
+        ]);
+
+        return [
+            'component' => [
+                $structure,
+                ['data' => $data, 'related' => $structure],
+                42,
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider casesTemplateGetComponent
+     */
+    public function testTemplateGetComponent(array $expected, array $responseBody, $templateId)
+    {
+        $tester = $this->getBasicHttpClientTester(
+            [
+                new Response(
+                    200,
+                    ['Content-Type' => 'application/json'],
+                    \GuzzleHttp\json_encode($responseBody)
+                ),
+            ]
+        );
+        $client = $tester['client'];
+        $container = &$tester['container'];
+
+        $actual = (new GatherContentClient($client))
+            ->setOptions($this->gcClientOptions)
+            ->templateGet($templateId);
+
+        if (!empty($expected['data'])) {
+            static::assertTrue($actual['data'] instanceof Template, 'Data type of the return is Template');
+            static::assertEquals(
+                \GuzzleHttp\json_encode($expected['data'], JSON_PRETTY_PRINT),
+                \GuzzleHttp\json_encode($actual['data'], JSON_PRETTY_PRINT)
+            );
+        } else {
+            static::assertNull($actual['data']);
+        }
+
+        if (!empty($expected['related'])) {
+            static::assertTrue($actual['related'] instanceof Related, 'Data type of the return is Related');
+            static::assertTrue(
+                $actual['related']->structure instanceof Structure,
+                'Data type of the return is Structure'
+            );
+            static::assertEquals(
+                \GuzzleHttp\json_encode($expected['related'], JSON_PRETTY_PRINT),
+                \GuzzleHttp\json_encode($actual['related'], JSON_PRETTY_PRINT)
+            );
+        } else {
+            static::assertNull($actual['related']);
+        }
+
+        /** @var Request $request */
+        $request = $container[0]['request'];
+
+        static::assertEquals(1, count($container));
+        static::assertEquals('GET', $request->getMethod());
+        static::assertEquals(['application/vnd.gathercontent.v2+json'], $request->getHeader('Accept'));
+        static::assertEquals(['api.example.com'], $request->getHeader('Host'));
+        static::assertEquals(
+            "{$this->gcClientOptions['baseUri']}/templates/$templateId",
+            (string) $request->getUri()
+        );
+    }
 }

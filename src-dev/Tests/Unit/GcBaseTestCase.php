@@ -182,7 +182,10 @@ class GcBaseTestCase extends TestCase
         ];
 
         foreach ($elementTypes as $elementType) {
-            switch ($elementType) {
+            if (is_array($elementType) && $elementType[0] === 'component') {
+                $group['fields'][] = static::getUniqueResponseElementTemplateComponent($elementType[1]);
+            }
+            else switch ($elementType) {
                 case 'text':
                     $group['fields'][] = static::getUniqueResponseElementTemplateText();
                     break;
@@ -333,6 +336,16 @@ class GcBaseTestCase extends TestCase
         }
 
         return $options;
+    }
+
+    public static function getUniqueResponseElementTemplateComponent($elementTypes)
+    {
+        $element = static::getUniqueResponseElement();
+        $element['field_type'] = 'component';
+        $element['component'] = static::getUniqueResponseGroup($elementTypes);
+        $element['component']['metadata'] = [];
+        unset($element['component']['name']);
+        return $element;
     }
 
     public static function getUniqueResponseAssignedUsers()
