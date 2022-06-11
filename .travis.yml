@@ -18,7 +18,6 @@ install:
     - 'composer install --no-progress'
 
 script:
-    - 'bin/robo lint'
     - 'bin/phpunit'
 
 after_success:
