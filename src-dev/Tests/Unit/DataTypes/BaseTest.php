@@ -100,7 +100,7 @@ class BaseTest extends GcBaseTestCase
     public function testSerialize($expected, array $data)
     {
         $base = new Base($data);
-        static::assertEquals($expected, $base->serialize());
+        static::assertEquals($expected, $base->__serialize());
     }
 
     public function casesUnserialize()
@@ -123,7 +123,7 @@ class BaseTest extends GcBaseTestCase
         $baseExpected = new Base($expected);
 
         $base = new Base();
-        $base->unserialize($data);
+        $base->__unserialize($data);
 
         static::assertEquals($baseExpected->id, $base->id);
     }
