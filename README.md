@@ -13,15 +13,15 @@ Compatible with `application/vnd.gathercontent.v0.5+json`
 These endpoints are essential, so we kept the support for them in this new version.
 In the future these endpoints will be in the v2 API and we will replace them accordingly.
 
-- [GET:  /me](https://docs.gathercontent.com/0.5/reference#get-me) `$gc->meGet()`
-- [GET:  /accounts](https://docs.gathercontent.com/0.5/reference#get-accounts) `$gc->accountsGet()`
-- [GET:  /accounts/:account_id](https://docs.gathercontent.com/0.5/reference#get-accountsaccount_id) `$gc->accountGet()`
-- [GET:  /projects](https://docs.gathercontent.com/0.5/reference#get-projects) `$gc->projectsGet()`
-- [GET:  /projects/:project_id](https://docs.gathercontent.com/0.5/reference#get-project-by-id) `$gc->projectGet()`
-- [POST: /projects](https://docs.gathercontent.com/0.5/reference#post-projects) `$gc->projectsPost()`
-- [GET:  /projects/:project_id/statuses](https://docs.gathercontent.com/0.5/reference#get-project-statuses) `$gc->projectStatusesGet()`
-- [GET:  /projects/:project_id/statuses/:status_id](https://docs.gathercontent.com/0.5/reference#get-project-statuses-by-id) `$gc->projectStatusGet()`
-- [POST: /items/:item_id/choose_status](https://docs.gathercontent.com/0.5/reference#post-item-choose_status) `$gc->itemChooseStatusPost()`
+- [GET:  /me](https://docs.gathercontent.com/0.5/reference/get-me) `$gc->meGet()`
+- [GET:  /accounts](https://docs.gathercontent.com/0.5/reference/get-accounts) `$gc->accountsGet()`
+- [GET:  /accounts/:account_id](https://docs.gathercontent.com/0.5/reference/get-accountsaccount_id) `$gc->accountGet()`
+- [GET:  /projects](https://docs.gathercontent.com/0.5/reference/get-projects) `$gc->projectsGet()`
+- [GET:  /projects/:project_id](https://docs.gathercontent.com/0.5/reference/get-project-by-id) `$gc->projectGet()`
+- [POST: /projects](https://docs.gathercontent.com/0.5/reference/post-projects) `$gc->projectsPost()`
+- [GET:  /projects/:project_id/statuses](https://docs.gathercontent.com/0.5/reference/get-project-statuses) `$gc->projectStatusesGet()`
+- [GET:  /projects/:project_id/statuses/:status_id](https://docs.gathercontent.com/0.5/reference/get-project-statuses-by-id) `$gc->projectStatusGet()`
+- [POST: /items/:item_id/choose_status](https://docs.gathercontent.com/0.5/reference/post-item-choose_status) `$gc->itemChooseStatusPost()`
 
 ### Current
 
@@ -29,39 +29,48 @@ Compatible with `application/vnd.gathercontent.v2+json`
 
 #### Items
 
-- [GET:  /projects/:project_id/items](https://docs.gathercontent.com/reference#listitems) `$gc->itemsGet()`
-- [GET:  /items/:item_id](https://docs.gathercontent.com/reference#getitem) `$gc->itemGet()`
-- [POST: /projects/:project_id/items](https://docs.gathercontent.com/reference#createitem) `$gc->itemPost()`
-- [POST: /items/:item_id/content](https://docs.gathercontent.com/reference#updateitemcontent) `$gc->itemUpdatePost()`
-- [POST: /items/:item_id/rename](https://docs.gathercontent.com/reference#renameitem) `$gc->itemRenamePost()`
-- [POST: /items/:item_id/move](https://docs.gathercontent.com/reference#moveitem) `$gc->itemMovePost()`
-- [POST: /items/:item_id/apply_template](https://docs.gathercontent.com/reference#applytemplate) `$gc->itemApplyTemplatePost()`
-- [POST: /items/:item_id/disconnect_template](https://docs.gathercontent.com/reference#disconnecttemplate) `$gc->itemDisconnectTemplatePost()`
-- [POST: /items/:item_id/duplicate](https://docs.gathercontent.com/reference#duplicate) `$gc->itemDuplicatePost()`
+- [GET:  /projects/:project_id/items](https://docs.gathercontent.com/reference/listitems) `$gc->itemsGet()`
+- [GET:  /items/:item_id](https://docs.gathercontent.com/reference/getitem) `$gc->itemGet()`
+- [POST: /projects/:project_id/items](https://docs.gathercontent.com/reference/createitem) `$gc->itemPost()`
+- [POST: /items/:item_id/content](https://docs.gathercontent.com/reference/updateitemcontent) `$gc->itemUpdatePost()`
+- [POST: /items/:item_id/rename](https://docs.gathercontent.com/reference/renameitem) `$gc->itemRenamePost()`
+- [POST: /items/:item_id/move](https://docs.gathercontent.com/reference/moveitem) `$gc->itemMovePost()`
+- [POST: /items/:item_id/apply_template](https://docs.gathercontent.com/reference/applytemplate) `$gc->itemApplyTemplatePost()`
+- [POST: /items/:item_id/disconnect_template](https://docs.gathercontent.com/reference/disconnecttemplate) `$gc->itemDisconnectTemplatePost()`
+- [POST: /items/:item_id/duplicate](https://docs.gathercontent.com/reference/duplicate) `$gc->itemDuplicatePost()`
 
 #### Templates
 
-- [GET:    /projects/:project_id/templates](https://docs.gathercontent.com/reference#listtemplates) `$gc->templatesGet()`
-- [GET:    /templates/:template_id](https://docs.gathercontent.com/reference#gettemplate) `$gc->templateGet()`
-- [POST:   /projects/:project_id/templates](https://docs.gathercontent.com/reference#createtemplate) `$gc->templatePost()`
-- [DELETE: /templates/:template_id/delete](https://docs.gathercontent.com/reference#deletetemplate) `$gc->templateDelete()`
-- [POST:   /templates/:template_id/rename](https://docs.gathercontent.com/reference#renametemplate) `$gc->templateRenamePost()`
-- [POST:   /templates/:template_id/duplicate](https://docs.gathercontent.com/reference#duplicatetemplate) `$gc->templateDuplicatePost()`
+- [GET:    /projects/:project_id/templates](https://docs.gathercontent.com/reference/listtemplates) `$gc->templatesGet()`
+- [GET:    /templates/:template_id](https://docs.gathercontent.com/reference/gettemplate) `$gc->templateGet()`
+- [POST:   /projects/:project_id/templates](https://docs.gathercontent.com/reference/createtemplate) `$gc->templatePost()`
+- [DELETE: /templates/:template_id/delete](https://docs.gathercontent.com/reference/deletetemplate) `$gc->templateDelete()`
+- [POST:   /templates/:template_id/rename](https://docs.gathercontent.com/reference/renametemplate) `$gc->templateRenamePost()`
+- [POST:   /templates/:template_id/duplicate](https://docs.gathercontent.com/reference/duplicatetemplate) `$gc->templateDuplicatePost()`
 
 #### Structures
 
-- [GET:  /structures/:structure_uuid](https://docs.gathercontent.com/reference#getstructure) `$gc->structureGet()`
-- [PUT:  /structures/:structure_uuid](https://docs.gathercontent.com/reference#alterstructure) `$gc->structureAlterPut()`
-- [POST: /structures/:structure_uuid/save_as_template](https://docs.gathercontent.com/reference#savestructureastemplate) `$gc->structureSaveAsTemplatePost()`
+- [GET:  /structures/:structure_uuid](https://docs.gathercontent.com/reference/getstructure) `$gc->structureGet()`
+- [PUT:  /structures/:structure_uuid](https://docs.gathercontent.com/reference/alterstructure) `$gc->structureAlterPut()`
+- [POST: /structures/:structure_uuid/save_as_template](https://docs.gathercontent.com/reference/savestructureastemplate) `$gc->structureSaveAsTemplatePost()`
+
+#### Components
+
+- [GET:    /projects/:project_id/components](https://docs.gathercontent.com/reference/listcomponents) `$gc->componentsGet()`
+- [GET:    /components/:component_uuid](https://docs.gathercontent.com/reference/getcomponent) `$gc->componentGet()`
+- [POST:   /projects/:project_id/components](https://docs.gathercontent.com/reference/createcomponent) `$gc->componentPost()`
+- [DELETE: /components/:component_uuid](https://docs.gathercontent.com/reference/deletecomponent) `$gc->componentDelete()`
+- [POST:   /components/:component_uuid/rename](https://docs.gathercontent.com/reference/renamecomponent) `$gc->componentRenamePost()`
+- [PUT:   /components/:component_uuid/fields](https://docs.gathercontent.com/reference/updatecomponentfields) `$gc->componentUpdatePut()`
 
 #### Folders
 
-- [GET:    /folders](https://docs.gathercontent.com/reference#listfolders) `$gc->foldersGet()`
-- [POST:   /folders](https://docs.gathercontent.com/reference#createfolder) `$gc->folderPost()`
-- [POST:   /folders](https://docs.gathercontent.com/reference#renamefolder) `$gc->folderRenamePost()`
-- [POST:   /folders](https://docs.gathercontent.com/reference#movefolder) `$gc->folderMovePost()`
-- [DELETE: /folders](https://docs.gathercontent.com/reference#trashordeletefolder) `$gc->folderDelete()`
-- [POST:   /folders](https://docs.gathercontent.com/reference#restorefolder) `$gc->folderRestorePost()`
+- [GET:    /folders](https://docs.gathercontent.com/reference/listfolders) `$gc->foldersGet()`
+- [POST:   /folders](https://docs.gathercontent.com/reference/createfolder) `$gc->folderPost()`
+- [POST:   /folders](https://docs.gathercontent.com/reference/renamefolder) `$gc->folderRenamePost()`
+- [POST:   /folders](https://docs.gathercontent.com/reference/movefolder) `$gc->folderMovePost()`
+- [DELETE: /folders](https://docs.gathercontent.com/reference/trashordeletefolder) `$gc->folderDelete()`
+- [POST:   /folders](https://docs.gathercontent.com/reference/restorefolder) `$gc->folderRestorePost()`
 
 
 ## Basic usage
@@ -71,7 +80,7 @@ To create the GatherContentClient simply pass in a Guzzle client in the construc
 You will need:
 
 - your e-mail address to log into GatherContent
-- your [API key](https://docs.gathercontent.com/reference#authentication) from GatherContent
+- your [API key](https://docs.gathercontent.com/reference/authentication) from GatherContent
 
 ```php
 <?php
@@ -88,7 +97,7 @@ try {
 }
 catch (\Exception $e) {
     echo 'ERROR: ' . $e->getMessage() . PHP_EOL;
-    
+
     exit(1);
 }
 echo "Email = {$me->email}" . PHP_EOL;
@@ -114,7 +123,7 @@ try {
 }
 catch (\Exception $e) {
     echo 'ERROR: ' . $e->getMessage() . PHP_EOL;
-    
+
     exit(1);
 }
 
@@ -125,7 +134,7 @@ echo "Pagination total = {$items['pagination']->total}" . PHP_EOL;
 echo "Pagination current page = {$items['pagination']->currentPage}" . PHP_EOL;
 ```
 
-For additional parameters please visit the documentation: [/projects/:project_id/items](https://docs.gathercontent.com/reference#listitems).
+For additional parameters please visit the documentation: [/projects/:project_id/items](https://docs.gathercontent.com/reference/listitems).
 
 The get template endpoint is returning structure object data in this new version, you can access it like this:
 
@@ -145,7 +154,7 @@ try {
 }
 catch (\Exception $e) {
     echo 'ERROR: ' . $e->getMessage() . PHP_EOL;
-    
+
     exit(1);
 }
 
@@ -188,7 +197,7 @@ try {
 }
 catch (\Exception $e) {
     echo 'ERROR: ' . $e->getMessage() . PHP_EOL;
-    
+
     exit(1);
 }
 
@@ -222,7 +231,7 @@ try {
 }
 catch (\Exception $e) {
     echo 'ERROR: ' . $e->getMessage() . PHP_EOL;
-    
+
     exit(1);
 }
 
