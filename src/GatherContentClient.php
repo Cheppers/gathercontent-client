@@ -6,6 +6,7 @@ use Cheppers\GatherContent\DataTypes\Folder;
 use Cheppers\GatherContent\DataTypes\Item;
 use Cheppers\GatherContent\DataTypes\Pagination;
 use Cheppers\GatherContent\DataTypes\Structure;
+use Cheppers\GatherContent\DataTypes\Component;
 use GuzzleHttp\ClientInterface;
 
 class GatherContentClient implements GatherContentClientInterface
@@ -663,6 +664,101 @@ class GatherContentClient implements GatherContentClientInterface
         $body = $this->parseResponse();
 
         return empty($body['data']) ? null : $this->parseResponseDataItem($body['data'], DataTypes\Template::class);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function componentsGet($projectId)
+    {
+        $this->setUseLegacy(false);
+        $this->sendGet("projects/$projectId/components");
+
+        $this->validateResponse();
+        $body = $this->parseResponse();
+
+        return $this->parseResponseItems($body, DataTypes\Component::class);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function componentPost($projectId, $name, $componentUuid, $fields)
+    {
+        $this->setUseLegacy(false);
+        $this->sendPost("projects/$projectId/components", [
+            'json' => [
+                'name' => $name,
+                'uuid' => $componentUuid,
+                'fields' => $fields,
+            ],
+        ]);
+
+        $this->validatePostResponse(201);
+        $body = $this->parseResponse();
+
+        return empty($body['data']) ? null : $this->parseResponseDataItem($body['data'], DataTypes\Component::class);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function componentGet($componentUuid)
+    {
+        $this->setUseLegacy(false);
+        $this->sendGet("components/$componentUuid");
+
+        $this->validateResponse();
+        $body = $this->parseResponse();
+
+        $response['data'] = empty($body['data'])
+            ? null
+            : $this->parseResponseDataItem($body['data'], DataTypes\Component::class);
+
+        return $response;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function componentDelete($componentUuid)
+    {
+        $this->setUseLegacy(false);
+        $this->sendDelete("components/$componentUuid");
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function componentUpdatePut($componentUuid, $fields)
+    {
+        $this->setUseLegacy(false);
+        $this->sendPut("components/$componentUuid/fields", [
+            'json' => [
+                'fields' => $fields,
+            ],
+        ]);
+
+        $this->validatePostResponse(201);
+        $body = $this->parseResponse();
+
+        return empty($body['data']) ? null : $this->parseResponseDataItem($body['data'], DataTypes\Component::class);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function componentRenamePost($componentUuid, $name)
+    {
+        $this->setUseLegacy(false);
+        $this->sendPost("components/$componentUuid/rename", [
+            'json' => ['name' => $name],
+        ]);
+
+        $this->validatePostResponse(200);
+        $body = $this->parseResponse();
+
+        return empty($body['data']) ? null : $this->parseResponseDataItem($body['data'], DataTypes\Component::class);
     }
 
     /**

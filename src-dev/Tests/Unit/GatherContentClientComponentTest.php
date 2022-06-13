@@ -2,46 +2,44 @@
 
 namespace Cheppers\GatherContent\Tests\Unit;
 
-use Cheppers\GatherContent\DataTypes\Related;
-use Cheppers\GatherContent\DataTypes\Structure;
-use Cheppers\GatherContent\DataTypes\Template;
+use Cheppers\GatherContent\DataTypes\Component;
 use Cheppers\GatherContent\GatherContentClient;
 use Cheppers\GatherContent\GatherContentClientException;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 
-class GatherContentClientTemplateTest extends GcBaseTestCase
+class GatherContentClientComponentTest extends GcBaseTestCase
 {
-    public function casesTemplatesGet()
+    public function casesComponentsGet()
     {
         $data = [
-            static::getUniqueResponseTemplate(),
-            static::getUniqueResponseTemplate()
+            static::getUniqueResponseComponent(['text', 'files', 'choice_radio', 'choice_checkbox']),
+            static::getUniqueResponseComponent(['text', 'files', 'choice_radio', 'choice_checkbox'])
         ];
 
-        $templates = [];
-        foreach ($data as $template) {
-            $templates[] = new Template($template);
+        $components = [];
+        foreach ($data as $component) {
+            $components[] = new Component($component);
         }
 
         return [
             'empty' => [
                 [],
                 ['data' => []],
-                42,
+                'uuid-42',
             ],
             'basic' => [
-                $templates,
-                ['data' => $templates],
-                42,
+                $components,
+                ['data' => $components],
+                'uuid-42',
             ],
         ];
     }
 
     /**
-     * @dataProvider casesTemplatesGet
+     * @dataProvider casesComponentsGet
      */
-    public function testTemplatesGet(array $expected, array $responseBody, $projectId)
+    public function testComponentsGet(array $expected, array $responseBody, $projectId)
     {
         $tester = $this->getBasicHttpClientTester(
             [
@@ -57,7 +55,7 @@ class GatherContentClientTemplateTest extends GcBaseTestCase
 
         $actual = (new GatherContentClient($client))
             ->setOptions($this->gcClientOptions)
-            ->templatesGet($projectId);
+            ->componentsGet($projectId);
 
         static::assertEquals(
             \GuzzleHttp\json_encode($expected, JSON_PRETTY_PRINT),
@@ -72,12 +70,12 @@ class GatherContentClientTemplateTest extends GcBaseTestCase
         static::assertEquals(['application/vnd.gathercontent.v2+json'], $request->getHeader('Accept'));
         static::assertEquals(['api.example.com'], $request->getHeader('Host'));
         static::assertEquals(
-            "{$this->gcClientOptions['baseUri']}/projects/$projectId/templates",
+            "{$this->gcClientOptions['baseUri']}/projects/$projectId/components",
             (string) $request->getUri()
         );
     }
 
-    public function casesTemplatesGetFail()
+    public function casesComponentsGetFail()
     {
         $cases = static::basicFailCasesGet();
 
@@ -95,16 +93,16 @@ class GatherContentClientTemplateTest extends GcBaseTestCase
                     'code' => 404
                 ],
             ],
-            42
+            'uuid-42'
         ];
 
         return $cases;
     }
 
     /**
-     * @dataProvider casesTemplatesGetFail
+     * @dataProvider casesComponentsGetFail
      */
-    public function testTemplatesGetFail(array $expected, array $response, $projectId)
+    public function testComponentsGetFail(array $expected, array $response, $projectId)
     {
         $tester = $this->getBasicHttpClientTester(
             [
@@ -124,35 +122,31 @@ class GatherContentClientTemplateTest extends GcBaseTestCase
         static::expectExceptionCode($expected['code']);
         static::expectExceptionMessage($expected['msg']);
 
-        $gc->templatesGet($projectId);
+        $gc->componentsGet($projectId);
     }
 
-    public function casesTemplateGet()
+    public function casesComponentGet()
     {
-        $data = static::getUniqueResponseTemplate();
-        $structure = static::getUniqueResponseRelated([
-            ['text', 'files', 'choice_radio', 'choice_checkbox'],
-            ['text', 'choice_checkbox', ['component', ['text', 'files', 'choice_radio', 'choice_checkbox']]],
-        ]);
+        $data = static::getUniqueResponseComponent(['text', 'files', 'choice_radio', 'choice_checkbox']);
 
         return [
             'empty' => [
-                ['data' => [], 'related' => []],
-                ['data' => [], 'related' => []],
-                42,
+                ['data' => []],
+                ['data' => []],
+                'uuid-42',
             ],
             'basic' => [
-                ['data' => $data, 'related' => $structure],
-                ['data' => $data, 'related' => $structure],
-                42,
+                ['data' => $data],
+                ['data' => $data],
+                'uuid-42',
             ],
         ];
     }
 
     /**
-     * @dataProvider casesTemplateGet
+     * @dataProvider casesComponentGet
      */
-    public function testTemplateGet(array $expected, array $responseBody, $templateId)
+    public function testComponentGet(array $expected, array $responseBody, $componentUuid)
     {
         $tester = $this->getBasicHttpClientTester(
             [
@@ -168,30 +162,16 @@ class GatherContentClientTemplateTest extends GcBaseTestCase
 
         $actual = (new GatherContentClient($client))
             ->setOptions($this->gcClientOptions)
-            ->templateGet($templateId);
+            ->componentGet($componentUuid);
 
         if (!empty($expected['data'])) {
-            static::assertTrue($actual['data'] instanceof Template, 'Data type of the return is Template');
+            static::assertTrue($actual['data'] instanceof Component, 'Data type of the return is Component');
             static::assertEquals(
                 \GuzzleHttp\json_encode($expected['data'], JSON_PRETTY_PRINT),
                 \GuzzleHttp\json_encode($actual['data'], JSON_PRETTY_PRINT)
             );
         } else {
             static::assertNull($actual['data']);
-        }
-
-        if (!empty($expected['related'])) {
-            static::assertTrue($actual['related'] instanceof Related, 'Data type of the return is Related');
-            static::assertTrue(
-                $actual['related']->structure instanceof Structure,
-                'Data type of the return is Structure'
-            );
-            static::assertEquals(
-                \GuzzleHttp\json_encode($expected['related'], JSON_PRETTY_PRINT),
-                \GuzzleHttp\json_encode($actual['related'], JSON_PRETTY_PRINT)
-            );
-        } else {
-            static::assertNull($actual['related']);
         }
 
         /** @var Request $request */
@@ -202,12 +182,12 @@ class GatherContentClientTemplateTest extends GcBaseTestCase
         static::assertEquals(['application/vnd.gathercontent.v2+json'], $request->getHeader('Accept'));
         static::assertEquals(['api.example.com'], $request->getHeader('Host'));
         static::assertEquals(
-            "{$this->gcClientOptions['baseUri']}/templates/$templateId",
+            "{$this->gcClientOptions['baseUri']}/components/$componentUuid",
             (string) $request->getUri()
         );
     }
 
-    public function casesTemplateGetFail()
+    public function casesComponentGetFail()
     {
         $cases = static::basicFailCasesGet();
 
@@ -215,26 +195,26 @@ class GatherContentClientTemplateTest extends GcBaseTestCase
             [
                 'class' => GatherContentClientException::class,
                 'code' => GatherContentClientException::API_ERROR,
-                'msg' => 'API Error: "Template Not Found", Code: 404',
+                'msg' => 'API Error: "Component Not Found", Code: 404',
             ],
             [
                 'code' => 200,
                 'headers' => ['Content-Type' => 'application/json'],
                 'body' => [
-                    'error' => 'Template Not Found',
+                    'error' => 'Component Not Found',
                     'code' => 404
                 ],
             ],
-            42
+            'uuid-42'
         ];
 
         return $cases;
     }
 
     /**
-     * @dataProvider casesTemplateGetFail
+     * @dataProvider casesComponentGetFail
      */
-    public function testTemplateGetFail(array $expected, array $response, $templateId)
+    public function testComponentGetFail(array $expected, array $response, $componentUuid)
     {
         $tester = $this->getBasicHttpClientTester(
             [
@@ -254,43 +234,40 @@ class GatherContentClientTemplateTest extends GcBaseTestCase
         static::expectExceptionCode($expected['code']);
         static::expectExceptionMessage($expected['msg']);
 
-        $gc->templateGet($templateId);
+        $gc->componentGet($componentUuid);
     }
 
-    public function casesTemplatePost()
+    public function casesComponentPost()
     {
-        $templateArray = static::getUniqueResponseTemplate();
-        $template = new Template($templateArray);
+        $componentFields = ['text', 'files', 'choice_radio', 'choice_checkbox'];
+        $component = new Component(static::getUniqueResponseComponent($componentFields));
 
-        $structureArray = static::getUniqueResponseStructure([
-            ['text', 'files', 'choice_radio', 'choice_checkbox']
-        ]);
-        $structure = new Structure($structureArray);
-
-        $emptyStructure = new Structure();
+        $emptyComponent = new Component(static::getUniqueResponseComponent([]));
 
         return [
             'basic' => [
-                $template,
-                $template->name,
-                $structure,
+                $component,
+                $component->name,
+                $component->id,
+                $componentFields,
                 131313,
-                $template->id,
+                $component->id,
             ],
             'empty' => [
-                $template,
-                $template->name,
-                $emptyStructure,
+                $emptyComponent,
+                $emptyComponent->name,
+                $emptyComponent->id,
+                [],
                 131313,
-                $template->id,
+                $emptyComponent->id,
             ],
         ];
     }
 
     /**
-     * @dataProvider casesTemplatePost
+     * @dataProvider casesComponentPost
      */
-    public function testTemplatePost(Template $expected, $name, $structure, $projectId, $resultItemId)
+    public function testComponentPost(Component $expected, $name, $componentUuid, $fields, $projectId, $resultUuid)
     {
         $tester = $this->getBasicHttpClientTester([
             new Response(
@@ -306,13 +283,13 @@ class GatherContentClientTemplateTest extends GcBaseTestCase
 
         $actual = (new GatherContentClient($client))
             ->setOptions($this->gcClientOptions)
-            ->templatePost($projectId, $name, $structure);
+            ->componentPost($projectId, $name, $componentUuid, $fields);
 
-        $actual->setSkipEmptyProperties(true);
+        $actual->setSkipEmptyProperties(false);
 
-        static::assertEquals($resultItemId, $actual->id);
+        static::assertEquals($resultUuid, $actual->id);
 
-        static::assertTrue($actual instanceof Template, 'Data type of the return is Template');
+        static::assertTrue($actual instanceof Component, 'Data type of the return is Component');
         static::assertEquals(
             \GuzzleHttp\json_encode($expected, JSON_PRETTY_PRINT),
             \GuzzleHttp\json_encode($actual, JSON_PRETTY_PRINT)
@@ -326,7 +303,7 @@ class GatherContentClientTemplateTest extends GcBaseTestCase
         static::assertEquals(['application/vnd.gathercontent.v2+json'], $request->getHeader('Accept'));
         static::assertEquals(['api.example.com'], $request->getHeader('Host'));
         static::assertEquals(
-            "{$this->gcClientOptions['baseUri']}/projects/$projectId/templates",
+            "{$this->gcClientOptions['baseUri']}/projects/$projectId/components",
             (string) $request->getUri()
         );
 
@@ -337,7 +314,7 @@ class GatherContentClientTemplateTest extends GcBaseTestCase
         static::assertEquals($sentQueryVariables['name'], $expected->name);
     }
 
-    public function casesTemplatePostFail()
+    public function casesComponentPostFail()
     {
         $cases['wrong_type'] = [
             [
@@ -351,32 +328,31 @@ class GatherContentClientTemplateTest extends GcBaseTestCase
                 'body' => [],
             ],
             1,
-            ''
         ];
         $cases['not_found'] = [
             [
                 'class' => GatherContentClientException::class,
                 'code' => GatherContentClientException::API_ERROR,
-                'msg' => 'API Error: "Template Not Found", Code: 404',
+                'msg' => 'API Error: "Component Not Found", Code: 404',
             ],
             [
                 'code' => 200,
                 'headers' => ['Content-Type' => 'application/json'],
                 'body' => [
-                    'error' => 'Template Not Found',
+                    'error' => 'Component Not Found',
                     'code' => 404
                 ],
             ],
-            42
+            42,
         ];
 
         return $cases;
     }
 
     /**
-     * @dataProvider casesTemplatePostFail
+     * @dataProvider casesComponentPostFail
      */
-    public function testTemplatePostFail(array $expected, array $response, $projectId)
+    public function testComponentPostFail(array $expected, array $response, $projectId)
     {
         $tester = $this->getBasicHttpClientTester(
             [
@@ -396,27 +372,27 @@ class GatherContentClientTemplateTest extends GcBaseTestCase
         static::expectExceptionCode($expected['code']);
         static::expectExceptionMessage($expected['msg']);
 
-        $gc->templatePost($projectId, 'name', new Structure());
+        $gc->componentPost($projectId, 'name', 'uuid-123', []);
     }
 
-    public function casesTemplateRenamePost()
+    public function casesComponentRenamePost()
     {
-        $templateArray = static::getUniqueResponseTemplate();
-        $template = new Template($templateArray);
+        $componentFields = ['text', 'files', 'choice_radio', 'choice_checkbox'];
+        $component = new Component(static::getUniqueResponseComponent($componentFields));
 
         return [
             'basic' => [
-                $template,
-                13,
-                $template->name,
+                $component,
+                'uuid-13',
+                $component->name,
             ],
         ];
     }
 
     /**
-     * @dataProvider casesTemplateRenamePost
+     * @dataProvider casesComponentRenamePost
      */
-    public function testTemplateRenamePost(Template $template, $templateId, $name)
+    public function testComponentRenamePost(Component $component, $componentUuid, $name)
     {
         $tester = $this->getBasicHttpClientTester([
             new Response(
@@ -424,7 +400,7 @@ class GatherContentClientTemplateTest extends GcBaseTestCase
                 [
                     'Content-Type' => 'application/json',
                 ],
-                \GuzzleHttp\json_encode(['data' => $template])
+                \GuzzleHttp\json_encode(['data' => $component])
             ),
         ]);
         $client = $tester['client'];
@@ -432,11 +408,11 @@ class GatherContentClientTemplateTest extends GcBaseTestCase
 
         $actual = (new GatherContentClient($client))
             ->setOptions($this->gcClientOptions)
-            ->templateRenamePost($templateId, $name);
+            ->componentRenamePost($componentUuid, $name);
 
-        static::assertTrue($actual instanceof Template, 'Data type of the return is Template');
+        static::assertTrue($actual instanceof Component, 'Data type of the return is Component');
         static::assertEquals(
-            \GuzzleHttp\json_encode($template, JSON_PRETTY_PRINT),
+            \GuzzleHttp\json_encode($component, JSON_PRETTY_PRINT),
             \GuzzleHttp\json_encode($actual, JSON_PRETTY_PRINT)
         );
 
@@ -448,7 +424,7 @@ class GatherContentClientTemplateTest extends GcBaseTestCase
         static::assertEquals(['application/vnd.gathercontent.v2+json'], $request->getHeader('Accept'));
         static::assertEquals(['api.example.com'], $request->getHeader('Host'));
         static::assertEquals(
-            "{$this->gcClientOptions['baseUri']}/templates/$templateId/rename",
+            "{$this->gcClientOptions['baseUri']}/components/$componentUuid/rename",
             (string) $request->getUri()
         );
 
@@ -460,7 +436,7 @@ class GatherContentClientTemplateTest extends GcBaseTestCase
         static::assertEquals($sentQueryVariables['name'], $name);
     }
 
-    public function casesTemplateRenamePostFail()
+    public function casesComponentRenamePostFail()
     {
         $cases['wrong_type'] = [
             [
@@ -480,13 +456,13 @@ class GatherContentClientTemplateTest extends GcBaseTestCase
             [
                 'class' => GatherContentClientException::class,
                 'code' => GatherContentClientException::API_ERROR,
-                'msg' => 'API Error: "Template Not Found", Code: 404',
+                'msg' => 'API Error: "Component Not Found", Code: 404',
             ],
             [
                 'code' => 200,
                 'headers' => ['Content-Type' => 'application/json'],
                 'body' => [
-                    'error' => 'Template Not Found',
+                    'error' => 'Component Not Found',
                     'code' => 404
                 ],
             ],
@@ -497,13 +473,13 @@ class GatherContentClientTemplateTest extends GcBaseTestCase
             [
                 'class' => \Exception::class,
                 'code' => 400,
-                'msg' => '{"error":"Missing template_id","code":400}',
+                'msg' => '{"error":"Missing component_uuid","code":400}',
             ],
             [
                 'code' => 400,
                 'headers' => ['Content-Type' => 'application/json'],
                 'body' => [
-                    'error' => 'Missing template_id',
+                    'error' => 'Missing component_uuid',
                     'code' => 400
                 ],
             ],
@@ -515,9 +491,9 @@ class GatherContentClientTemplateTest extends GcBaseTestCase
     }
 
     /**
-     * @dataProvider casesTemplateRenamePostFail
+     * @dataProvider casesComponentRenamePostFail
      */
-    public function testTemplateRenamePostFail(array $expected, array $response, $templateId, $name)
+    public function testComponentRenamePostFail(array $expected, array $response, $componentUuid, $name)
     {
         $tester = $this->getBasicHttpClientTester([
             new Response(
@@ -535,164 +511,22 @@ class GatherContentClientTemplateTest extends GcBaseTestCase
         static::expectExceptionCode($expected['code']);
         static::expectExceptionMessage($expected['msg']);
 
-        $gc->templateRenamePost($templateId, $name);
+        $gc->componentRenamePost($componentUuid, $name);
     }
 
-    public function casesTemplateDuplicatePost()
-    {
-        $templateArray = static::getUniqueResponseItem();
-        $template = new Template($templateArray);
-
-        return [
-            'basic' => [
-                $template,
-                $template->id,
-                $template->projectId
-            ],
-            'empty_project' => [
-                $template,
-                $template->id,
-                null
-            ],
-        ];
-    }
-
-    /**
-     * @dataProvider casesTemplateDuplicatePost
-     */
-    public function testTemplateDuplicateTemplatePost(Template $template, $templateId, $projectId = null)
-    {
-        $tester = $this->getBasicHttpClientTester([
-            new Response(
-                201,
-                ['Content-Type' => 'application/json'],
-                \GuzzleHttp\json_encode(['data' => $template])
-            ),
-        ]);
-        $client = $tester['client'];
-        $container = &$tester['container'];
-
-        $client = (new GatherContentClient($client));
-        $actual = $client->setOptions($this->gcClientOptions)
-            ->templateDuplicatePost($templateId, $projectId);
-
-        static::assertTrue($actual instanceof Template, 'Data type of the return is Template');
-        static::assertEquals(
-            \GuzzleHttp\json_encode($template, JSON_PRETTY_PRINT),
-            \GuzzleHttp\json_encode($actual, JSON_PRETTY_PRINT)
-        );
-
-        /** @var Request $request */
-        $request = $container[0]['request'];
-
-        static::assertEquals(1, count($container));
-        static::assertEquals('POST', $request->getMethod());
-        static::assertEquals(['application/vnd.gathercontent.v2+json'], $request->getHeader('Accept'));
-        static::assertEquals(['api.example.com'], $request->getHeader('Host'));
-        static::assertEquals(
-            "{$this->gcClientOptions['baseUri']}/templates/$templateId/duplicate",
-            (string) $request->getUri()
-        );
-
-        $requestBody = $request->getBody();
-        $sentQueryVariables = \GuzzleHttp\json_decode($requestBody, true);
-
-        if (!empty($projectId)) {
-            static::assertArrayHasKey('project_id', $sentQueryVariables);
-            static::assertEquals($sentQueryVariables['project_id'], $projectId);
-        } else {
-            static::assertArrayNotHasKey('project_id', $sentQueryVariables);
-        }
-    }
-
-    public function casesTemplateDuplicatePostFail()
-    {
-        $cases['wrong_type'] = [
-            [
-                'class' => GatherContentClientException::class,
-                'code' => GatherContentClientException::UNEXPECTED_CONTENT_TYPE,
-                'msg' => 'Unexpected Content-Type',
-            ],
-            [
-                'code' => 201,
-                'headers' => ['Content-Type' => 'image/jpeg'],
-                'body' => [],
-            ],
-            1
-        ];
-        $cases['missing_item'] = [
-            [
-                'class' => GatherContentClientException::class,
-                'code' => GatherContentClientException::API_ERROR,
-                'msg' => 'API Error: "Template Not Found", Code: 404',
-            ],
-            [
-                'code' => 200,
-                'headers' => ['Content-Type' => 'application/json'],
-                'body' => [
-                    'error' => 'Template Not Found',
-                    'code' => 404
-                ],
-            ],
-            0
-        ];
-        $cases['empty'] = [
-            [
-                'class' => \Exception::class,
-                'code' => 400,
-                'msg' => '{"error":"Missing template_id","code":400}',
-            ],
-            [
-                'code' => 400,
-                'headers' => ['Content-Type' => 'application/json'],
-                'body' => [
-                    'error' => 'Missing template_id',
-                    'code' => 400
-                ],
-            ],
-            42
-        ];
-
-        return $cases;
-    }
-
-    /**
-     * @dataProvider casesTemplateDuplicatePostFail
-     */
-    public function testTemplateDuplicatePostFail(array $expected, array $response, $templateId)
-    {
-        $tester = $this->getBasicHttpClientTester([
-            new Response(
-                $response['code'],
-                $response['headers'],
-                \GuzzleHttp\json_encode($response['body'])
-            ),
-        ]);
-        $client = $tester['client'];
-
-        $gc = (new GatherContentClient($client))
-            ->setOptions($this->gcClientOptions);
-
-        static::expectException($expected['class']);
-        static::expectExceptionCode($expected['code']);
-        static::expectExceptionMessage($expected['msg']);
-
-        $gc->templateDuplicatePost($templateId);
-    }
-
-    public function casesTemplateDelete()
+    public function casesComponentDelete()
     {
         return [
             'basic' => [
-                13
+                'uuid-13'
             ],
         ];
     }
 
     /**
-     * @dataProvider casesTemplateDelete
+     * @dataProvider casesComponentDelete
      */
-    public function testTemplateDelete($templateId)
+    public function testComponentDelete($componentUuid)
     {
         $tester = $this->getBasicHttpClientTester([
             new Response(
@@ -707,7 +541,7 @@ class GatherContentClientTemplateTest extends GcBaseTestCase
 
         (new GatherContentClient($client))
             ->setOptions($this->gcClientOptions)
-            ->templateDelete($templateId);
+            ->componentDelete($componentUuid);
 
         /** @var Request $request */
         $request = $container[0]['request'];
@@ -717,11 +551,84 @@ class GatherContentClientTemplateTest extends GcBaseTestCase
         static::assertEquals(['application/vnd.gathercontent.v2+json'], $request->getHeader('Accept'));
         static::assertEquals(['api.example.com'], $request->getHeader('Host'));
         static::assertEquals(
-            "{$this->gcClientOptions['baseUri']}/templates/$templateId",
+            "{$this->gcClientOptions['baseUri']}/components/$componentUuid",
             (string) $request->getUri()
         );
 
         $requestBody = $request->getBody();
         static::assertEmpty($requestBody->getContents());
+    }
+
+    public function casesComponentUpdatePut()
+    {
+        $componentFields = ['text', 'files', 'choice_radio', 'choice_checkbox'];
+        $component = new Component(static::getUniqueResponseComponent($componentFields));
+
+        $emptyComponent = new Component(static::getUniqueResponseComponent([]));
+
+        return [
+            'basic' => [
+                $component,
+                $component->id,
+                $componentFields,
+                $component->id,
+            ],
+            'empty' => [
+                $emptyComponent,
+                $emptyComponent->id,
+                [],
+                $emptyComponent->id,
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider casesComponentUpdatePut
+     */
+    public function testComponentUpdatePut(Component $expected, $componentUuid, $fields, $resultUuid)
+    {
+        $tester = $this->getBasicHttpClientTester([
+            new Response(
+                201,
+                [
+                    'Content-Type' => 'application/json',
+                ],
+                \GuzzleHttp\json_encode(['data' => $expected])
+            ),
+        ]);
+        $client = $tester['client'];
+        $container = &$tester['container'];
+
+        $actual = (new GatherContentClient($client))
+            ->setOptions($this->gcClientOptions)
+            ->componentUpdatePut($componentUuid, $fields);
+
+        $actual->setSkipEmptyProperties(false);
+
+        static::assertEquals($resultUuid, $actual->id);
+
+        static::assertTrue($actual instanceof Component, 'Data type of the return is Component');
+        static::assertEquals(
+            \GuzzleHttp\json_encode($expected, JSON_PRETTY_PRINT),
+            \GuzzleHttp\json_encode($actual, JSON_PRETTY_PRINT)
+        );
+
+        /** @var Request $request */
+        $request = $container[0]['request'];
+
+        static::assertEquals(1, count($container));
+        static::assertEquals('PUT', $request->getMethod());
+        static::assertEquals(['application/vnd.gathercontent.v2+json'], $request->getHeader('Accept'));
+        static::assertEquals(['api.example.com'], $request->getHeader('Host'));
+        static::assertEquals(
+            "{$this->gcClientOptions['baseUri']}/components/$componentUuid/fields",
+            (string) $request->getUri()
+        );
+
+        $requestBody = $request->getBody();
+        $sentQueryVariables = \GuzzleHttp\json_decode($requestBody, true);
+
+        static::assertArrayHasKey('fields', $sentQueryVariables);
+        static::assertEquals(count($sentQueryVariables['fields']), count($expected->fields));
     }
 }

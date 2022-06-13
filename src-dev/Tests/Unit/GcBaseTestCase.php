@@ -173,41 +173,48 @@ class GcBaseTestCase extends TestCase
         return $elements;
     }
 
+    public static function getUniqueResponseFields(array $elementTypes)
+    {
+        $fields = [];
+
+        foreach ($elementTypes as $elementType) {
+            if (is_array($elementType) && $elementType[0] === 'component') {
+                $fields[] = static::getUniqueResponseElementTemplateComponent($elementType[1]);
+            } else {
+                switch ($elementType) {
+                    case 'text':
+                        $fields[] = static::getUniqueResponseElementTemplateText();
+                        break;
+
+                    case 'files':
+                        $fields[] = static::getUniqueResponseElementTemplateFiles();
+                        break;
+
+                    case 'guideline':
+                        $fields[] = static::getUniqueResponseElementTemplateGuideline();
+                        break;
+
+                    case 'choice_radio':
+                        $fields[] = static::getUniqueResponseElementTemplateChoiceRadio();
+                        break;
+
+                    case 'choice_checkbox':
+                        $fields[] = static::getUniqueResponseElementTemplateChoiceCheckbox();
+                        break;
+                }
+            }
+        }
+
+        return $fields;
+    }
+
     public static function getUniqueResponseGroup(array $elementTypes)
     {
         $group = [
             'uuid' => static::getUniqueString('uuid'),
             'name' => static::getUniqueString('name'),
-            'fields' => [],
+            'fields' => static::getUniqueResponseFields($elementTypes),
         ];
-
-        foreach ($elementTypes as $elementType) {
-            if (is_array($elementType) && $elementType[0] === 'component') {
-                $group['fields'][] = static::getUniqueResponseElementTemplateComponent($elementType[1]);
-            } else {
-                switch ($elementType) {
-                    case 'text':
-                        $group['fields'][] = static::getUniqueResponseElementTemplateText();
-                        break;
-
-                    case 'files':
-                        $group['fields'][] = static::getUniqueResponseElementTemplateFiles();
-                        break;
-
-                    case 'guideline':
-                        $group['fields'][] = static::getUniqueResponseElementTemplateGuideline();
-                        break;
-
-                    case 'choice_radio':
-                        $group['fields'][] = static::getUniqueResponseElementTemplateChoiceRadio();
-                        break;
-
-                    case 'choice_checkbox':
-                        $group['fields'][] = static::getUniqueResponseElementTemplateChoiceCheckbox();
-                        break;
-                }
-            }
-        }
 
         return $group;
     }
@@ -339,13 +346,15 @@ class GcBaseTestCase extends TestCase
         return $options;
     }
 
-    public static function getUniqueResponseElementTemplateComponent($elementTypes)
+    public static function getUniqueResponseElementTemplateComponent(array $elementTypes)
     {
         $element = static::getUniqueResponseElement();
         $element['field_type'] = 'component';
-        $element['component'] = static::getUniqueResponseGroup($elementTypes);
-        $element['component']['metadata'] = [];
-        unset($element['component']['name']);
+        $element['component'] = [
+            'uuid' => static::getUniqueString('uuid'),
+            'fields' => static::getUniqueResponseFields($elementTypes),
+            'metadata' => []
+        ];
         return $element;
     }
 
@@ -419,6 +428,22 @@ class GcBaseTestCase extends TestCase
     public static function getUniqueResponseRelated(array $groups = [])
     {
         return ['structure' => static::getUniqueResponseStructure($groups)];
+    }
+
+    public static function getUniqueResponseComponent(array $elementTypes = [])
+    {
+        return [
+            'uuid' => static::getUniqueString('uuid'),
+            'project_id' => static::getUniqueInt(),
+            'name' => static::getUniqueString('name'),
+            'field_count' => static::getUniqueInt(),
+            'updated_at' => static::getUniqueResponseDate(),
+            'updated_by' => static::getUniqueInt(),
+            'updated_by_name' => static::getUniqueString('update_by_name'),
+            'created_at' => static::getUniqueResponseDate(),
+            'created_by' => static::getUniqueInt(),
+            'fields' => static::getUniqueResponseFields($elementTypes)
+        ];
     }
 
     public static function getUniqueResponseStructure(array $groups = [])

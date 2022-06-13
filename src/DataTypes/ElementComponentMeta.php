@@ -2,17 +2,10 @@
 
 namespace Cheppers\GatherContent\DataTypes;
 
+use Cheppers\GatherContent\DataTypes\Group;
+
 class ElementComponentMeta extends Base
 {
-    protected static $type2Class = [
-        'text' => ElementText::class,
-        'attachment' => Element::class,
-        'guidelines' => ElementGuideline::class,
-        'choice_checkbox' => ElementCheckbox::class,
-        'choice_radio' => ElementRadio::class,
-        'component' => ElementComponent::class,
-    ];
-
     /**
      * {@inheritdoc}
      */
@@ -43,7 +36,7 @@ class ElementComponentMeta extends Base
                     'closure' => function (array $data) {
                         $elements = [];
                         foreach ($data as $elementData) {
-                            $class = static::$type2Class[$elementData['field_type']];
+                            $class = Group::$type2Class[$elementData['field_type']];
                             /** @var \Cheppers\GatherContent\DataTypes\Base $element */
                             $element = new $class($elementData);
                             $elements[] = $element;
