@@ -1,29 +1,29 @@
 #!/usr/bin/env bash
 
-echo "BEGIN Git hook: ${cghHookName}"
+echo "BEGIN Git hook: ${sghHookName}"
 
-function myExit ()
+function sghExit ()
 {
-    echo "END   Git hook: ${cghHookName}"
+    echo "END   Git hook: ${sghHookName}"
 
     exit $1
 }
 
-export COMPOSER_DISABLE_XDEBUG_WARN=1
-
 # @todo Better detection for executables: php, composer.phar.
-cghRobo="$(composer config 'bin-dir')/robo"
+sghRobo="$(composer config 'bin-dir')/robo"
 
-test -s "${cghBridge}.local" && . "${cghBridge}.local"
+test -s "${sghBridge}.local" && . "${sghBridge}.local"
+
+sghTask="githook:${sghHookName}"
 
 # Exit without error if "robo" doesn't exists or it has no corresponding task.
-test -x "$cghRobo" || myExit 0
-"${cghRobo}" help "githook:${cghHookName}" 1> /dev/null 2>&1 || myExit 0
+test -x "$sghRobo" || sghExit 0
+"${sghRobo}" help "${sghTask}" 1> /dev/null 2>&1 || sghExit 0
 
-if [ "$cghHasInput" = 'true' ]; then
-    "$cghRobo" "githook:${cghHookName}" $@ <<< $(</dev/stdin) || myExit $?
+if [ "$sghHasInput" = 'true' ]; then
+    "$sghRobo" "${sghTask}" $@ <<< $(</dev/stdin) || sghExit $?
 else
-    "$cghRobo" "githook:${cghHookName}" $@ || myExit $?
+    "$sghRobo" "${sghTask}" $@ || sghExit $?
 fi
 
-myExit 0
+sghExit 0

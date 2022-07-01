@@ -1,6 +1,5 @@
 <?php
 
-use Sweetchuck\AssetJar\AssetJar;
 use Sweetchuck\LintReport\Reporter\BaseReporter;
 use Sweetchuck\LintReport\Reporter\CheckstyleReporter;
 use Sweetchuck\LintReport\Reporter\VerboseReporter;
@@ -120,18 +119,18 @@ class RoboFile extends Tasks
     /**
      * Git "pre-commit" hook callback.
      */
-    // public function githookPreCommit(): CollectionBuilder
-    // {
-    //     $this->context = 'git-hook';
+    public function githookPreCommit(): CollectionBuilder
+    {
+        $this->context = 'git-hook';
 
-    //     return $this
-    //         ->collectionBuilder()
-    //         ->addTaskList([
-    //             'lint.composer.lock' => $this->taskComposerValidate(),
-    //             'lint.phpcs' => $this->getTaskPhpcsLint(),
-    //             'phpunit.unit' => $this->getTaskPhpUnit(),
-    //         ]);
-    // }
+        return $this
+            ->collectionBuilder()
+            ->addTaskList([
+                'lint.composer.lock' => $this->taskComposerValidate(),
+                'lint.phpcs' => $this->getTaskPhpcsLint(),
+                'phpunit.unit' => $this->getTaskPhpUnit(),
+            ]);
+    }
 
     /**
      * @return \Cheppers\Robo\Phpcs\Task\PhpcsLintFiles|\Robo\Collection\CollectionBuilder
@@ -165,16 +164,12 @@ class RoboFile extends Tasks
             return $this->taskPhpcsLintFiles($options + ['files' => $files]);
         }
 
-        $assetJar = new AssetJar();
-
         return $this
             ->collectionBuilder()
             ->addTaskList([
                 'git.readStagedFiles' => $this
                     ->taskGitReadStagedFiles()
                     ->setCommandOnly(true)
-                    ->setAssetJar($assetJar)
-                    ->setAssetJarMap('files', ['files'])
                     ->setPaths($files),
                 'lint.phpcs' => $this
                     ->taskPhpcsLintInput($options)
@@ -183,8 +178,6 @@ class RoboFile extends Tasks
                         '*.txt',
                         '*.yml',
                     ])
-                    ->setAssetJar($assetJar)
-                    ->setAssetJarMap('files', ['files']),
             ]);
     }
 
