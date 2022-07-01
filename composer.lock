@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fac339047b0528f540d4a4a4d3e70ba8",
+    "content-hash": "d269f5e5d6892a11b7d837535feb1b41",
     "packages": [
         {
             "name": "guzzlehttp/guzzle",
@@ -3392,45 +3392,6 @@
                 "wiki": "https://github.com/squizlabs/PHP_CodeSniffer/wiki"
             },
             "time": "2022-06-18T07:21:10+00:00"
-        },
-        {
-            "name": "sweetchuck/asset-jar",
-            "version": "v0.0.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Sweetchuck/asset-jar.git",
-                "reference": "a6d4d67db8eef018aa10779b3906fb109bcb6508"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/Sweetchuck/asset-jar/zipball/a6d4d67db8eef018aa10779b3906fb109bcb6508",
-                "reference": "a6d4d67db8eef018aa10779b3906fb109bcb6508",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.1"
-            },
-            "require-dev": {
-                "phpunit/php-code-coverage": "^4.0",
-                "phpunit/phpunit": "^5.4",
-                "squizlabs/php_codesniffer": "^2.6"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Sweetchuck\\AssetJar\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "GPL-2.0+"
-            ],
-            "description": "Provides a very simple, shared, in-memory data storage.",
-            "support": {
-                "issues": "https://github.com/Sweetchuck/asset-jar/issues",
-                "source": "https://github.com/Sweetchuck/asset-jar/tree/v0.0.2"
-            },
-            "time": "2017-07-29T07:37:14+00:00"
         },
         {
             "name": "sweetchuck/git-hooks",
