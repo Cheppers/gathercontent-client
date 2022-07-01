@@ -381,6 +381,24 @@ class GatherContentClient implements GatherContentClientInterface
     /**
      * {@inheritdoc}
      */
+    public function itemUpdatePut($itemId, array $groups)
+    {
+        $this->setUseLegacy(false);
+        $this->sendPut("items/$itemId/structure", [
+            'json' => [
+                'groups' => $groups,
+            ],
+        ]);
+
+        $this->validatePostResponse(201);
+        $body = $this->parseResponse();
+
+        return empty($body['data']) ? null : $this->parseResponseDataItem($body['data'], DataTypes\Item::class);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function itemUpdatePost($itemId, array $content = [], array $assets = [])
     {
         $this->setUseLegacy(false);
@@ -612,8 +630,28 @@ class GatherContentClient implements GatherContentClientInterface
     /**
      * {@inheritdoc}
      */
+    public function templateUpdatePut($templateId, array $groups)
+    {
+        $this->setUseLegacy(false);
+        $this->sendPut("templates/$templateId/structure", [
+            'json' => [
+                'groups' => $groups,
+            ],
+        ]);
+
+        $this->validatePostResponse(201);
+        $body = $this->parseResponse();
+
+        return empty($body['data']) ? null : $this->parseResponseDataItem($body['data'], DataTypes\Template::class);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function structureGet($structureUuid)
     {
+        trigger_error(__METHOD__ . ' is deprecated', E_USER_DEPRECATED);
+
         $this->setUseLegacy(false);
         $this->sendGet("structures/$structureUuid");
 
@@ -628,6 +666,8 @@ class GatherContentClient implements GatherContentClientInterface
      */
     public function structureAlterPut($structureUuid, Structure $structure, $priorityItemId = null)
     {
+        trigger_error(__METHOD__ . ' is deprecated', E_USER_DEPRECATED);
+
         $this->setUseLegacy(false);
         $structure->setSkipEmptyProperties(true);
         $request = [
@@ -653,6 +693,8 @@ class GatherContentClient implements GatherContentClientInterface
      */
     public function structureSaveAsTemplatePost($structureUuid, $name)
     {
+        trigger_error(__METHOD__ . ' is deprecated', E_USER_DEPRECATED);
+
         $this->setUseLegacy(false);
         $this->sendPost("structures/$structureUuid/save_as_template", [
             'json' => [

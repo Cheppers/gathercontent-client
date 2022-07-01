@@ -166,6 +166,13 @@ interface GatherContentClientInterface
     );
 
     /**
+     * @see https://docs.gathercontent.com/reference/updateitemstructure
+     *
+     * @return \Cheppers\GatherContent\DataTypes\Item|null
+     */
+    public function itemUpdatePut($itemId, array $groups);
+
+    /**
      * @see https://docs.gathercontent.com/reference/updateitemcontent
      *
      * @return \Cheppers\GatherContent\DataTypes\Meta|null
@@ -259,6 +266,13 @@ interface GatherContentClientInterface
      * @see https://docs.gathercontent.com/reference/deletetemplate
      */
     public function templateDelete($templateId);
+
+    /**
+     * @see https://docs.gathercontent.com/reference/updatetemplatestructure
+     *
+     * @return \Cheppers\GatherContent\DataTypes\Template|null
+     */
+    public function templateUpdatePut($templateId, array $groups);
 
     /**
      * @deprecated
