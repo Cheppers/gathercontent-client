@@ -381,7 +381,7 @@ class GatherContentClient implements GatherContentClientInterface
     /**
      * {@inheritdoc}
      */
-    public function itemUpdatePut($itemId, array $groups)
+    public function itemStructurePut($itemId, array $groups)
     {
         $this->setUseLegacy(false);
         $this->sendPut("items/$itemId/structure", [
@@ -390,7 +390,7 @@ class GatherContentClient implements GatherContentClientInterface
             ],
         ]);
 
-        $this->validatePostResponse(201);
+        $this->validatePostResponse(200);
         $body = $this->parseResponse();
 
         return empty($body['data']) ? null : $this->parseResponseDataItem($body['data'], DataTypes\Item::class);
@@ -496,6 +496,31 @@ class GatherContentClient implements GatherContentClientInterface
         $body = $this->parseResponse();
 
         return empty($body['data']) ? null : $this->parseResponseDataItem($body['data'], DataTypes\Item::class);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function itemSaveAsTemplatePost($itemId, string $templateName)
+    {
+        $this->setUseLegacy(false);
+        $this->sendPost("items/$itemId/save_as_template", [
+            'json' => [
+                'name' => $templateName
+            ],
+        ]);
+
+        $this->validatePostResponse(201);
+        $body = $this->parseResponse();
+
+        $response['data'] = empty($body['data'])
+            ? null
+            : $this->parseResponseDataItem($body['data'], DataTypes\Template::class);
+        $response['related'] = empty($body['related'])
+            ? null
+            : $this->parseResponseDataItem($body['related'], DataTypes\Related::class);
+
+        return $response;
     }
 
     /**
@@ -630,7 +655,7 @@ class GatherContentClient implements GatherContentClientInterface
     /**
      * {@inheritdoc}
      */
-    public function templateUpdatePut($templateId, array $groups)
+    public function templateStructurePut($templateId, array $groups)
     {
         $this->setUseLegacy(false);
         $this->sendPut("templates/$templateId/structure", [
@@ -639,7 +664,7 @@ class GatherContentClient implements GatherContentClientInterface
             ],
         ]);
 
-        $this->validatePostResponse(201);
+        $this->validatePostResponse(200);
         $body = $this->parseResponse();
 
         return empty($body['data']) ? null : $this->parseResponseDataItem($body['data'], DataTypes\Template::class);

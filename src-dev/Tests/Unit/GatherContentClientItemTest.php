@@ -3,6 +3,8 @@
 namespace Cheppers\GatherContent\Tests\Unit;
 
 use Cheppers\GatherContent\DataTypes\Item;
+use Cheppers\GatherContent\DataTypes\Template;
+use Cheppers\GatherContent\DataTypes\Structure;
 use Cheppers\GatherContent\GatherContentClient;
 use Cheppers\GatherContent\GatherContentClientException;
 use GuzzleHttp\Psr7\MultipartStream;
@@ -1306,5 +1308,153 @@ class GatherContentClientItemTest extends GcBaseTestCase
         static::expectExceptionMessage($expected['msg']);
 
         $gc->itemDuplicatePost($itemId);
+    }
+
+    public function casesItemStructurePut()
+    {
+        $itemMultipleArray = [
+            'text', 'files', 'choice_radio', 'choice_checkbox'
+        ];
+        $itemMultipleElements = new Item(static::getUniqueResponseItem(
+            $itemMultipleArray,
+            static::getUniqueResponseStructure([$itemMultipleArray]),
+        ));
+
+        var_dump($itemMultipleElements->structure);
+
+        return [
+            'multiple-elements' => [
+                $itemMultipleElements,
+                $itemMultipleElements->id,
+                [$itemMultipleArray],
+                $itemMultipleElements->id,
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider casesItemStructurePut
+     */
+    public function testItemStructurePut(Item $expected, $itemId, $groups, $resultId)
+    {
+        $tester = $this->getBasicHttpClientTester([
+            new Response(
+                200,
+                [
+                    'Content-Type' => 'application/json',
+                ],
+                \GuzzleHttp\json_encode(['data' => $expected])
+            ),
+        ]);
+        $client = $tester['client'];
+        $container = &$tester['container'];
+
+        $actual = (new GatherContentClient($client))
+            ->setOptions($this->gcClientOptions)
+            ->itemStructurePut($itemId, $groups);
+
+        $actual->setSkipEmptyProperties(false);
+
+        static::assertEquals($resultId, $actual->id);
+
+        static::assertTrue($actual instanceof Item, 'Data type of the return is Item');
+        static::assertEquals(
+            \GuzzleHttp\json_encode($expected, JSON_PRETTY_PRINT),
+            \GuzzleHttp\json_encode($actual, JSON_PRETTY_PRINT)
+        );
+
+        /** @var Request $request */
+        $request = $container[0]['request'];
+
+        static::assertEquals(1, count($container));
+        static::assertEquals('PUT', $request->getMethod());
+        static::assertEquals(['application/vnd.gathercontent.v2+json'], $request->getHeader('Accept'));
+        static::assertEquals(['api.example.com'], $request->getHeader('Host'));
+        static::assertEquals(
+            "{$this->gcClientOptions['baseUri']}/items/$itemId/structure",
+            (string) $request->getUri()
+        );
+
+        $requestBody = $request->getBody();
+        $sentQueryVariables = \GuzzleHttp\json_decode($requestBody, true);
+
+        static::assertArrayHasKey('groups', $sentQueryVariables);
+        static::assertEquals(count($sentQueryVariables['groups']), count($expected->structure->groups));
+    }
+
+    public function casesItemSaveAsTemplatePost()
+    {
+        $templateArray = static::getUniqueResponseTemplate();
+        $template = new Template($templateArray);
+
+        $structureArray = static::getUniqueResponseStructure([
+            ['text', 'files', 'choice_radio', 'choice_checkbox']
+        ]);
+        $structure = new Structure($structureArray);
+
+        return [
+            'basic' => [
+                $template,
+                $structure,
+                42,
+                $templateArray['name'],
+                $template->id
+            ]
+        ];
+    }
+
+    /**
+     * @dataProvider casesItemSaveAsTemplatePost
+     */
+    public function testItemSaveAsTemplatePost(
+        Template $expected,
+        Structure $structure,
+        $itemId,
+        $templateName,
+        $resultId
+    ) {
+        $tester = $this->getBasicHttpClientTester([
+            new Response(
+                201,
+                [
+                    'Content-Type' => 'application/json',
+                ],
+                \GuzzleHttp\json_encode(['data' => $expected, 'related' => $structure])
+            ),
+        ]);
+        $client = $tester['client'];
+        $container = &$tester['container'];
+
+        $actual = (new GatherContentClient($client))
+            ->setOptions($this->gcClientOptions)
+            ->itemSaveAsTemplatePost($itemId, $templateName);
+
+        $actual['data']->setSkipEmptyProperties(false);
+
+        static::assertEquals($resultId, $actual['data']->id);
+
+        static::assertTrue($actual['data'] instanceof Template, 'Data type of the return is Template');
+        static::assertEquals(
+            \GuzzleHttp\json_encode($expected, JSON_PRETTY_PRINT),
+            \GuzzleHttp\json_encode($actual['data'], JSON_PRETTY_PRINT)
+        );
+
+        /** @var Request $request */
+        $request = $container[0]['request'];
+
+        static::assertEquals(1, count($container));
+        static::assertEquals('POST', $request->getMethod());
+        static::assertEquals(['application/vnd.gathercontent.v2+json'], $request->getHeader('Accept'));
+        static::assertEquals(['api.example.com'], $request->getHeader('Host'));
+        static::assertEquals(
+            "{$this->gcClientOptions['baseUri']}/items/$itemId/save_as_template",
+            (string) $request->getUri()
+        );
+
+        $requestBody = $request->getBody();
+        $sentQueryVariables = \GuzzleHttp\json_decode($requestBody, true);
+
+        static::assertArrayHasKey('name', $sentQueryVariables);
+        static::assertEquals($sentQueryVariables['name'], $expected->name);
     }
 }

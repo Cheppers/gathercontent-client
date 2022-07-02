@@ -724,4 +724,75 @@ class GatherContentClientTemplateTest extends GcBaseTestCase
         $requestBody = $request->getBody();
         static::assertEmpty($requestBody->getContents());
     }
+
+    public function casesTemplateStructurePut()
+    {
+        $templateArray = static::getUniqueResponseTemplate();
+        $template = new Template($templateArray);
+
+        $structureArray = static::getUniqueResponseStructure([
+            ['text', 'files', 'choice_radio', 'choice_checkbox']
+        ]);
+        $structure = new Structure($structureArray);
+
+        return [
+            'basic' => [
+                $template,
+                $template->id,
+                $structure,
+                $structureArray['groups'],
+                $template->id
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider casesTemplateStructurePut
+     */
+    public function testTemplateStructurePut(Template $expected, $templateId, Structure $structure, $groups, $resultId)
+    {
+        $tester = $this->getBasicHttpClientTester([
+            new Response(
+                200,
+                [
+                    'Content-Type' => 'application/json',
+                ],
+                \GuzzleHttp\json_encode(['data' => $expected, 'related' => $structure])
+            ),
+        ]);
+        $client = $tester['client'];
+        $container = &$tester['container'];
+
+        $actual = (new GatherContentClient($client))
+            ->setOptions($this->gcClientOptions)
+            ->templateStructurePut($templateId, $groups);
+
+        $actual->setSkipEmptyProperties(false);
+
+        static::assertEquals($resultId, $actual->id);
+
+        static::assertTrue($actual instanceof Template, 'Data type of the return is Template');
+        static::assertEquals(
+            \GuzzleHttp\json_encode($expected, JSON_PRETTY_PRINT),
+            \GuzzleHttp\json_encode($actual, JSON_PRETTY_PRINT)
+        );
+
+        /** @var Request $request */
+        $request = $container[0]['request'];
+
+        static::assertEquals(1, count($container));
+        static::assertEquals('PUT', $request->getMethod());
+        static::assertEquals(['application/vnd.gathercontent.v2+json'], $request->getHeader('Accept'));
+        static::assertEquals(['api.example.com'], $request->getHeader('Host'));
+        static::assertEquals(
+            "{$this->gcClientOptions['baseUri']}/templates/$templateId/structure",
+            (string) $request->getUri()
+        );
+
+        $requestBody = $request->getBody();
+        $sentQueryVariables = \GuzzleHttp\json_decode($requestBody, true);
+
+        static::assertArrayHasKey('groups', $sentQueryVariables);
+        static::assertEquals(count($sentQueryVariables['groups']), count($structure->groups));
+    }
 }

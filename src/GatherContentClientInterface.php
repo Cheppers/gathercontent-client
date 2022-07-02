@@ -170,7 +170,7 @@ interface GatherContentClientInterface
      *
      * @return \Cheppers\GatherContent\DataTypes\Item|null
      */
-    public function itemUpdatePut($itemId, array $groups);
+    public function itemStructurePut($itemId, array $groups);
 
     /**
      * @see https://docs.gathercontent.com/reference/updateitemcontent
@@ -214,6 +214,13 @@ interface GatherContentClientInterface
      * @return \Cheppers\GatherContent\DataTypes\Item|null
      */
     public function itemDisconnectTemplatePost($itemId);
+
+    /**
+     * @see https://docs.gathercontent.com/reference/savecustomstructureastemplate
+     *
+     * @return \Cheppers\GatherContent\DataTypes\Template|null
+     */
+    public function itemSaveAsTemplatePost($itemId, string $templateName);
 
     /**
      * @see https://docs.gathercontent.com/reference/duplicateitem
@@ -272,7 +279,7 @@ interface GatherContentClientInterface
      *
      * @return \Cheppers\GatherContent\DataTypes\Template|null
      */
-    public function templateUpdatePut($templateId, array $groups);
+    public function templateStructurePut($templateId, array $groups);
 
     /**
      * @deprecated

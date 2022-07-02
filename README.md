@@ -30,25 +30,30 @@ Compatible with `application/vnd.gathercontent.v2+json`
 #### Items
 
 - [GET:  /projects/:project_id/items](https://docs.gathercontent.com/reference/listitems) `$gc->itemsGet()`
-- [GET:  /items/:item_id](https://docs.gathercontent.com/reference/getitem) `$gc->itemGet()`
 - [POST: /projects/:project_id/items](https://docs.gathercontent.com/reference/createitem) `$gc->itemPost()`
+- [GET:  /items/:item_id](https://docs.gathercontent.com/reference/getitem) `$gc->itemGet()`
+- [PUT:  /items/:item_id/structure](https://docs.gathercontent.com/reference/updateitemstructure) `$gc->itemStructurePut()`
 - [POST: /items/:item_id/content](https://docs.gathercontent.com/reference/updateitemcontent) `$gc->itemUpdatePost()`
 - [POST: /items/:item_id/rename](https://docs.gathercontent.com/reference/renameitem) `$gc->itemRenamePost()`
 - [POST: /items/:item_id/move](https://docs.gathercontent.com/reference/moveitem) `$gc->itemMovePost()`
 - [POST: /items/:item_id/apply_template](https://docs.gathercontent.com/reference/applytemplate) `$gc->itemApplyTemplatePost()`
 - [POST: /items/:item_id/disconnect_template](https://docs.gathercontent.com/reference/disconnecttemplate) `$gc->itemDisconnectTemplatePost()`
+- [POST: /items/:item_id/save_as_template](https://docs.gathercontent.com/reference/savecustomstructureastemplate) `$gc->itemSaveAsTemplatePost()`
 - [POST: /items/:item_id/duplicate](https://docs.gathercontent.com/reference/duplicate) `$gc->itemDuplicatePost()`
 
 #### Templates
 
 - [GET:    /projects/:project_id/templates](https://docs.gathercontent.com/reference/listtemplates) `$gc->templatesGet()`
-- [GET:    /templates/:template_id](https://docs.gathercontent.com/reference/gettemplate) `$gc->templateGet()`
 - [POST:   /projects/:project_id/templates](https://docs.gathercontent.com/reference/createtemplate) `$gc->templatePost()`
+- [GET:    /templates/:template_id](https://docs.gathercontent.com/reference/gettemplate) `$gc->templateGet()`
 - [DELETE: /templates/:template_id/delete](https://docs.gathercontent.com/reference/deletetemplate) `$gc->templateDelete()`
+- [PUT:    /templates/:template_id/structure](https://docs.gathercontent.com/reference/updatetemplatestructure) `$gc->templateStructurePut()`
 - [POST:   /templates/:template_id/rename](https://docs.gathercontent.com/reference/renametemplate) `$gc->templateRenamePost()`
 - [POST:   /templates/:template_id/duplicate](https://docs.gathercontent.com/reference/duplicatetemplate) `$gc->templateDuplicatePost()`
 
 #### Structures
+
+:construction: DEPRECATED
 
 - [GET:  /structures/:structure_uuid](https://docs.gathercontent.com/reference/getstructure) `$gc->structureGet()`
 - [PUT:  /structures/:structure_uuid](https://docs.gathercontent.com/reference/alterstructure) `$gc->structureAlterPut()`
