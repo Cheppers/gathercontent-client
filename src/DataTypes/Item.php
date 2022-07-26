@@ -125,55 +125,11 @@ class Item extends Base
                 'assigned_user_ids' => 'assignedUserIds',
                 'assignee_count' => 'assigneeCount',
                 'approval_count' => 'approvalCount',
-                'content' => [
-                    'type' => 'closure',
-                    'closure' => function (array $data) {
-                        $elements = [];
-                        foreach ($data as $key => $elementData) {
-                            if (!is_array($elementData)) {
-                                $elements[$key] = new ElementSimpleText(['value' => $elementData]);
-                                continue;
-                            }
-
-                            $elements[$key] = $this->getSubElements($elementData);
-                        }
-
-                        return $elements;
-                    },
-                ],
+                'content' => 'content',
                 'assets' => 'assets',
             ]
         );
 
         return $this;
-    }
-
-    /**
-     * Return sub element type.
-     *
-     * @param  array  $elementData
-     * @return array|ElementBase[]
-     */
-    protected function getSubElements(array $elementData)
-    {
-        $elements = [];
-
-        foreach ($elementData as $element) {
-            if (empty($element)) {
-                continue;
-            }
-            $class = ElementSimpleChoice::class;
-            if (isset($element['file_id'])) {
-                $class = ElementSimpleFile::class;
-            }
-            if (!is_array($element)) {
-                $class = ElementSimpleText::class;
-                $element = ['value' => $element];
-            }
-            /** @var \Cheppers\GatherContent\DataTypes\ElementBase[] $elements */
-            $elements[] = new $class($element);
-        }
-
-        return $elements;
     }
 }
