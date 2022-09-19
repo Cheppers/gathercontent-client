@@ -1,8 +1,8 @@
 <?php
 
-namespace Cheppers\GatherContent\DataTypes;
+namespace GatherContent\DataTypes;
 
-use Cheppers\GatherContent\Utils\NestedArray;
+use GatherContent\Utils\NestedArray;
 use JsonSerializable;
 use ReflectionObject;
 use ReflectionProperty;
@@ -179,7 +179,7 @@ class Base implements JsonSerializable, \Serializable
                     break;
 
                 case 'subConfig':
-                    /** @var \Cheppers\GatherContent\DataTypes\Base $subConfig */
+                    /** @var \GatherContent\DataTypes\Base $subConfig */
                     if (empty($handler['parents'])) {
                         $subConfig = new $handler['class']((array) $data[$src]);
                     } else {

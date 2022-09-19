@@ -1,8 +1,8 @@
 <?php
 
-namespace Cheppers\GatherContent\Tests\Unit\DataTypes;
+namespace GatherContent\Tests\Unit\DataTypes;
 
-use Cheppers\GatherContent\DataTypes\Item;
+use GatherContent\DataTypes\Item;
 
 /**
  * @group GatherContentClient
@@ -35,7 +35,7 @@ class ItemTest extends BaseTest
             \GuzzleHttp\json_encode($actual1, JSON_PRETTY_PRINT)
         );
 
-        /** @var \Cheppers\GatherContent\DataTypes\Item $item2 */
+        /** @var \GatherContent\DataTypes\Item $item2 */
         $item2 = new $this->className($actual1);
         $json2 = json_encode($item2);
         $actual2 = json_decode($json2, true);

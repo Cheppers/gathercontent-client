@@ -1,6 +1,6 @@
 <?php
 
-namespace Cheppers\GatherContent\Utils;
+namespace GatherContent\Utils;
 
 class NestedArray
 {

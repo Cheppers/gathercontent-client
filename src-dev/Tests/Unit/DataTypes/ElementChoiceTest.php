@@ -1,9 +1,9 @@
 <?php
 
-namespace Cheppers\GatherContent\Tests\Unit\DataTypes;
+namespace GatherContent\Tests\Unit\DataTypes;
 
-use Cheppers\GatherContent\DataTypes\ElementChoice;
-use Cheppers\GatherContent\DataTypes\ElementChoiceMeta;
+use GatherContent\DataTypes\ElementChoice;
+use GatherContent\DataTypes\ElementChoiceMeta;
 
 /**
  * @group GatherContentClient

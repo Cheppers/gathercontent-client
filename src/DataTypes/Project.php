@@ -1,6 +1,6 @@
 <?php
 
-namespace Cheppers\GatherContent\DataTypes;
+namespace GatherContent\DataTypes;
 
 class Project extends Base
 {
@@ -55,7 +55,7 @@ class Project extends Base
     public $overdue = false;
 
     /**
-     * @var \Cheppers\GatherContent\DataTypes\Status[]
+     * @var \GatherContent\DataTypes\Status[]
      */
     public $statuses = [];
 

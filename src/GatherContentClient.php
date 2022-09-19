@@ -1,11 +1,11 @@
 <?php
 
-namespace Cheppers\GatherContent;
+namespace GatherContent;
 
-use Cheppers\GatherContent\DataTypes\Folder;
-use Cheppers\GatherContent\DataTypes\Item;
-use Cheppers\GatherContent\DataTypes\Pagination;
-use Cheppers\GatherContent\DataTypes\Structure;
+use GatherContent\DataTypes\Folder;
+use GatherContent\DataTypes\Item;
+use GatherContent\DataTypes\Pagination;
+use GatherContent\DataTypes\Structure;
 use GuzzleHttp\ClientInterface;
 
 class GatherContentClient implements GatherContentClientInterface

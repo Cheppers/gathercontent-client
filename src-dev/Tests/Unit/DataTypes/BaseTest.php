@@ -1,9 +1,9 @@
 <?php
 
-namespace Cheppers\GatherContent\Tests\Unit\DataTypes;
+namespace GatherContent\Tests\Unit\DataTypes;
 
-use Cheppers\GatherContent\DataTypes\Base;
-use Cheppers\GatherContent\Tests\Unit\GcBaseTestCase;
+use GatherContent\DataTypes\Base;
+use GatherContent\Tests\Unit\GcBaseTestCase;
 
 /**
  * @group GatherContentClient

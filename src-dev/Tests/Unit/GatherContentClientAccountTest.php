@@ -1,10 +1,10 @@
 <?php
 
-namespace Cheppers\GatherContent\Tests\Unit;
+namespace GatherContent\Tests\Unit;
 
-use Cheppers\GatherContent\DataTypes\Account;
-use Cheppers\GatherContent\GatherContentClient;
-use Cheppers\GatherContent\GatherContentClientException;
+use GatherContent\DataTypes\Account;
+use GatherContent\GatherContentClient;
+use GatherContent\GatherContentClientException;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 

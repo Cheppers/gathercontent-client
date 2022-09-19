@@ -1,8 +1,8 @@
 <?php
 
-namespace Cheppers\GatherContent\Tests\Unit\DataTypes;
+namespace GatherContent\Tests\Unit\DataTypes;
 
-use Cheppers\GatherContent\DataTypes\Group;
+use GatherContent\DataTypes\Group;
 
 /**
  * @group GatherContentClient

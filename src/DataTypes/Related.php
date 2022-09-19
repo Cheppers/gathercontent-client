@@ -1,11 +1,11 @@
 <?php
 
-namespace Cheppers\GatherContent\DataTypes;
+namespace GatherContent\DataTypes;
 
 class Related extends Base
 {
     /**
-     * @var \Cheppers\GatherContent\DataTypes\Structure
+     * @var \GatherContent\DataTypes\Structure
      */
     public $structure = null;
 

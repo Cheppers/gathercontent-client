@@ -1,8 +1,8 @@
 <?php
 
-namespace Cheppers\GatherContent\Tests\Unit\DataTypes;
+namespace GatherContent\Tests\Unit\DataTypes;
 
-use Cheppers\GatherContent\DataTypes\Project;
+use GatherContent\DataTypes\Project;
 
 /**
  * @group GatherContentClient
@@ -75,7 +75,7 @@ class ProjectTest extends BaseTest
     {
         $projectArray = static::getUniqueResponseProject();
 
-        /** @var \Cheppers\GatherContent\DataTypes\Project $project1 */
+        /** @var \GatherContent\DataTypes\Project $project1 */
         $project1 = new $this->className($projectArray);
 
         $project1->name .= '-MODIFIED';
@@ -94,7 +94,7 @@ class ProjectTest extends BaseTest
             static::assertEquals($value, $actual1[$key], "JSON encode.decode - $key");
         }
 
-        /** @var \Cheppers\GatherContent\DataTypes\Project $project2 */
+        /** @var \GatherContent\DataTypes\Project $project2 */
         $project2 = new $this->className($actual1);
         $json2 = json_encode($project2);
         $actual2 = json_decode($json2, true);

@@ -1,10 +1,10 @@
 <?php
 
-namespace Cheppers\GatherContent\Tests\Unit;
+namespace GatherContent\Tests\Unit;
 
-use Cheppers\GatherContent\DataTypes\Pagination;
-use Cheppers\GatherContent\DataTypes\User;
-use Cheppers\GatherContent\GatherContentClient;
+use GatherContent\DataTypes\Pagination;
+use GatherContent\DataTypes\User;
+use GatherContent\GatherContentClient;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Handler\MockHandler;
@@ -16,7 +16,7 @@ use GuzzleHttp\Psr7\Response;
 /**
  * @group GatherContentClient
  *
- * @covers \Cheppers\GatherContent\GatherContentClient
+ * @covers \GatherContent\GatherContentClient
  */
 class GatherContentClientTest extends GcBaseTestCase
 {

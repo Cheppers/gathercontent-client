@@ -1,6 +1,6 @@
 <?php
 
-namespace Cheppers\GatherContent\DataTypes;
+namespace GatherContent\DataTypes;
 
 class User extends Base
 {
@@ -35,7 +35,7 @@ class User extends Base
     public $avatar = '';
 
     /**
-     * @var \Cheppers\GatherContent\DataTypes\Announcement[]
+     * @var \GatherContent\DataTypes\Announcement[]
      */
     public $announcements = [];
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Cheppers\GatherContent\Composer;
+namespace GatherContent\Composer;
 
 use Cheppers\GitHooks\Main as GitHooksScripts;
 use Composer\Script\Event;

@@ -1,5 +1,5 @@
 {
-    "name": "cheppers/gathercontent-client",
+    "name": "gathercontent/client",
     "description": "GatherContent client",
     "type": "library",
     "license": "GPL-2.0-or-later",
@@ -24,17 +24,17 @@
     },
     "autoload": {
         "psr-4": {
-            "Cheppers\\GatherContent\\": "src/"
+            "GatherContent\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Cheppers\\GatherContent\\Composer\\": "src-dev/Composer",
-            "Cheppers\\GatherContent\\Tests\\": "src-dev/Tests"
+            "GatherContent\\Composer\\": "src-dev/Composer",
+            "GatherContent\\Tests\\": "src-dev/Tests"
         }
     },
     "scripts": {
-        "post-install-cmd": "\\Cheppers\\GatherContent\\Composer\\Scripts::postInstallCmd",
-        "post-update-cmd": "\\Cheppers\\GatherContent\\Composer\\Scripts::postUpdateCmd"
+        "post-install-cmd": "\\GatherContent\\Composer\\Scripts::postInstallCmd",
+        "post-update-cmd": "\\GatherContent\\Composer\\Scripts::postUpdateCmd"
     }
 }

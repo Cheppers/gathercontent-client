@@ -1,6 +1,6 @@
 <?php
 
-namespace Cheppers\GatherContent\DataTypes;
+namespace GatherContent\DataTypes;
 
 class Account extends Base
 {

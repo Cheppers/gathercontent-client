@@ -1,6 +1,6 @@
 <?php
 
-namespace Cheppers\GatherContent\DataTypes;
+namespace GatherContent\DataTypes;
 
 class ElementChoice extends Element
 {

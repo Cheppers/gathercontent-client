@@ -1,12 +1,12 @@
 <?php
 
-namespace Cheppers\GatherContent\Tests\Unit;
+namespace GatherContent\Tests\Unit;
 
-use Cheppers\GatherContent\DataTypes\Related;
-use Cheppers\GatherContent\DataTypes\Structure;
-use Cheppers\GatherContent\DataTypes\Template;
-use Cheppers\GatherContent\GatherContentClient;
-use Cheppers\GatherContent\GatherContentClientException;
+use GatherContent\DataTypes\Related;
+use GatherContent\DataTypes\Structure;
+use GatherContent\DataTypes\Template;
+use GatherContent\GatherContentClient;
+use GatherContent\GatherContentClientException;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 

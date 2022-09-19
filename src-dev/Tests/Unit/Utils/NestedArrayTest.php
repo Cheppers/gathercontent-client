@@ -1,8 +1,8 @@
 <?php
 
-namespace Cheppers\GatherContent\Tests\Unit\Utils;
+namespace GatherContent\Tests\Unit\Utils;
 
-use Cheppers\GatherContent\Utils\NestedArray;
+use GatherContent\Utils\NestedArray;
 use PHPUnit\Framework\TestCase;
 
 class NestedArrayTest extends TestCase

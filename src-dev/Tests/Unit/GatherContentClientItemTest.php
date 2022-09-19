@@ -1,10 +1,10 @@
 <?php
 
-namespace Cheppers\GatherContent\Tests\Unit;
+namespace GatherContent\Tests\Unit;
 
-use Cheppers\GatherContent\DataTypes\Item;
-use Cheppers\GatherContent\GatherContentClient;
-use Cheppers\GatherContent\GatherContentClientException;
+use GatherContent\DataTypes\Item;
+use GatherContent\GatherContentClient;
+use GatherContent\GatherContentClientException;
 use GuzzleHttp\Psr7\MultipartStream;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
@@ -12,7 +12,7 @@ use GuzzleHttp\Psr7\Response;
 /**
  * Class GatherContentClientItemTest.
  *
- * @package Cheppers\GatherContent\Tests\Unit
+ * @package GatherContent\Tests\Unit
  */
 class GatherContentClientItemTest extends GcBaseTestCase
 {

@@ -1,11 +1,11 @@
 <?php
 
-namespace Cheppers\GatherContent\DataTypes;
+namespace GatherContent\DataTypes;
 
 class Structure extends Base
 {
     /**
-     * @var \Cheppers\GatherContent\DataTypes\Group[]
+     * @var \GatherContent\DataTypes\Group[]
      */
     public $groups = [];
 

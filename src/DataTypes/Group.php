@@ -1,6 +1,6 @@
 <?php
 
-namespace Cheppers\GatherContent\DataTypes;
+namespace GatherContent\DataTypes;
 
 class Group extends Base
 {
@@ -18,7 +18,7 @@ class Group extends Base
     public $name = '';
 
     /**
-     * @var \Cheppers\GatherContent\DataTypes\Element[]
+     * @var \GatherContent\DataTypes\Element[]
      */
     public $fields = [];
 
@@ -41,7 +41,7 @@ class Group extends Base
                         $elements = [];
                         foreach ($data as $elementData) {
                             $class = static::$type2Class[$elementData['field_type']];
-                            /** @var \Cheppers\GatherContent\DataTypes\Base $element */
+                            /** @var \GatherContent\DataTypes\Base $element */
                             $element = new $class($elementData);
                             $elements[] = $element;
                         }

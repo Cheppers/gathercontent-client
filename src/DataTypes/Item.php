@@ -1,6 +1,6 @@
 <?php
 
-namespace Cheppers\GatherContent\DataTypes;
+namespace GatherContent\DataTypes;
 
 class Item extends Base
 {
@@ -25,7 +25,7 @@ class Item extends Base
     public $structureUuid = '';
 
     /**
-     * @var \Cheppers\GatherContent\DataTypes\Structure
+     * @var \GatherContent\DataTypes\Structure
      */
     public $structure = null;
 
@@ -70,7 +70,7 @@ class Item extends Base
     public $completedAt = '';
 
     /**
-     * @var \Cheppers\GatherContent\DataTypes\ElementBase[]
+     * @var \GatherContent\DataTypes\ElementBase[]
      */
     public $content = [];
 
@@ -170,7 +170,7 @@ class Item extends Base
                 $class = ElementSimpleText::class;
                 $element = ['value' => $element];
             }
-            /** @var \Cheppers\GatherContent\DataTypes\ElementBase[] $elements */
+            /** @var \GatherContent\DataTypes\ElementBase[] $elements */
             $elements[] = new $class($element);
         }
 

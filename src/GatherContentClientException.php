@@ -1,6 +1,6 @@
 <?php
 
-namespace Cheppers\GatherContent;
+namespace GatherContent;
 
 class GatherContentClientException extends \Exception
 {

@@ -1,8 +1,8 @@
 <?php
 
-namespace Cheppers\GatherContent\Tests\Unit\DataTypes;
+namespace GatherContent\Tests\Unit\DataTypes;
 
-use Cheppers\GatherContent\DataTypes\ElementBase;
+use GatherContent\DataTypes\ElementBase;
 
 /**
  * @group GatherContentClient
@@ -16,7 +16,7 @@ class ElementBaseTest extends BaseTest
 
     public function testGetSetValue()
     {
-        /** @var \Cheppers\GatherContent\DataTypes\ElementBase $element */
+        /** @var \GatherContent\DataTypes\ElementBase $element */
         $element = new $this->className([]);
 
         static::assertEquals('', $element->getValue());
